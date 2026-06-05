@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dra. Vivian Amaral — Central de Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8D5A3;
+      --gold-dim: #7A6030;
+      --dark: #111010;
+      --dark2: #1A1918;
+      --dark3: #222120;
+      --dark4: #2C2B2A;
+      --text: #F0EBE0;
+      --text-muted: #9A9188;
+      --border: rgba(201,168,76,0.18);
+      --border-hover: rgba(201,168,76,0.45);
+      --mentoria: #C9A84C;
+      --mentoria-bg: rgba(201,168,76,0.13);
+      --posgrad: #2A4FBB;
+      --posgrad-bg: rgba(42,79,187,0.15);
+      --master: #8B1A1A;
+      --master-bg: rgba(139,26,26,0.18);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+    }
+
+    /* ─── LAYOUT ─── */
+    .hub { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 36px 16px;
+      border-bottom: 0.5px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--dark);
+      z-index: 50;
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-monogram {
+      width: 38px; height: 38px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; color: var(--gold); font-weight: 300; letter-spacing: 1px;
+    }
+    .brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px; font-weight: 300; color: var(--text); letter-spacing: 2px;
+    }
+    .brand-sub {
+      font-size: 10px; color: var(--text-muted);
+      letter-spacing: 3px; text-transform: uppercase; margin-top: 2px;
+    }
+
+    .nav { display: flex; gap: 4px; }
+    .nav-btn {
+      background: none; border: none;
+      padding: 8px 18px;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); cursor: pointer; border-radius: 2px;
+      transition: color .2s; position: relative;
+    }
+    .nav-btn:hover { color: var(--gold); }
+    .nav-btn.active { color: var(--gold); }
+    .nav-btn.active::after {
+      content: ''; position: absolute;
+      bottom: -17px; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+    }
+
+    .content { padding: 32px 36px; flex: 1; }
+
+    /* ─── CALENDÁRIO ─── */
+    .cal-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .cal-title-row { display: flex; align-items: center; gap: 14px; }
+    .cal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 300; color: var(--gold-light); letter-spacing: 1px;
+    }
+    .cal-nav { display: flex; align-items: center; gap: 10px; }
+    .cal-nav-btn {
+      background: none; border: 0.5px solid var(--border);
+      color: var(--text-muted); width: 30px; height: 30px;
+      border-radius: 2px; cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .cal-nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .cal-month {
+      font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); min-width: 110px; text-align: center;
+    }
+    .edit-mode-btn {
+      background: none; border: 0.5px solid var(--border);
+      color: var(--text-muted); padding: 0 14px; height: 30px;
+      border-radius: 2px; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      transition: all .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .edit-mode-btn:hover, .edit-mode-btn.active { border-color: var(--gold); color: var(--gold); }
+
+    .edit-hint-bar {
+      display: none;
+      font-size: 11px; color: var(--gold-dim); letter-spacing: 1px;
+      margin-bottom: 14px; padding: 8px 12px;
+      border: 0.5px dashed var(--gold-dim); border-radius: 2px;
+    }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .cal-day-name {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); text-align: center; padding: 6px 0;
+    }
+    .cal-day {
+      min-height: 82px; background: var(--dark2);
+      border: 0.5px solid var(--border); border-radius: 2px;
+      padding: 6px; transition: border-color .2s;
+    }
+    .cal-day.other-month { opacity: .3; }
+    .cal-day.today { border-color: var(--gold-dim); }
+    .cal-day.today .day-num { color: var(--gold); }
+    .cal-day.edit-active { cursor: pointer; }
+    .cal-day.edit-active:hover { border-color: var(--gold-dim); }
+    .day-num { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+
+    .cal-event {
+      font-size: 9px; letter-spacing: .3px;
+      padding: 2px 5px; border-radius: 1px;
+      margin-bottom: 2px; line-height: 1.3;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 2px;
+    }
+    .ev-mentoria  { background: var(--mentoria-bg); color: var(--mentoria); border-left: 2px solid var(--mentoria); }
+    .ev-posgrad   { background: var(--posgrad-bg);  color: #6B8FE8;         border-left: 2px solid var(--posgrad); }
+    .ev-master    { background: var(--master-bg);   color: #D46060;         border-left: 2px solid var(--master); }
+    .ev-all       { background: rgba(201,168,76,.07); color: var(--text-muted); border-left: 2px solid var(--dark4); }
+
+    .ev-remove {
+      opacity: .45; cursor: pointer; font-size: 10px;
+      flex-shrink: 0; line-height: 1; padding-top: 1px;
+    }
+    .ev-remove:hover { opacity: 1; color: #fff; }
+
+    .cal-legend { display: flex; gap: 18px; margin-top: 16px; flex-wrap: wrap; }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 1px; color: var(--text-muted); }
+    .leg-dot { width: 8px; height: 8px; border-radius: 1px; }
+
+    /* ─── PRODUTOS ─── */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+    }
+    .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+    .prod-card {
+      background: var(--dark2); border: 0.5px solid var(--border);
+      border-radius: 2px; padding: 22px; cursor: pointer;
+      transition: all .3s; position: relative; overflow: hidden;
+    }
+    .prod-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0; transition: opacity .3s;
+    }
+    .prod-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .prod-card:hover::before { opacity: 1; }
+    .prod-badge {
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold); border: 0.5px solid var(--gold-dim);
+      padding: 3px 8px; border-radius: 1px; display: inline-block; margin-bottom: 12px;
+    }
+    .prod-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px; color: var(--text); margin-bottom: 8px; line-height: 1.2;
+    }
+    .prod-tagline { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
+    .prod-price { font-family: 'Cormorant Garamond', serif; font-size: 23px; color: var(--gold-light); font-weight: 300; }
+    .prod-price-label { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; margin-top: 2px; }
+    .prod-arrow { position: absolute; bottom: 18px; right: 18px; color: var(--gold-dim); font-size: 17px; transition: all .2s; }
+    .prod-card:hover .prod-arrow { color: var(--gold); transform: translate(2px, -2px); }
+
+    /* ─── MODAL PRODUTO ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.87);
+      z-index: 100; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--dark2); border: 0.5px solid var(--border-hover);
+      border-radius: 2px; width: min(700px, 94vw);
+      max-height: 85vh; overflow-y: auto; padding: 34px; position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 19px; transition: color .2s;
+    }
+    .modal-close:hover { color: var(--gold); }
+    .modal-badge {
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold); border: 0.5px solid var(--gold-dim);
+      padding: 3px 8px; border-radius: 1px; display: inline-block; margin-bottom: 14px;
+    }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 300; color: var(--text); margin-bottom: 8px; line-height: 1.1;
+    }
+    .modal-tagline { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.7; }
+    .modal-divider { height: 0.5px; background: var(--border); margin: 22px 0; }
+    .modal-section-title {
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold-dim); margin-bottom: 12px;
+    }
+    .modal-desc { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; }
+    .modal-items { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .modal-items li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-muted); }
+    .modal-items li::before { content: '◆'; color: var(--gold-dim); font-size: 8px; margin-top: 4px; flex-shrink: 0; }
+    .modal-prices { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px; margin-bottom: 20px; }
+    .price-block { background: var(--dark3); border: 0.5px solid var(--border); border-radius: 2px; padding: 14px; }
+    .price-label { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+    .price-value { font-family: 'Cormorant Garamond', serif; font-size: 25px; color: var(--gold-light); font-weight: 300; }
+    .price-link { display: block; font-size: 11px; color: var(--gold-dim); margin-top: 5px; text-decoration: none; }
+    .price-link:hover { color: var(--gold); text-decoration: underline; }
+    .modal-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .link-pill {
+      background: var(--dark3); border: 0.5px solid var(--border);
+      border-radius: 1px; padding: 8px 14px;
+      font-size: 11px; letter-spacing: 1px; color: var(--text-muted);
+      text-decoration: none; display: flex; align-items: center; gap: 6px; transition: all .2s;
+    }
+    .link-pill:hover { border-color: var(--gold-dim); color: var(--gold); }
+    .edit-hint {
+      font-size: 11px; color: var(--gold-dim); letter-spacing: 1px;
+      margin-top: 24px; padding: 10px 14px;
+      border: 0.5px dashed var(--gold-dim); border-radius: 2px; opacity: .75;
+    }
+
+    /* ─── MODAL ADICIONAR EVENTO ─── */
+    .add-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,.9);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .add-modal.open { opacity: 1; pointer-events: all; }
+    .add-box {
+      background: var(--dark2); border: 0.5px solid var(--border-hover);
+      border-radius: 2px; width: min(420px, 92vw); padding: 30px; position: relative;
+    }
+    .add-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; color: var(--gold-light); font-weight: 300; margin-bottom: 18px;
+    }
+    .add-date-label { font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom: 18px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; background: var(--dark3);
+      border: 0.5px solid var(--border); color: var(--text);
+      font-family: 'Jost', sans-serif; font-size: 13px;
+      padding: 9px 11px; border-radius: 2px; outline: none; transition: border-color .2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--gold-dim); }
+    .field select option { background: var(--dark3); }
+    .add-actions { display: flex; gap: 10px; margin-top: 22px; }
+    .btn-primary {
+      flex: 1; background: var(--gold-dim); border: none; color: var(--dark);
+      font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; padding: 11px; border-radius: 2px; cursor: pointer; transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--gold); }
+    .btn-cancel {
+      background: none; border: 0.5px solid var(--border); color: var(--text-muted);
+      font-family: 'Jost', sans-serif; font-size: 12px; letter-spacing: 1px;
+      padding: 11px 18px; border-radius: 2px; cursor: pointer; transition: all .2s;
+    }
+    .btn-cancel:hover { border-color: var(--gold-dim); color: var(--text); }
+    .modal-close-x {
+      position: absolute; top: 14px; right: 14px;
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 17px; transition: color .2s;
+    }
+    .modal-close-x:hover { color: var(--gold); }
+
+    /* ─── TIME ─── */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+    .team-card {
+      background: var(--dark2); border: 0.5px solid var(--border);
+      border-radius: 2px; padding: 24px; transition: border-color .2s;
+    }
+    .team-card:hover { border-color: var(--border-hover); }
+    .team-avatar {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: var(--dark4); border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--gold); margin-bottom: 16px;
+    }
+    .team-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--text); margin-bottom: 3px; }
+    .team-role { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 16px; }
+    .team-resp { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .team-resp li { font-size: 12px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .team-resp li::before { content: '—'; color: var(--gold-dim); flex-shrink: 0; }
+    .team-add {
+      background: none; border: 0.5px dashed var(--gold-dim); border-radius: 2px;
+      padding: 24px; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 10px; cursor: pointer;
+      color: var(--gold-dim); font-family: 'Jost', sans-serif;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      transition: all .2s; min-height: 190px; width: 100%;
+    }
+    .team-add:hover { border-color: var(--gold); color: var(--gold); }
+    .team-add i { font-size: 26px; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<div class="hub">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-monogram">VA</div>
+      <div>
+        <div class="brand-name">Dra. Vivian Amaral</div>
+        <div class="brand-sub">Central de Gestão</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="switchTab('calendario', this)">Calendário</button>
+      <button class="nav-btn" onclick="switchTab('produtos', this)">Produtos</button>
+      <button class="nav-btn" onclick="switchTab('time', this)">Time</button>
+    </nav>
+  </div>
+
+  <div class="content">
+
+    <!-- ── CALENDÁRIO ── -->
+    <div id="tab-calendario">
+      <div class="cal-header">
+        <div class="cal-title-row">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+            <span class="cal-month" id="cal-month-label"></span>
+            <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+          </div>
+          <div class="cal-title" id="cal-title-text"></div>
+        </div>
+        <button class="edit-mode-btn" id="edit-btn" onclick="toggleEditMode()">
+          <i class="ti ti-pencil" style="font-size:13px"></i>
+          <span id="edit-btn-label">Editar</span>
+        </button>
+      </div>
+      <div class="edit-hint-bar" id="edit-hint-bar">
+        <i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:6px"></i>
+        Modo edição ativo — clique em qualquer dia para adicionar um evento. Clique no × para remover.
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#C9A84C"></div>Mentoria</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2A4FBB"></div>Pós Graduação</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#8B1A1A"></div>Master Leggacy</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2C2B2A"></div>Todos os produtos</div>
+      </div>
+    </div>
+
+    <!-- ── PRODUTOS ── -->
+    <div id="tab-produtos" style="display:none">
+      <div class="section-header">
+        <div class="cal-title">Produtos</div>
+        <button class="edit-mode-btn" onclick="promptAddProduct()">
+          <i class="ti ti-plus" style="font-size:13px"></i> Novo produto
+        </button>
+      </div>
+      <div class="prod-grid" id="prod-grid"></div>
+    </div>
+
+    <!-- ── TIME ── -->
+    <div id="tab-time" style="display:none">
+      <div class="section-header">
+        <div class="cal-title">Time Interno</div>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal produto -->
+<div class="modal-overlay" id="prod-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('prod-modal').classList.remove('open')"><i class="ti ti-x"></i></button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Modal adicionar evento -->
+<div class="add-modal" id="add-modal" onclick="if(event.target===this)closeAddModal()">
+  <div class="add-box">
+    <button class="modal-close-x" onclick="closeAddModal()"><i class="ti ti-x"></i></button>
+    <h3>Adicionar evento</h3>
+    <div class="add-date-label" id="add-date-label"></div>
+    <div class="field">
+      <label>Título do evento</label>
+      <input type="text" id="ev-label" placeholder="ex: Aula módulo 5 — 19h30">
+    </div>
+    <div class="field">
+      <label>Produto / Grupo</label>
+      <select id="ev-type">
+        <option value="mentoria">Mentoria</option>
+        <option value="posgrad">Pós Graduação</option>
+        <option value="master">Master Leggacy</option>
+        <option value="all">Todos os produtos</option>
+      </select>
+    </div>
+    <div class="add-actions">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn-primary" onclick="confirmAddEvent()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ─── DATA ─── */
+  const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const DAYS   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  let currentDate = new Date(2026, 5, 1);
+  let editMode    = false;
+  let addTargetDate = null;
+
+  /* ── Eventos — edite aqui ── */
+  let EVENTS = [
+    { date: '2026-06-03', label: 'Fios Vulvares — 19h30',                   type: 'mentoria' },
+    { date: '2026-06-03', label: 'Fios Vulvares — 19h30',                   type: 'posgrad'  },
+    { date: '2026-06-10', label: 'Instagram Médico — 19h30',                type: 'mentoria' },
+    { date: '2026-06-10', label: 'Instagram Médico — 19h30',                type: 'master'   },
+    { date: '2026-06-10', label: 'Início do Desafio',                       type: 'all'      },
+    { date: '2026-06-17', label: 'Mesoterapia Prática — 19h30',             type: 'mentoria' },
+    { date: '2026-06-17', label: 'Mesoterapia Prática — 19h30',             type: 'posgrad'  },
+    { date: '2026-06-24', label: 'Encontro Presencial — Mesa do Conselho',  type: 'master'   },
+    { date: '2026-06-25', label: 'Encontro Presencial — Mesa do Conselho',  type: 'master'   },
+  ];
+
+  /* ── Produtos — edite aqui ── */
+  let PRODUCTS = [
+    {
+      id: 1, badge: 'Mentoria', name: '[Nome do Produto]',
+      tagline: 'Breve descrição da proposta de valor do produto.',
+      price: 'R$ 0.000', priceLabel: 'à vista',
+      description: 'Descrição completa do produto. Explique o que é, para quem é e qual transformação entrega.',
+      deliverables: ['Entregável 1 — descrição', 'Entregável 2 — carga horária e formato', 'Entregável 3 — materiais e recursos'],
+      bonus: ['Bônus 1 — nome e descrição', 'Bônus 2 — nome e descrição'],
+      prices: [{ label: 'À vista', value: 'R$ 0.000', link: '#' }, { label: 'Parcelado', value: '12x R$ 000', link: '#' }],
+      groupLink: '#', extraLinks: []
+    },
+    {
+      id: 2, badge: 'Pós Graduação', name: '[Nome do Produto]',
+      tagline: 'Breve descrição da proposta de valor do produto.',
+      price: 'R$ 0.000', priceLabel: 'à vista',
+      description: 'Descrição completa do produto.',
+      deliverables: ['Entregável 1', 'Entregável 2', 'Entregável 3'],
+      bonus: ['Bônus 1'],
+      prices: [{ label: 'À vista', value: 'R$ 0.000', link: '#' }],
+      groupLink: '#', extraLinks: []
+    },
+    {
+      id: 3, badge: 'Master Leggacy', name: '[Nome do Produto]',
+      tagline: 'Breve descrição da proposta de valor do produto.',
+      price: 'R$ 0.000', priceLabel: 'por pessoa',
+      description: 'Descrição completa do produto.',
+      deliverables: ['Entregável 1', 'Entregável 2'],
+      bonus: [],
+      prices: [{ label: 'Presença', value: 'R$ 0.000', link: '#' }],
+      groupLink: '#', extraLinks: []
+    },
+  ];
+
+  /* ── Time — edite aqui ── */
+  const TEAM = [
+    { initials: 'VA', name: 'Dra. Vivian Amaral', role: 'Expert & Fundadora',
+      resp: ['Criação e entrega de conteúdo', 'Aulas e lives ao vivo', 'Posicionamento e estratégia'] },
+    { initials: '—', name: '[Nome]', role: 'Gestor(a) de Tráfego',
+      resp: ['Campanhas pagas', 'Relatórios de performance', 'Testes de criativos'] },
+    { initials: '—', name: '[Nome]', role: 'Produtor(a) de Conteúdo',
+      resp: ['Roteiros e edição', 'Calendário editorial', 'Entrega de materiais'] },
+    { initials: '—', name: '[Nome]', role: 'Atendimento / CS',
+      resp: ['Suporte a alunos', 'Gestão de grupos', 'Onboarding de novos alunos'] },
+  ];
+
+  /* ─── CALENDÁRIO ─── */
+  function renderCalendar() {
+    const y = currentDate.getFullYear(), m = currentDate.getMonth();
+    document.getElementById('cal-title-text').textContent  = MONTHS[m] + ' ' + y;
+    document.getElementById('cal-month-label').textContent = MONTHS[m].substring(0,3) + ' ' + y;
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+    DAYS.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-name'; el.textContent = d; grid.appendChild(el);
+    });
+    const first       = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+    const daysInPrev  = new Date(y, m, 0).getDate();
+    const today       = new Date();
+    for (let i = 0; i < first; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day other-month';
+      el.innerHTML = `<div class="day-num">${daysInPrev - first + i + 1}</div>`;
+      grid.appendChild(el);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div');
+      const isToday = today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
+      el.className = 'cal-day' + (isToday ? ' today' : '') + (editMode ? ' edit-active' : '');
+      const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const evs = EVENTS.filter(e => e.date === dateStr);
+      let html = `<div class="day-num">${d}</div>`;
+      evs.forEach((e, i) => {
+        const rm = editMode ? `<span class="ev-remove" onclick="removeEvent(event,'${dateStr}',${i})">×</span>` : '';
+        html += `<div class="cal-event ev-${e.type}"><span>${e.label}</span>${rm}</div>`;
+      });
+      el.innerHTML = html;
+      if (editMode) el.addEventListener('click', () => openAddModal(dateStr, d, m, y));
+      grid.appendChild(el);
+    }
+    const remaining = (7 - ((first + daysInMonth) % 7)) % 7;
+    for (let i = 1; i <= remaining; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day other-month';
+      el.innerHTML = `<div class="day-num">${i}</div>`;
+      grid.appendChild(el);
+    }
+  }
+
+  function changeMonth(dir) { currentDate.setMonth(currentDate.getMonth() + dir); renderCalendar(); }
+
+  function toggleEditMode() {
+    editMode = !editMode;
+    document.getElementById('edit-btn').classList.toggle('active', editMode);
+    document.getElementById('edit-btn-label').textContent = editMode ? 'Concluir edição' : 'Editar';
+    document.getElementById('edit-hint-bar').style.display = editMode ? 'block' : 'none';
+    renderCalendar();
+  }
+
+  function openAddModal(dateStr, d, m, y) {
+    addTargetDate = dateStr;
+    document.getElementById('add-date-label').textContent =
+      `${String(d).padStart(2,'0')}/${String(m+1).padStart(2,'0')}/${y}`;
+    document.getElementById('ev-label').value = '';
+    document.getElementById('add-modal').classList.add('open');
+  }
+  function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); addTargetDate = null; }
+  function confirmAddEvent() {
+    const label = document.getElementById('ev-label').value.trim();
+    const type  = document.getElementById('ev-type').value;
+    if (!label || !addTargetDate) return;
+    EVENTS.push({ date: addTargetDate, label, type });
+    closeAddModal();
+    renderCalendar();
+  }
+  function removeEvent(e, dateStr, idx) {
+    e.stopPropagation();
+    const dayEvs = EVENTS.filter(ev => ev.date === dateStr);
+    const target = dayEvs[idx];
+    EVENTS = EVENTS.filter(ev => ev !== target);
+    renderCalendar();
+  }
+
+  /* ─── PRODUTOS ─── */
+  function renderProducts() {
+    const grid = document.getElementById('prod-grid'); grid.innerHTML = '';
+    PRODUCTS.forEach(p => {
+      const el = document.createElement('div'); el.className = 'prod-card';
+      el.innerHTML = `
+        <div class="prod-badge">${p.badge}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-tagline">${p.tagline}</div>
+        <div class="prod-price">${p.price}</div>
+        <div class="prod-price-label">${p.priceLabel}</div>
+        <div class="prod-arrow"><i class="ti ti-arrow-up-right"></i></div>`;
+      el.onclick = () => openProduct(p);
+      grid.appendChild(el);
+    });
+  }
+
+  function openProduct(p) {
+    const bonusHtml = p.bonus.length
+      ? `<div class="modal-divider"></div>
+         <div class="modal-section-title">Bônus incluídos</div>
+         <ul class="modal-items">${p.bonus.map(b => `<li>${b}</li>`).join('')}</ul>` : '';
+    const extraLinks = (p.extraLinks || []).map(l =>
+      `<a class="link-pill" href="${l.url}" target="_blank">${l.label}</a>`).join('');
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-badge">${p.badge}</div>
+      <div class="modal-title">${p.name}</div>
+      <div class="modal-tagline">${p.tagline}</div>
+      <div class="modal-divider"></div>
+      <div class="modal-section-title">Sobre o produto</div>
+      <div class="modal-desc">${p.description}</div>
+      <div class="modal-section-title">O que é entregue</div>
+      <ul class="modal-items">${p.deliverables.map(d => `<li>${d}</li>`).join('')}</ul>
+      <div class="modal-divider"></div>
+      <div class="modal-section-title">Valores e pagamento</div>
+      <div class="modal-prices">
+        ${p.prices.map(pr => `
+          <div class="price-block">
+            <div class="price-label">${pr.label}</div>
+            <div class="price-value">${pr.value}</div>
+            <a class="price-link" href="${pr.link}" target="_blank">Link de pagamento →</a>
+          </div>`).join('')}
+      </div>
+      ${bonusHtml}
+      <div class="modal-divider"></div>
+      <div class="modal-section-title">Links</div>
+      <div class="modal-links">
+        <a class="link-pill" href="${p.groupLink}" target="_blank">
+          <i class="ti ti-brand-whatsapp" style="font-size:14px"></i>Grupo de alunos
+        </a>
+        ${extraLinks}
+      </div>
+      <div class="edit-hint">
+        <i class="ti ti-pencil" style="font-size:13px;vertical-align:-2px;margin-right:4px"></i>
+        Placeholder — preencha os dados reais editando diretamente no arquivo <code>index.html</code>, seção <code>PRODUCTS</code>.
+      </div>`;
+    document.getElementById('prod-modal').classList.add('open');
+  }
+
+  function promptAddProduct() {
+    alert('Para adicionar um produto, edite o array PRODUCTS no arquivo index.html.');
+  }
+
+  /* ─── TIME ─── */
+  function renderTeam() {
+    const grid = document.getElementById('team-grid'); grid.innerHTML = '';
+    TEAM.forEach(m => {
+      const el = document.createElement('div'); el.className = 'team-card';
+      el.innerHTML = `
+        <div class="team-avatar">${m.initials}</div>
+        <div class="team-name">${m.name}</div>
+        <div class="team-role">${m.role}</div>
+        <ul class="team-resp">${m.resp.map(r => `<li>${r}</li>`).join('')}</ul>`;
+      grid.appendChild(el);
+    });
+    const add = document.createElement('button'); add.className = 'team-add';
+    add.innerHTML = '<i class="ti ti-plus"></i>Adicionar membro';
+    add.onclick = () => alert('Para adicionar um membro, edite o array TEAM no arquivo index.html.');
+    grid.appendChild(add);
+  }
+
+  /* ─── TABS ─── */
+  function switchTab(tab, btn) {
+    ['calendario','produtos','time'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (tab === 'calendario') renderCalendar();
+    if (tab === 'produtos')   renderProducts();
+    if (tab === 'time')       renderTeam();
+  }
+
+  renderCalendar();
+</script>
+</body>
+</html>
