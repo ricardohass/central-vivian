@@ -1347,9 +1347,11 @@ function getClientes(){
       if(a.fim&&a.fim>fimConf)fimConf=a.fim;
     }));
     compras.forEach(x=>{if(x.fim_estimado&&x.fim_estimado>fimEst)fimEst=x.fim_estimado;});
+    // removido do Grupo Mentoria na base antiga = não está mais ativo, mesmo que a data estimada não tenha passado
+    const removido=!!(c.base&&c.base.grupo_mentoria==='removido');
     if(fimConf>=hoje&&fimConf)c.sit={s:'ativo',fim:fimConf};
     else if(aConf)c.sit={s:'a_confirmar'};
-    else if(fimEst>=hoje&&fimEst>fimConf)c.sit={s:'ativo',fim:fimEst,est:true};
+    else if(fimEst>=hoje&&fimEst>fimConf)c.sit=removido?{s:'vencido',removido:true}:{s:'ativo',fim:fimEst,est:true};
     else if(fimConf)c.sit={s:'vencido',fim:fimConf};
     else if(fimEst)c.sit={s:'vencido',fim:fimEst,est:true};
     else c.sit={s:'sem_info'};
@@ -1369,6 +1371,7 @@ function vaSitHtml(sit){
     const logo=sit.fim<=vaMaisDias(30);
     return `<div class="ob-acc${logo?' wait':''}">${logo?'Vence em breve':'Ativo'}<small>até ${obBr(sit.fim,true)}${est}</small></div>`;
   }
+  if(sit.removido)return '<div class="ob-acc venc">Inativo<small>removido do Grupo Mentoria</small></div>';
   if(sit.s==='vencido')return `<div class="ob-acc venc">Vencido<small>em ${obBr(sit.fim,true)}${est}</small></div>`;
   if(sit.s==='a_confirmar')return '<div class="ob-acc wait">A confirmar<small>tempo não informado</small></div>';
   return '<span class="va-muted">Sem informação</span>';
