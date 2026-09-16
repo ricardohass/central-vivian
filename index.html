@@ -287,9 +287,55 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-bonus{list-style:none;display:flex;flex-direction:column;gap:6px}
 .ob-bonus li{font-size:13px;display:flex;gap:8px;line-height:1.45}
 .ob-bonus li::before{content:'—';color:var(--gold-dim);flex-shrink:0}
+.ob-acc.wait{color:var(--gold)}
+
+/* VENDAS E ALUNOS */
+.va-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.va-sel{background-color:var(--dark2);border:0.5px solid var(--border);color:var(--text-muted);font-family:'Jost',sans-serif;font-size:13px;height:34px;padding:0 28px 0 10px;border-radius:2px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 14px) 50%,calc(100% - 10px) 50%;background-size:4px 4px;background-repeat:no-repeat;max-width:230px}
+.va-sel option{background:var(--dark3);color:var(--text)}
+.va-sel.on{border-color:var(--gold-dim);color:var(--gold-light)}
+.va-sel:focus{border-color:var(--gold-dim)}
+.va-date{background-image:none;padding:0 10px;color-scheme:dark;cursor:text}
+.ob-list.vl{min-width:1180px}
+.ob-list.al{min-width:1080px}
+.ob-row.vv{grid-template-columns:92px minmax(180px,1.3fr) minmax(180px,1.3fr) 140px 116px minmax(130px,1fr) 96px 130px 44px}
+.ob-row.aa{grid-template-columns:minmax(210px,1.4fr) minmax(180px,1.2fr) minmax(180px,1.2fr) 150px 120px 110px 100px}
+.va-val{font-variant-numeric:tabular-nums lining-nums}
+.va-muted{color:var(--text-muted);font-size:12px}
+.ob-prod.va-muted{color:var(--text-muted)}
+.ob-tag.ok{border-color:rgba(61,168,130,0.45);color:#5FC49E}
+.ob-tag.base{border-color:rgba(154,145,136,0.45);color:var(--text-muted)}
+.ob-tag.warn{border-color:rgba(224,179,95,0.5);color:#E0B35F;cursor:help}
+.va-tags{display:flex;gap:4px;flex-wrap:wrap}
+.va-alert{font-size:12px;color:#E0B35F;background:rgba(224,179,95,0.07);border:0.5px solid rgba(224,179,95,0.3);padding:9px 11px;border-radius:2px;line-height:1.55;margin-bottom:16px}
+.va-alert div+div{margin-top:4px}
+.va-item{display:grid;grid-template-columns:88px 1fr auto;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border);font-size:13px;align-items:start;line-height:1.45}
+.va-item:last-child{border-bottom:none}
+.va-item .va-muted{display:block}
+.va-item-actions{display:flex;gap:6px}
+.ve-acc{border:0.5px solid var(--border);border-radius:2px;padding:12px;margin-bottom:8px}
+.ve-acc-t{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:10px}
+.ve-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ve-grid .field{margin-bottom:0}
+.ve-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin:18px 0 10px}
+.field input[type=date]{color-scheme:dark}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.4}
+
+@media(max-width:1180px){
+  .nav-btn{padding:8px 10px;letter-spacing:1.5px}
+  .user-badge #user-nome{display:none}
+}
+@media(max-width:1020px){
+  .nav,.topbar-right{display:none}
+  .hamburger{display:flex}
+}
 
 /* MOBILE */
 @media(max-width:680px){
+  .ob-list.vl,.ob-list.al{min-width:0}
+  .va-filters .va-sel{flex:1 1 calc(50% - 4px);max-width:none;min-width:0;width:0}
+  .ve-grid{grid-template-columns:1fr}
+  .va-item{grid-template-columns:1fr}
   .nav,.topbar-right{display:none}
   .hamburger{display:flex}
   .topbar{padding:12px 16px}
@@ -426,13 +472,63 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <div class="ob-toolbar">
         <input class="ob-search" id="ob-search" type="search" placeholder="Buscar por nome, e-mail, telefone ou vendedor" oninput="renderOnboarding()">
         <div class="ob-chips" id="ob-chips">
-          <button class="ob-chip active" data-p="30" onclick="setObPeriodo(this)">30 dias</button>
-          <button class="ob-chip" data-p="90" onclick="setObPeriodo(this)">90 dias</button>
+          <button class="ob-chip" data-p="30" onclick="setObPeriodo(this)">30 dias</button>
+          <button class="ob-chip active" data-p="90" onclick="setObPeriodo(this)">90 dias</button>
           <button class="ob-chip" data-p="0" onclick="setObPeriodo(this)">Tudo</button>
         </div>
       </div>
       <div class="ob-scroll"><div class="ob-list" id="ob-list"></div></div>
       <div class="ob-foot"><span id="ob-count"></span><span id="ob-updated"></span></div>
+    </div>
+    <div id="tab-vendas" style="display:none">
+      <div class="sec-header">
+        <div class="sec-title">Vendas</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="icon-btn" href="/nova-venda" target="_blank" style="text-decoration:none"><i class="ti ti-plus" style="font-size:12px"></i>Nova venda</a>
+          <button class="icon-btn" onclick="exportVendas()"><i class="ti ti-download" style="font-size:12px"></i>CSV</button>
+          <button class="icon-btn" onclick="loadVendasAlunos(true)"><i class="ti ti-refresh" style="font-size:12px"></i>Atualizar</button>
+        </div>
+      </div>
+      <div class="ob-kpis" id="vd-kpis"></div>
+      <div class="ob-toolbar">
+        <input class="ob-search" id="vd-q" type="search" placeholder="Buscar por aluno, e-mail, telefone ou produto" oninput="renderVendas()">
+      </div>
+      <div class="va-filters">
+        <select class="va-sel" id="vd-periodo" onchange="renderVendas()">
+          <option value="">Todo o período</option><option value="mes">Este mês</option><option value="mes_ant">Mês passado</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="ano">Este ano</option><option value="custom">Escolher datas</option>
+        </select>
+        <input type="date" class="va-sel va-date" id="vd-de" title="De" style="display:none" onchange="renderVendas()">
+        <input type="date" class="va-sel va-date" id="vd-ate" title="Até" style="display:none" onchange="renderVendas()">
+        <select class="va-sel" id="vd-produto" onchange="renderVendas()"></select>
+        <select class="va-sel" id="vd-closer" onchange="renderVendas()"></select>
+        <select class="va-sel" id="vd-tipo" onchange="renderVendas()"><option value="">Todos os tipos</option><option value="nova">Aluno novo</option><option value="renovacao">Renovação</option><option value="upgrade">Upgrade</option></select>
+        <select class="va-sel" id="vd-status" onchange="renderVendas()"><option value="">Qualquer status</option><option value="ativa">Ativa</option><option value="reembolsada">Reembolsada</option><option value="cancelada">Cancelada</option></select>
+        <select class="va-sel" id="vd-fonte" onchange="renderVendas()"><option value="">Só vendas confirmadas</option><option value="todas">Incluir base antiga</option><option value="base">Só base antiga</option></select>
+        <button class="icon-btn" onclick="limparFiltros('vd')">Limpar</button>
+      </div>
+      <div class="ob-scroll"><div class="ob-list vl" id="vd-list"></div></div>
+      <div class="ob-foot"><span id="vd-count"></span><span id="vd-nota"></span></div>
+    </div>
+    <div id="tab-alunos" style="display:none">
+      <div class="sec-header">
+        <div class="sec-title">Alunos</div>
+        <button class="icon-btn" onclick="loadVendasAlunos(true)"><i class="ti ti-refresh" style="font-size:12px"></i>Atualizar</button>
+      </div>
+      <div class="ob-kpis" id="al-kpis"></div>
+      <div class="ob-toolbar">
+        <input class="ob-search" id="al-q" type="search" placeholder="Buscar por nome, e-mail ou telefone" oninput="renderAlunos()">
+      </div>
+      <div class="va-filters">
+        <select class="va-sel" id="al-sit" onchange="renderAlunos()"><option value="">Qualquer situação</option><option value="ativo">Acesso ativo</option><option value="vence30">Vence em até 30 dias</option><option value="vencido">Acesso vencido</option><option value="a_confirmar">Acesso a confirmar</option><option value="sem_info">Sem informação de acesso</option></select>
+        <select class="va-sel" id="al-tempo" onchange="renderAlunos()"><option value="">Qualquer tempo de acesso</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="outro">Outra duração</option><option value="a_confirmar">Tempo a confirmar</option></select>
+        <select class="va-sel" id="al-produto" onchange="renderAlunos()"></select>
+        <select class="va-sel" id="al-closer" onchange="renderAlunos()"></select>
+        <select class="va-sel" id="al-grupo" onchange="renderAlunos()"><option value="">Grupo Mentoria: todos</option><option value="ativo">No grupo (base antiga)</option><option value="removido">Removido do grupo (base antiga)</option></select>
+        <select class="va-sel" id="al-fonte" onchange="renderAlunos()"><option value="">Todas as fontes</option><option value="conf">Com venda confirmada</option><option value="base">Só na base antiga</option><option value="colab">Colaboradores</option></select>
+        <button class="icon-btn" onclick="limparFiltros('al')">Limpar</button>
+      </div>
+      <div class="ob-scroll"><div class="ob-list al" id="al-list"></div></div>
+      <div class="ob-foot"><span id="al-count"></span><span>Base antiga = planilha Clientes x Produtos, não confirmada. Telefones e acessos dela são estimativa.</span></div>
     </div>
     <div id="tab-produtos" style="display:none"><div class="sec-header"><div class="sec-title">Produtos</div></div><div class="prod-grid" id="prod-grid"></div></div>
     <div id="tab-time" style="display:none"><div class="sec-header"><div class="sec-title">Time Interno</div></div><div class="team-grid" id="team-grid"></div></div>
@@ -455,6 +551,20 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 <!-- Modal venda (onboarding) -->
 <div class="modal-overlay" id="ob-modal" onclick="if(event.target===this)closeObVenda()">
   <div class="modal"><button class="mclose" onclick="closeObVenda()"><i class="ti ti-x"></i></button><div id="ob-modal-body"></div></div>
+</div>
+
+<!-- Modal editar venda -->
+<div class="add-modal" id="ve-modal" onclick="if(event.target===this)closeVendaEdit()">
+  <div class="add-box" style="width:min(520px,95vw)">
+    <button class="mclose-sm" onclick="closeVendaEdit()"><i class="ti ti-x"></i></button>
+    <h3>Completar venda</h3>
+    <div class="add-date-lbl" id="ve-sub"></div>
+    <div id="ve-body"></div>
+    <div class="add-actions">
+      <button class="btn-cancel" onclick="closeVendaEdit()">Cancelar</button>
+      <button class="btn-primary" id="ve-save" onclick="saveVendaEdit()">Salvar</button>
+    </div>
+  </div>
 </div>
 
 <!-- Modal add evento -->
@@ -533,10 +643,11 @@ const FICHA_SEC=[
   {title:'05 — Entrega',fields:[{key:'oQueIncluso',label:'O que está incluso'},{key:'linksGrupos',label:'Links dos grupos'},{key:'politicaCancelamento',label:'Política de cancelamento'}]},
   {title:'06 — Observações',fields:[{key:'observacoes',label:'Observações'}]},
 ];
-const TABS_ADM=['calendario','onboarding','produtos','time','acessos','usuarios'];
-const TABS_EQ=['calendario','onboarding','produtos'];
-const TAB_LABELS={calendario:'Calendário',onboarding:'Onboarding',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
-const TAB_ICONS={calendario:'ti-calendar',onboarding:'ti-user-check',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
+const ALL_TABS=['calendario','onboarding','vendas','alunos','produtos','time','acessos','usuarios'];
+const TABS_ADM=ALL_TABS;
+const TABS_EQ=['calendario','onboarding','vendas','alunos','produtos'];
+const TAB_LABELS={calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
+const TAB_ICONS={calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
 
 let EVENTS=[],PRODUCTS=[],USUARIOS=[];
 let currentUser=null,currentNivel=null;
@@ -608,7 +719,7 @@ async function doLogin(){
 }
 
 function doLogout(){
-  OB_DATA=null;
+  OB_DATA=null;BASE_DATA=null;CLIENTES=null;
   localStorage.removeItem('va_user');
   currentUser=null;currentNivel=null;
   showLogin();
@@ -634,8 +745,7 @@ function buildNav(){
     mb.onclick=()=>{switchTab(tab);toggleDrawer();};
     mnav.appendChild(mb);
   });
-  const allTabs=['calendario','onboarding','produtos','time','acessos','usuarios'];
-  allTabs.forEach(t=>{
+  ALL_TABS.forEach(t=>{
     const el=document.getElementById('tab-'+t);
     if(el)el.style.display=t===tabs[0]?'block':'none';
   });
@@ -644,13 +754,15 @@ function buildNav(){
 function switchTab(tab){
   const tabs=currentNivel==='adm'?TABS_ADM:TABS_EQ;
   if(!tabs.includes(tab))return;
-  ['calendario','onboarding','produtos','time','acessos','usuarios'].forEach(t=>{
+  ALL_TABS.forEach(t=>{
     const el=document.getElementById('tab-'+t);if(el)el.style.display=t===tab?'block':'none';
   });
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{b.classList.toggle('active',tabs[i]===tab);});
   document.querySelectorAll('.mobile-nav-btn').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
   if(tab==='calendario')renderWeek();
   if(tab==='onboarding')loadOnboarding(false);
+  if(tab==='vendas')loadVendasAlunos(false);
+  if(tab==='alunos')loadVendasAlunos(false);
   if(tab==='produtos')renderProducts();
   if(tab==='time')renderTeam();
   if(tab==='acessos')renderAcessos();
@@ -937,6 +1049,8 @@ const OB_PROD={
   workshop:{label:'Workshop Prático',color:'#3DA882',evento:true},
   thunder:{label:'Thunder Legacy',color:'#9B6BE0',evento:true},
   outro:{label:'Outro',color:'#888077'},
+  intimapro:{label:'ÍntimaPro (assinatura)',color:'#D08A5A'},
+  curso:{label:'Cursos e imersões',color:'#6F8F9A'},
 };
 const OB_OPTS={
   chamado:[['','—'],['sim','Sim'],['sem_resposta','Sem resposta'],['nao','Não']],
@@ -946,13 +1060,29 @@ const OB_OPTS={
 const OB_TONE={sim:'ok',feito:'ok',feita:'ok',agendado:'wait',agendada:'wait',sem_resposta:'wait',nao:'no'};
 const OB_FORMAS={pix:'PIX à vista',cartao:'Cartão de crédito',pix_recorrente:'PIX recorrente',boleto_recorrente:'Boleto recorrente',cartao_recorrente:'Cartão recorrente'};
 const OB_TIPOS={nova:'Aluno novo',renovacao:'Renovação',upgrade:'Upgrade'};
-let OB_DATA=null,obFiltro='',obPeriodo=30,obLoading=false,obLastLoad=null;
+let OB_DATA=null,obFiltro='',obPeriodo=90,obLoading=false,obLastLoad=null;
 
 function escH(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function obBr(iso,curto){if(!iso)return '—';const[y,m,d]=String(iso).slice(0,10).split('-');return curto?`${d}/${m}/${y.slice(2)}`:`${d}/${m}/${y}`;}
 function obBrl(n){return Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 function obHoje(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function obTel(t){const d=String(t||'').replace(/\D/g,'');const n=d.startsWith('55')?d.slice(2):d;return n.length>=10?`(${n.slice(0,2)}) ${n.slice(2,-4)}-${n.slice(-4)}`:t||'—';}
+function obAccHtml(a,v){
+  const p=OB_PROD[a.produto]||OB_PROD.outro;
+  if(a.a_confirmar){
+    const orig=v&&v.tempo_acesso_original&&obNorm(v.tempo_acesso_original)!=='a confirmar'?'planilha: '+v.tempo_acesso_original:(p.evento?'data a confirmar':'tempo não informado');
+    return `<div class="ob-acc wait">${p.evento?'Evento':'A confirmar'}<small>${escH(orig)}</small></div>`;
+  }
+  if(p.evento)return `<div class="ob-acc">Evento<small>${obBr(a.inicio)}</small></div>`;
+  const venc=a.fim<obHoje();
+  return `<div class="ob-acc${venc?' venc':''}">${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'}<small>${venc?'venceu':'até'} ${obBr(a.fim,true)}</small></div>`;
+}
+function obTagsVenda(v){
+  return (v.tipo&&v.tipo!=='nova'?`<span class="ob-tag">${OB_TIPOS[v.tipo]}</span>`:'')
+    +(v.status!=='ativa'?`<span class="ob-tag off">${escH(v.status)}</span>`:'')
+    +(v.origem==='planilha_onboarding'?'<span class="ob-tag base" title="Importada da planilha de acompanhamento de onboarding">Planilha</span>':'');
+}
+function obNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
 function obPendente(v){return v.onboarding_status!=='feito'&&v.status==='ativa';}
 
 async function obRpc(fn,args){
@@ -971,6 +1101,7 @@ async function loadOnboarding(force){
   if(!OB_DATA)document.getElementById('ob-list').innerHTML='<div class="ob-empty">Carregando vendas...</div>';
   try{
     OB_DATA=await obRpc('onboarding_listar',{});
+    CLIENTES=null;
     obLastLoad=new Date();
     renderOnboarding();
   }catch(e){
@@ -1026,16 +1157,12 @@ function renderOnboarding(){
   const hoje=obHoje();
   const html=rows.map(v=>{
     const prods=v.acessos.map(a=>{const p=OB_PROD[a.produto]||OB_PROD.outro;return `<div class="ob-prod"><span class="ob-dot" style="background:${p.color}"></span>${escH(a.produto_detalhe||p.label)}</div>`;}).join('');
-    const accs=v.acessos.map(a=>{
-      const p=OB_PROD[a.produto]||OB_PROD.outro;
-      if(p.evento)return `<div class="ob-acc">Evento<small>${obBr(a.inicio)}</small></div>`;
-      return `<div class="ob-acc${a.fim<hoje?' venc':''}">${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'}<small>${a.fim<hoje?'venceu':'até'} ${obBr(a.fim,true)}</small></div>`;
-    }).join('');
+    const accs=v.acessos.map(a=>obAccHtml(a,v)).join('');
     const sel=campo=>`<select class="ob-sel ${OB_TONE[v[campo]]||''}" onchange="saveOb('${v.id}','${campo}',this)">${OB_OPTS[campo].map(([val,l])=>`<option value="${val}"${(v[campo]||'')===val?' selected':''}>${l}</option>`).join('')}</select>`;
-    const tags=(v.tipo!=='nova'?`<span class="ob-tag">${OB_TIPOS[v.tipo]}</span>`:'')+(v.status!=='ativa'?`<span class="ob-tag off">${escH(v.status)}</span>`:'');
+    const tags=obTagsVenda(v);
     const tel=(v.aluno_telefone||'').replace(/\D/g,'');
     return `<div class="ob-row${!v.chamado&&v.status==='ativa'?' nova':''}">
-      <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(v.data_venda)}</span><span class="ob-vend">${escH(v.vendedor)}</span></div>
+      <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(v.data_venda)}</span><span class="ob-vend">${escH(v.vendedor||'')}</span></div>
       <div class="ob-cell" data-l="Nome"><button class="ob-name" onclick="openObVenda('${v.id}')">${escH(v.aluno_nome)}</button>${tags}</div>
       <div class="ob-cell" data-l="Contato">
         <div class="ob-contact"><a href="https://wa.me/${tel}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>${escH(obTel(v.aluno_telefone))}</a></div>
@@ -1100,12 +1227,13 @@ function openObVenda(id){
   const v=OB_DATA.find(x=>x.id===id);if(!v)return;
   const f=(l,val,full)=>`<div class="ficha-field"${full?' style="grid-column:1/-1"':''}><div class="ficha-label">${l}</div><div class="ficha-value${val?'':' empty'}">${val?escH(val):'—'}</div></div>`;
   const sec=(t,body,full)=>`<div class="ficha-section"><div class="ficha-section-title">${t}</div><div class="ficha-grid${full?' full':''}">${body}</div></div>`;
-  const doc=v.aluno_documento?(v.aluno_documento.length===11?v.aluno_documento.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4'):v.aluno_documento.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')):'Estrangeiro, sem CPF';
+  const doc=v.aluno_documento?(v.aluno_documento.length===11?v.aluno_documento.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4'):v.aluno_documento.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')):(v.origem==='formulario'?'Estrangeiro, sem CPF':'');
   const acessos=v.acessos.map(a=>{
     const p=OB_PROD[a.produto]||OB_PROD.outro;const nome=a.produto_detalhe||p.label;
+    if(a.a_confirmar)return f(nome,p.evento?'Evento · data a confirmar':`Tempo de acesso a confirmar · desde ${obBr(a.inicio)}`);
     return f(nome,p.evento?`Evento em ${obBr(a.inicio)}`:`${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'} · ${obBr(a.inicio)} a ${obBr(a.fim)}`);
   }).join('');
-  let pag=`${obBrl(v.valor_total)} · ${OB_FORMAS[v.forma_pagamento]||v.forma_pagamento}`;
+  let pag=[v.valor_total!=null?obBrl(v.valor_total):'Valor não informado',v.forma_pagamento?OB_FORMAS[v.forma_pagamento]||v.forma_pagamento:''].filter(Boolean).join(' · ');
   if(v.cartao_parcelas)pag+=v.cartao_parcelas===1?' à vista':` em ${v.cartao_parcelas}x`;
   let rec='';
   if(v.parcelas_qtd){
@@ -1117,7 +1245,8 @@ function openObVenda(id){
   document.getElementById('ob-modal-body').innerHTML=`
     <div class="ficha-badge" style="background:rgba(201,168,76,0.14);color:#C9A84C"><div class="ficha-badge-dot" style="background:#C9A84C"></div>${OB_TIPOS[v.tipo]||v.tipo}</div>
     <div class="ficha-name">${escH(v.aluno_nome)}</div>
-    <div class="ficha-tagline-el">Vendido por ${escH(v.vendedor)} em ${obBr(v.data_venda)} · registrado ${quando}${edit?'<br>'+edit:''}</div>
+    <div class="ficha-tagline-el">${v.vendedor?'Vendido por '+escH(v.vendedor):'Closer não informado'} em ${obBr(v.data_venda)} · ${v.origem==='planilha_onboarding'?'importada da planilha de onboarding':'registrado '+quando}${edit?'<br>'+edit:''}${v.updated_at?'<br>Venda editada por '+escH(v.updated_by||'—')+' em '+new Date(v.updated_at).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}</div>
+    <div class="edit-bar"><span>${v.origem==='planilha_onboarding'?'Planilha original: '+escH(v.produto_original||'')+(v.tempo_acesso_original?' · '+escH(v.tempo_acesso_original):''):'Ficha da venda'}</span><div class="edit-bar-btns"><button class="btn-sm" onclick="openVendaEdit('${v.id}')"><i class="ti ti-pencil" style="font-size:11px;vertical-align:-1px;margin-right:4px"></i>Completar / corrigir</button></div></div>
     ${sec('01 — Aluno',f('WhatsApp',obTel(v.aluno_telefone))+f('E-mail',v.aluno_email)+f('CPF / CNPJ',doc)+f('Instagram',v.aluno_instagram)+f('Profissão',v.aluno_especialidade)+f('Cidade',v.aluno_cidade))}
     ${sec('02 — Produtos e acesso',acessos)}
     ${sec('03 — Pagamento',f('Valor e forma',pag)+f('Plataforma',v.plataforma)+(rec?f('Parcelamento',rec,true):'')+(v.pagamento_detalhes?f('Condições combinadas',v.pagamento_detalhes,true):''))}
@@ -1126,6 +1255,380 @@ function openObVenda(id){
   document.getElementById('ob-modal').classList.add('open');
 }
 function closeObVenda(){document.getElementById('ob-modal').classList.remove('open');}
+
+// ── VENDAS E ALUNOS ──
+// Vendas confirmadas: tabela vendas (formulário + planilha de onboarding importada).
+// Base antiga: planilha Clientes x Produtos, não confiável. Nunca vira venda; aparece marcada.
+// Um aluno junta vendas pelo e-mail, ou pelo telefone quando o primeiro nome também bate
+// (há alunos diferentes com o mesmo telefone de quem gerencia o acesso).
+const VENDEDORES=['JP','Arthur','Carol','Luan','Alicia','Ricardo','Mac','Vivian'];
+const DURACOES=[1,2,3,4,6,9,12,18,24,36];
+let BASE_DATA=null,CLIENTES=null,vaLoading=false,vdIncompletas=false,vdUltimas=[];
+
+const $v=id=>document.getElementById(id).value;
+function vaTelKey(t){let d=String(t||'').replace(/\D/g,'');if(d.startsWith('55')&&d.length>=12)d=d.slice(2);return d.length>=10?d.slice(0,2)+d.slice(-8):'';}
+function vaPrimeiroNome(s){return obNorm(s).split(/\s+/).filter(w=>!['dr','dra','dr.','dra.'].includes(w))[0]||'';}
+function vaDias(a,b){return Math.abs(Date.parse(a)-Date.parse(b))/864e5;}
+function vaMaisDias(n){const d=new Date();d.setDate(d.getDate()+n);return dStr(d);}
+function vaTab(t){const el=document.getElementById('tab-'+t);return el&&el.style.display!=='none';}
+
+async function loadVendasAlunos(force){
+  if(vaLoading)return;
+  const render=()=>{vaPreencherSelects();if(vaTab('vendas'))renderVendas();if(vaTab('alunos'))renderAlunos();};
+  if(OB_DATA&&BASE_DATA&&!force){render();return;}
+  vaLoading=true;
+  ['vd-list','al-list'].forEach(id=>{if(!OB_DATA||!BASE_DATA)document.getElementById(id).innerHTML='<div class="ob-empty">Carregando...</div>';});
+  try{
+    const[v,b]=await Promise.all([obRpc('onboarding_listar',{}),obRpc('base_antiga_listar',{})]);
+    OB_DATA=v;BASE_DATA=b;CLIENTES=null;obLastLoad=new Date();
+    render();
+  }catch(e){
+    console.error(e);
+    const msg='<div class="ob-empty">Não foi possível carregar.<br>'+escH(e.message||'')+'</div>';
+    ['vd-list','al-list'].forEach(id=>document.getElementById(id).innerHTML=msg);
+  }finally{vaLoading=false;}
+}
+
+function vaPreencherSelects(){
+  const closers=[...new Set([...VENDEDORES,...OB_DATA.map(v=>v.vendedor).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const fill=(id,first,opts)=>{
+    const el=document.getElementById(id),cur=el.value;
+    el.innerHTML=`<option value="">${first}</option>`+opts.map(([v,l])=>`<option value="${escH(v)}">${escH(l)}</option>`).join('');
+    if([...el.options].some(o=>o.value===cur))el.value=cur;
+  };
+  const prods=Object.entries(OB_PROD).map(([k,p])=>[k,p.label]);
+  const cl=[['__sem','Sem closer informado'],...closers.map(c=>[c,c])];
+  fill('vd-produto','Todos os produtos',prods);fill('al-produto','Todos os produtos',prods);
+  fill('vd-closer','Todos os closers',cl);fill('al-closer','Todos os closers',cl);
+}
+
+function limparFiltros(pre){
+  document.querySelectorAll(`#tab-${pre==='vd'?'vendas':'alunos'} .va-sel, #${pre}-q`).forEach(el=>el.value='');
+  vdIncompletas=false;
+  pre==='vd'?renderVendas():renderAlunos();
+}
+function vaMarcarFiltros(pre){document.querySelectorAll(`#tab-${pre==='vd'?'vendas':'alunos'} .va-sel`).forEach(el=>el.classList.toggle('on',!!el.value));}
+
+function getClientes(){
+  if(CLIENTES)return CLIENTES;
+  const cl=[];
+  [...OB_DATA].sort((a,b)=>a.data_venda.localeCompare(b.data_venda)).forEach(v=>{
+    const em=(v.aluno_email||'').toLowerCase(),tk=vaTelKey(v.aluno_telefone),pn=vaPrimeiroNome(v.aluno_nome);
+    let c=cl.find(c=>(em&&c.emails.has(em))||(tk&&c.tels.has(tk)&&c.pn===pn));
+    if(!c){c={vendas:[],base:null,emails:new Set(),tels:new Set(),pn};cl.push(c);}
+    c.vendas.push(v);if(em)c.emails.add(em);if(tk)c.tels.add(tk);
+    c.nome=v.aluno_nome;c.email=v.aluno_email;c.telefone=v.aluno_telefone||c.telefone;
+  });
+  (BASE_DATA||[]).forEach(b=>{
+    const tk=vaTelKey(b.telefone),pn=vaPrimeiroNome(b.nome);
+    const cand=tk?cl.filter(c=>c.vendas.length&&!c.base&&c.tels.has(tk)):[];
+    const c=cand.length===1?cand[0]:cand.find(c=>c.pn===pn);
+    if(c){c.base=b;return;}
+    cl.push({vendas:[],base:b,emails:new Set(),tels:new Set(tk?[tk]:[]),pn,nome:b.nome||'Não identificado',email:'',telefone:b.telefone});
+  });
+  const hoje=obHoje();
+  cl.forEach((c,i)=>{
+    c.id='c'+i;
+    c.colab=!!(c.base&&c.base.colaborador);
+    const compras=(c.base?c.base.compras:[]).filter(x=>x.tipo==='produto');
+    c.prodConf=new Set();c.vendas.forEach(v=>v.acessos.forEach(a=>c.prodConf.add(a.produto)));
+    c.prodBase=new Set();compras.forEach(x=>x.produtos.forEach(k=>{if(!c.prodConf.has(k))c.prodBase.add(k);}));
+    c.closers=[...new Set(c.vendas.map(v=>v.vendedor).filter(Boolean))];
+    c.duracoes=new Set();
+    c.vendas.forEach(v=>v.acessos.forEach(a=>{if(a.a_confirmar&&!(OB_PROD[a.produto]||{}).evento)c.duracoes.add('a_confirmar');else if(a.duracao_meses)c.duracoes.add(a.duracao_meses);}));
+    compras.forEach(x=>{if(x.meses)c.duracoes.add(x.meses);});
+    c.ultima=[...c.vendas.map(v=>v.data_venda),...compras.map(x=>x.data).filter(Boolean)].sort().pop()||'';
+    // Situação: venda confirmada manda; a base só entra como estimativa.
+    let fimConf='',aConf=false,fimEst='';
+    c.vendas.filter(v=>v.status==='ativa').forEach(v=>v.acessos.forEach(a=>{
+      if((OB_PROD[a.produto]||{}).evento)return;
+      if(a.a_confirmar){aConf=true;return;}
+      if(a.fim&&a.fim>fimConf)fimConf=a.fim;
+    }));
+    compras.forEach(x=>{if(x.fim_estimado&&x.fim_estimado>fimEst)fimEst=x.fim_estimado;});
+    if(fimConf>=hoje&&fimConf)c.sit={s:'ativo',fim:fimConf};
+    else if(aConf)c.sit={s:'a_confirmar'};
+    else if(fimEst>=hoje&&fimEst>fimConf)c.sit={s:'ativo',fim:fimEst,est:true};
+    else if(fimConf)c.sit={s:'vencido',fim:fimConf};
+    else if(fimEst)c.sit={s:'vencido',fim:fimEst,est:true};
+    else c.sit={s:'sem_info'};
+    // telefone reconstruído da base não importa quando já há telefone confirmado
+    c.alertas=vaAlertasBase(c).filter(a=>!(c.vendas.length&&/^Telefone/.test(a)));
+    c.busca=obNorm([c.nome,c.email,c.base&&c.base.nome,...c.vendas.map(v=>v.aluno_nome+' '+v.aluno_email)].join(' '));
+    c.telBusca=[c.telefone,c.base&&c.base.telefone,...c.vendas.map(v=>v.aluno_telefone)].join(' ').replace(/[^\d ]/g,'');
+  });
+  CLIENTES=cl;
+  return cl;
+}
+function vaAlertasBase(c){return c.base&&c.base.alerta?c.base.alerta.split(' · '):[];}
+
+function vaSitHtml(sit){
+  const est=sit.est?' (estimado)':'';
+  if(sit.s==='ativo'){
+    const logo=sit.fim<=vaMaisDias(30);
+    return `<div class="ob-acc${logo?' wait':''}">${logo?'Vence em breve':'Ativo'}<small>até ${obBr(sit.fim,true)}${est}</small></div>`;
+  }
+  if(sit.s==='vencido')return `<div class="ob-acc venc">Vencido<small>em ${obBr(sit.fim,true)}${est}</small></div>`;
+  if(sit.s==='a_confirmar')return '<div class="ob-acc wait">A confirmar<small>tempo não informado</small></div>';
+  return '<span class="va-muted">Sem informação</span>';
+}
+function vaProdHtml(k,muted,nome){
+  const p=OB_PROD[k]||OB_PROD.outro;
+  return `<div class="ob-prod${muted?' va-muted':''}"${muted?' title="Só na base antiga (não confirmado)"':''}><span class="ob-dot" style="background:${p.color}${muted?';opacity:.55':''}"></span>${escH(nome||p.label)}</div>`;
+}
+function vaContato(tel,email,aviso){
+  const t=String(tel||'').replace(/\D/g,'');
+  return (t?`<div class="ob-contact"><a href="https://wa.me/${t}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>${escH(obTel(tel))}</a>${aviso?`<i class="ti ti-alert-triangle" style="color:#E0B35F;font-size:13px" title="${escH(aviso)}"></i>`:''}</div>`:'')
+    +(email?`<div class="ob-contact"><span>${escH(email)}</span><button class="ob-mini" title="Copiar e-mail" onclick="copyT(this,'${escQ(email)}')"><i class="ti ti-copy"></i></button></div>`:'');
+}
+
+// ── Vendas ──
+function vdIntervalo(){
+  const p=$v('vd-periodo'),h=new Date();
+  document.getElementById('vd-de').style.display=document.getElementById('vd-ate').style.display=p==='custom'?'':'none';
+  if(p==='mes')return[dStr(new Date(h.getFullYear(),h.getMonth(),1)),''];
+  if(p==='mes_ant')return[dStr(new Date(h.getFullYear(),h.getMonth()-1,1)),dStr(new Date(h.getFullYear(),h.getMonth(),0))];
+  if(p==='30'||p==='90')return[vaMaisDias(-Number(p)),''];
+  if(p==='ano')return[h.getFullYear()+'-01-01',''];
+  if(p==='custom')return[$v('vd-de'),$v('vd-ate')];
+  return['',''];
+}
+function vdLinhas(){
+  const fonte=$v('vd-fonte');let rows=[];
+  if(fonte!=='base')rows=OB_DATA.map(v=>({k:'v',v,id:v.id,data:v.data_venda,nome:v.aluno_nome,tel:v.aluno_telefone,email:v.aluno_email,
+    produtos:v.acessos.map(a=>a.produto),valor:v.valor_total==null?null:Number(v.valor_total),vendedor:v.vendedor||'',tipo:v.tipo,status:v.status,
+    busca:obNorm([v.aluno_nome,v.aluno_email,v.produto_original,...v.acessos.map(a=>a.produto_detalhe||(OB_PROD[a.produto]||{}).label)].join(' '))}));
+  if(fonte){
+    getClientes().forEach(c=>{
+      if(!c.base||c.colab)return;
+      c.base.compras.forEach((x,i)=>{
+        if(x.tipo!=='produto'||!x.data)return;
+        // mesma compra já registrada como venda confirmada
+        if(c.vendas.some(v=>vaDias(v.data_venda,x.data)<=5&&v.acessos.some(a=>x.produtos.includes(a.produto))))return;
+        rows.push({k:'b',c,x,id:c.base.id+'-'+i,data:x.data,nome:c.nome,tel:c.telefone,email:c.email,produtos:x.produtos,valor:null,vendedor:'',tipo:null,status:null,
+          busca:obNorm([c.nome,c.email,x.nome].join(' '))});
+      });
+    });
+  }
+  return rows.sort((a,b)=>b.data.localeCompare(a.data));
+}
+function renderVendas(){
+  if(!OB_DATA||!BASE_DATA)return;
+  vaMarcarFiltros('vd');
+  const[de,ate]=vdIntervalo();
+  const q=obNorm($v('vd-q')),qd=q.replace(/\D/g,'');
+  const prod=$v('vd-produto'),closer=$v('vd-closer'),tipo=$v('vd-tipo'),status=$v('vd-status');
+  let rows=vdLinhas().filter(r=>
+    (!de||r.data>=de)&&(!ate||r.data<=ate)&&
+    (!prod||r.produtos.includes(prod))&&
+    (!closer||(closer==='__sem'?!r.vendedor:r.vendedor===closer))&&
+    (!tipo||r.tipo===tipo)&&(!status||r.status===status)&&
+    (!q||r.busca.includes(q)||(qd.length>=4&&String(r.tel||'').includes(qd))));
+  const conf=rows.filter(r=>r.k==='v');
+  const validas=conf.filter(r=>r.status==='ativa'&&r.valor!=null);
+  const soma=validas.reduce((s,r)=>s+r.valor,0);
+  const incompletas=conf.filter(r=>r.valor==null||!r.vendedor);
+  const kpi=(n,l,extra)=>`<div class="ob-kpi" style="cursor:default"${extra||''}><div class="ob-kpi-num">${n}</div><div class="ob-kpi-lbl">${l}</div></div>`;
+  document.getElementById('vd-kpis').innerHTML=
+    kpi(conf.length,'Vendas confirmadas')+
+    kpi(obBrl(soma).replace(/,\d{2}$/,''),'Valor vendido')+
+    kpi(validas.length?obBrl(soma/validas.length).replace(/,\d{2}$/,''):'—','Ticket médio')+
+    `<button class="ob-kpi${vdIncompletas?' active':''}" onclick="vdIncompletas=!vdIncompletas;renderVendas()"><div class="ob-kpi-num">${incompletas.length}</div><div class="ob-kpi-lbl">Sem valor ou closer</div></button>`;
+  if(vdIncompletas)rows=incompletas;
+  vdUltimas=rows;
+
+  const head='<div class="ob-row ob-head vv"><div class="ob-cell">Data</div><div class="ob-cell">Aluno</div><div class="ob-cell">Produto</div><div class="ob-cell">Tempo de acesso</div><div class="ob-cell">Valor</div><div class="ob-cell">Pagamento</div><div class="ob-cell">Closer</div><div class="ob-cell">Tipo / fonte</div><div class="ob-cell"></div></div>';
+  const html=rows.slice(0,600).map(r=>{
+    if(r.k==='b'){
+      const x=r.x;
+      return `<div class="ob-row vv">
+        <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(r.data)}</span></div>
+        <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${r.c.id}')">${escH(r.nome)}</button></div>
+        <div class="ob-cell" data-l="Produto">${vaProdHtml(x.produtos[0],false,x.nome+(x.qtd>1?' (×'+x.qtd+')':''))}</div>
+        <div class="ob-cell" data-l="Tempo de acesso">${x.meses?`<div class="ob-acc">${x.meses} meses<small>até ~${obBr(x.fim_estimado,true)}</small></div>`:'<span class="va-muted">—</span>'}</div>
+        <div class="ob-cell" data-l="Valor"><span class="va-muted">—</span></div>
+        <div class="ob-cell" data-l="Pagamento"><span class="va-muted">—</span></div>
+        <div class="ob-cell" data-l="Closer"><span class="va-muted">—</span></div>
+        <div class="ob-cell" data-l="Fonte"><span class="ob-tag base" title="Planilha Clientes x Produtos: não confirmado">Base antiga</span></div>
+        <div class="ob-cell"></div>
+      </div>`;
+    }
+    const v=r.v;
+    let pag=v.forma_pagamento?escH(OB_FORMAS[v.forma_pagamento]||v.forma_pagamento):'<span class="va-muted">—</span>';
+    if(v.cartao_parcelas>1)pag+=`<span class="va-muted">${v.cartao_parcelas}x</span>`;
+    if(v.parcelas_qtd)pag+=`<span class="va-muted">${v.entrada_valor?'entrada + ':''}${v.parcelas_qtd}x ${obBrl(v.parcela_valor)}</span>`;
+    return `<div class="ob-row vv">
+      <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(v.data_venda)}</span></div>
+      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openObVenda('${v.id}')">${escH(v.aluno_nome)}</button></div>
+      <div class="ob-cell" data-l="Produto">${v.acessos.map(a=>vaProdHtml(a.produto,false,a.produto_detalhe)).join('')}</div>
+      <div class="ob-cell" data-l="Tempo de acesso">${v.acessos.map(a=>obAccHtml(a,v)).join('')}</div>
+      <div class="ob-cell" data-l="Valor">${r.valor!=null?`<span class="va-val">${obBrl(r.valor)}</span>`:'<span class="va-muted">não informado</span>'}</div>
+      <div class="ob-cell" data-l="Pagamento">${pag}</div>
+      <div class="ob-cell" data-l="Closer">${v.vendedor?escH(v.vendedor):'<span class="va-muted">—</span>'}</div>
+      <div class="ob-cell" data-l="Tipo / fonte"><div class="va-tags">${v.tipo==='nova'?'<span class="ob-tag">Aluno novo</span>':''}${obTagsVenda(v)}</div></div>
+      <div class="ob-cell"><button class="ob-mini" title="Completar ou corrigir" onclick="openVendaEdit('${v.id}')"><i class="ti ti-pencil"></i></button></div>
+    </div>`;
+  }).join('');
+  document.getElementById('vd-list').innerHTML=head+(html||'<div class="ob-empty">Nenhuma venda com esses filtros.</div>');
+  const nb=rows.filter(r=>r.k==='b').length;
+  document.getElementById('vd-count').textContent=`${rows.length} ${rows.length===1?'linha':'linhas'}`+(rows.length>600?' (mostrando 600; use os filtros ou o CSV)':'');
+  document.getElementById('vd-nota').textContent=nb?`${nb} da base antiga: sem valor nem closer, não entram nos totais`:'Totais sem vendas reembolsadas ou canceladas';
+}
+
+function exportVendas(){
+  if(!vdUltimas.length){alert('Nada para exportar com esses filtros.');return;}
+  const cel=s=>{s=String(s??'');return /[;"\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+  const lin=[['Data','Aluno','E-mail','Telefone','Produtos','Tempo de acesso','Valor','Pagamento','Closer','Tipo','Status','Fonte']];
+  vdUltimas.forEach(r=>{
+    if(r.k==='b'){lin.push([obBr(r.data),r.nome,r.email,r.tel,r.x.nome,r.x.meses?r.x.meses+' meses (estimado)':'','','','','','','Base antiga (não confirmada)']);return;}
+    const v=r.v;
+    lin.push([obBr(v.data_venda),v.aluno_nome,v.aluno_email,v.aluno_telefone,
+      v.acessos.map(a=>a.produto_detalhe||(OB_PROD[a.produto]||OB_PROD.outro).label).join(' + '),
+      v.acessos.map(a=>a.a_confirmar?'a confirmar':(OB_PROD[a.produto]||{}).evento?'evento '+obBr(a.inicio):a.duracao_meses+' meses até '+obBr(a.fim)).join(' + '),
+      v.valor_total!=null?String(v.valor_total).replace('.',','):'',OB_FORMAS[v.forma_pagamento]||'',v.vendedor||'',OB_TIPOS[v.tipo]||'',v.status,
+      v.origem==='planilha_onboarding'?'Planilha de onboarding':'Formulário']);
+  });
+  const blob=new Blob(['﻿'+lin.map(l=>l.map(cel).join(';')).join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vendas-vivian-${obHoje()}.csv`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+// ── Alunos ──
+function renderAlunos(){
+  if(!OB_DATA||!BASE_DATA)return;
+  vaMarcarFiltros('al');
+  const q=obNorm($v('al-q')),qd=q.replace(/\D/g,'');
+  const sit=$v('al-sit'),tempo=$v('al-tempo'),prod=$v('al-produto'),closer=$v('al-closer'),grupo=$v('al-grupo'),fonte=$v('al-fonte');
+  const em30=vaMaisDias(30);
+  const pre=getClientes().filter(c=>
+    (fonte==='colab'?c.colab:!c.colab)&&
+    (fonte!=='conf'||c.vendas.length)&&(fonte!=='base'||!c.vendas.length)&&
+    (!prod||c.prodConf.has(prod)||c.prodBase.has(prod))&&
+    (!tempo||(tempo==='outro'?[...c.duracoes].some(d=>typeof d==='number'&&d!==6&&d!==12):c.duracoes.has(tempo==='a_confirmar'?tempo:Number(tempo))))&&
+    (!closer||(closer==='__sem'?!c.closers.length:c.closers.includes(closer)))&&
+    (!grupo||(c.base&&c.base.grupo_mentoria===grupo))&&
+    (!q||c.busca.includes(q)||(qd.length>=4&&c.telBusca.includes(qd))));
+  const bate={
+    ativo:c=>c.sit.s==='ativo',
+    vence30:c=>c.sit.s==='ativo'&&c.sit.fim<=em30,
+    vencido:c=>c.sit.s==='vencido',
+    a_confirmar:c=>c.sit.s==='a_confirmar',
+    sem_info:c=>c.sit.s==='sem_info',
+  };
+  const kpi=(key,n,l)=>`<button class="ob-kpi${sit===key?' active':''}" onclick="document.getElementById('al-sit').value='${sit===key?'':key}';renderAlunos()"><div class="ob-kpi-num">${n}</div><div class="ob-kpi-lbl">${l}</div></button>`;
+  document.getElementById('al-kpis').innerHTML=
+    kpi('',pre.length,'Alunos')+
+    kpi('ativo',pre.filter(bate.ativo).length,'Acesso ativo')+
+    kpi('vence30',pre.filter(bate.vence30).length,'Vencem em 30 dias')+
+    kpi('a_confirmar',pre.filter(bate.a_confirmar).length,'Acesso a confirmar');
+  const rows=(sit?pre.filter(bate[sit]):pre).sort((a,b)=>b.ultima.localeCompare(a.ultima)||a.nome.localeCompare(b.nome,'pt-BR'));
+
+  const head='<div class="ob-row ob-head aa"><div class="ob-cell">Aluno</div><div class="ob-cell">Contato</div><div class="ob-cell">Produtos</div><div class="ob-cell">Acesso</div><div class="ob-cell">Grupo Mentoria</div><div class="ob-cell">Closer</div><div class="ob-cell">Última compra</div></div>';
+  const html=rows.map(c=>{
+    const b=c.base;
+    const tags=(c.vendas.length?'<span class="ob-tag ok">Confirmado</span>':'<span class="ob-tag base" title="Só aparece na planilha Clientes x Produtos">Base antiga</span>')
+      +(c.colab?'<span class="ob-tag">Colaborador</span>':'')
+      +(c.alertas.length?`<span class="ob-tag warn" title="${escH(c.alertas.join('\n'))}">Conferir</span>`:'');
+    const avisoTel=!c.vendas.length?c.alertas.find(x=>/^Telefone/.test(x)):'';
+    const prods=[...c.prodConf].map(k=>vaProdHtml(k)).join('')+[...c.prodBase].map(k=>vaProdHtml(k,true)).join('');
+    return `<div class="ob-row aa">
+      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${c.id}')">${escH(c.nome)}</button><div class="va-tags">${tags}</div></div>
+      <div class="ob-cell" data-l="Contato">${vaContato(c.telefone,c.email,avisoTel)||'<span class="va-muted">—</span>'}</div>
+      <div class="ob-cell" data-l="Produtos">${prods||'<span class="va-muted">Nenhum produto listado</span>'}</div>
+      <div class="ob-cell" data-l="Acesso">${vaSitHtml(c.sit)}</div>
+      <div class="ob-cell" data-l="Grupo Mentoria">${b?(b.grupo_mentoria==='ativo'?'No grupo':'<span class="va-muted">Removido</span>'):'<span class="va-muted">—</span>'}</div>
+      <div class="ob-cell" data-l="Closer">${c.closers.length?escH(c.closers.join(', ')):'<span class="va-muted">—</span>'}</div>
+      <div class="ob-cell" data-l="Última compra">${c.ultima?obBr(c.ultima):'<span class="va-muted">—</span>'}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('al-list').innerHTML=head+(html||'<div class="ob-empty">Nenhum aluno com esses filtros.</div>');
+  document.getElementById('al-count').textContent=`${rows.length} ${rows.length===1?'aluno':'alunos'}`;
+}
+
+function openAluno(id){
+  const c=getClientes().find(x=>x.id===id);if(!c)return;
+  const b=c.base;
+  const sec=(t,body)=>`<div class="ficha-section"><div class="ficha-section-title">${t}</div>${body}</div>`;
+  const vendas=c.vendas.slice().sort((a,z)=>z.data_venda.localeCompare(a.data_venda)).map(v=>`<div class="va-item">
+      <div>${obBr(v.data_venda)}</div>
+      <div>${v.acessos.map(a=>{const p=OB_PROD[a.produto]||OB_PROD.outro;const acc=a.a_confirmar?'tempo a confirmar':p.evento?'evento em '+obBr(a.inicio):`${a.duracao_meses} meses, até ${obBr(a.fim)}`;return escH(a.produto_detalhe||p.label)+` <span class="va-muted" style="display:inline">· ${acc}</span>`;}).join('<br>')}
+        <span class="va-muted">${[v.valor_total!=null?obBrl(v.valor_total):'valor não informado',v.vendedor?'closer '+v.vendedor:'closer não informado',v.status!=='ativa'?v.status:''].filter(Boolean).map(escH).join(' · ')}</span></div>
+      <div class="va-item-actions"><button class="btn-sm" onclick="openObVenda('${v.id}')">Ver</button><button class="btn-sm" onclick="openVendaEdit('${v.id}')">Editar</button></div>
+    </div>`).join('');
+  const compras=b?b.compras.map(x=>`<div class="va-item">
+      <div>${x.data?obBr(x.data):'—'}</div>
+      <div>${escH(x.nome)}${x.qtd>1?` <span class="va-muted" style="display:inline">×${x.qtd}</span>`:''}${x.fim_estimado?`<span class="va-muted">acesso estimado até ${obBr(x.fim_estimado)}</span>`:''}</div>
+      <div></div>
+    </div>`).join(''):'';
+  const nomeBase=b&&b.nome&&obNorm(b.nome)!==obNorm(c.nome)?`Nome na base antiga: ${escH(b.nome)}<br>`:'';
+  document.getElementById('ob-modal-body').innerHTML=`
+    <div class="ficha-badge" style="background:${c.vendas.length?'rgba(61,168,130,0.12);color:#5FC49E':'rgba(154,145,136,0.14);color:#9A9188'}"><div class="ficha-badge-dot" style="background:currentColor"></div>${c.vendas.length?'Venda confirmada':'Base antiga · não confirmado'}</div>
+    <div class="ficha-name">${escH(c.nome)}</div>
+    <div class="ficha-tagline-el">${vaContato(c.telefone,c.email)}</div>
+    ${c.alertas.length?`<div class="va-alert">${c.alertas.map(a=>`<div><i class="ti ti-alert-triangle" style="vertical-align:-2px;margin-right:6px"></i>${escH(a)}</div>`).join('')}</div>`:''}
+    ${sec('Acesso',`<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">${vaSitHtml(c.sit)}${c.sit.est?'<span class="va-muted" style="max-width:360px;line-height:1.5">Estimado pela data de compra na base antiga e pela duração escrita no nome do produto. Confirme antes de informar o aluno.</span>':''}</div>`)}
+    ${c.vendas.length?sec(`Vendas confirmadas (${c.vendas.length})`,vendas):''}
+    ${b?sec('Base antiga · não confirmado',`<div class="va-muted" style="line-height:1.7;margin-bottom:6px">${nomeBase}Grupo Mentoria: ${b.grupo_mentoria==='ativo'?'ativo':'removido (assinatura vencida)'} · telefone na planilha: ${escH(b.telefone_original)} · ${escH(b.localizado_via||'')}</div>${compras||'<div class="va-muted">Nenhuma compra listada.</div>'}`):''}`;
+  document.getElementById('ob-modal').classList.add('open');
+}
+
+// ── Completar / corrigir venda ──
+let veId=null;
+function openVendaEdit(id){
+  const v=OB_DATA.find(x=>x.id===id);if(!v)return;
+  veId=id;
+  const opts=(arr,cur)=>arr.map(([val,l])=>`<option value="${escH(val)}"${String(cur??'')===String(val)?' selected':''}>${escH(l)}</option>`).join('');
+  const vend=[...new Set([...VENDEDORES,...(v.vendedor?[v.vendedor]:[])])];
+  const acc=v.acessos.map(a=>{
+    const p=OB_PROD[a.produto]||OB_PROD.outro;
+    const titulo=`<div class="ve-acc-t"><span class="ob-dot" style="background:${p.color}"></span>${escH(a.produto_detalhe||p.label)}</div>`;
+    if(p.evento)return `<div class="ve-acc" data-id="${a.id}" data-ev="1">${titulo}<div class="ve-grid"><div class="field"><label>Data do evento</label><input type="date" data-k="inicio" value="${a.a_confirmar?'':a.inicio}"></div></div><div class="hint">Em branco = data a confirmar.</div></div>`;
+    const dur=[['','A confirmar'],...DURACOES.map(m=>[m,m===1?'1 mês':m+' meses'])];
+    return `<div class="ve-acc" data-id="${a.id}">${titulo}<div class="ve-grid"><div class="field"><label>Início do acesso</label><input type="date" data-k="inicio" value="${a.inicio}"></div><div class="field"><label>Tempo de acesso</label><select data-k="meses">${opts(dur,a.a_confirmar?'':a.duracao_meses)}</select></div></div></div>`;
+  }).join('');
+  document.getElementById('ve-sub').textContent=v.aluno_nome+(v.produto_original?` · planilha: ${v.produto_original}${v.tempo_acesso_original?' / '+v.tempo_acesso_original:''}`:'');
+  document.getElementById('ve-body').innerHTML=`
+    <div class="ve-grid">
+      <div class="field"><label>Closer</label><select id="ve-vendedor">${opts([['','Não informado'],...vend.map(n=>[n,n])],v.vendedor||'')}</select></div>
+      <div class="field"><label>Data da venda</label><input type="date" id="ve-data" value="${v.data_venda}"></div>
+      <div class="field"><label>Valor negociado</label><input type="text" id="ve-valor" inputmode="numeric" placeholder="R$ 0,00" value="${v.valor_total!=null?obBrl(v.valor_total):''}"></div>
+      <div class="field"><label>Forma de pagamento</label><select id="ve-forma">${opts([['','Não informada'],...Object.entries(OB_FORMAS)],v.forma_pagamento||'')}</select></div>
+      <div class="field"><label>Tipo</label><select id="ve-tipo">${opts(Object.entries(OB_TIPOS),v.tipo)}</select></div>
+      <div class="field"><label>Status</label><select id="ve-status">${opts([['ativa','Ativa'],['reembolsada','Reembolsada'],['cancelada','Cancelada']],v.status)}</select></div>
+    </div>
+    <div class="ve-sub">Acesso</div>${acc}`;
+  const val=document.getElementById('ve-valor');
+  val.addEventListener('input',()=>{const d=val.value.replace(/\D/g,'').replace(/^0+/,'').slice(0,11);val.value=d?obBrl(Number(d)/100):'';});
+  document.getElementById('ve-modal').classList.add('open');
+}
+function closeVendaEdit(){document.getElementById('ve-modal').classList.remove('open');veId=null;}
+async function saveVendaEdit(){
+  const v=OB_DATA.find(x=>x.id===veId);if(!v)return;
+  if(!$v('ve-data')){alert('Informe a data da venda.');return;}
+  const dig=$v('ve-valor').replace(/\D/g,'');
+  const acessos=[...document.querySelectorAll('#ve-body .ve-acc')].map(el=>{
+    const a=v.acessos.find(x=>x.id===el.dataset.id),ini=el.querySelector('[data-k=inicio]').value;
+    if(el.dataset.ev)return{id:a.id,inicio:ini||a.inicio,duracao_meses:null,a_confirmar:!ini};
+    const m=el.querySelector('[data-k=meses]').value;
+    return{id:a.id,inicio:ini||a.inicio,duracao_meses:m?Number(m):null,a_confirmar:!m};
+  });
+  const p={vendedor:$v('ve-vendedor'),data_venda:$v('ve-data'),valor_total:dig?String(Number(dig)/100):'',
+    forma_pagamento:$v('ve-forma'),tipo:$v('ve-tipo'),status:$v('ve-status'),acessos};
+  const btn=document.getElementById('ve-save');btn.disabled=true;btn.textContent='Salvando...';
+  const id=veId;
+  try{
+    await obRpc('venda_editar',{p_venda_id:id,p});
+    OB_DATA=await obRpc('onboarding_listar',{});CLIENTES=null;
+    closeVendaEdit();
+    if(vaTab('vendas'))renderVendas();
+    if(vaTab('alunos'))renderAlunos();
+    if(vaTab('onboarding'))renderOnboarding();
+    if(document.getElementById('ob-modal').classList.contains('open'))openObVenda(id);
+  }catch(e){
+    console.error(e);
+    alert('Não foi possível salvar. '+(e.message||''));
+  }finally{btn.disabled=false;btn.textContent='Salvar';}
+}
 </script>
 </body>
 </html>
