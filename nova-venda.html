@@ -172,8 +172,7 @@ button{font-family:inherit}
     <div class="grid">
       <div class="field" id="f-vendedor">
         <label>Quem vendeu <span class="req">*</span></label>
-        <input type="text" id="vendedor" list="vendedores-list" autocomplete="off" placeholder="Seu nome">
-        <datalist id="vendedores-list"></datalist>
+        <select id="vendedor"></select>
         <div class="err">Informe quem fechou a venda.</div>
       </div>
       <div class="field" id="f-data_venda">
@@ -256,10 +255,9 @@ button{font-family:inherit}
         <label>Plataforma de pagamento <span class="req">*</span></label>
         <select id="plataforma">
           <option value="">Selecione</option>
-          <option>Asaas</option><option>Hotmart</option><option>Hubla</option><option>Cispay</option><option>Transferência direta</option><option value="outra">Outra</option>
+          <option>Berry</option><option>Pix</option>
         </select>
         <div class="err">Selecione a plataforma.</div>
-        <input type="text" id="plataforma_outra" placeholder="Qual plataforma?" style="display:none;margin-top:8px">
       </div>
 
       <div class="full block" id="f-forma">
@@ -402,6 +400,7 @@ const PRODUTOS=[
   {key:'thunder',  label:'Thunder Legacy',                tag:'Evento presencial de marketing médico',         color:'#9B6BE0', evento:true},
   {key:'outro',    label:'Outro produto',                 tag:'Algo que não está na lista',                    color:'#888077', meses:12, outro:true},
 ];
+const VENDEDORES=['JP','Arthur','Carol','Luan','Alicia','Ricardo','Mac','Vivian'];
 const DURACOES=[1,2,3,4,6,9,12,18,24,36];
 const FORMAS={pix:'PIX à vista',cartao:'Cartão de crédito',pix_recorrente:'PIX recorrente',boleto_recorrente:'Boleto recorrente',cartao_recorrente:'Cartão recorrente'};
 const TIPOS={nova:'Aluno novo',renovacao:'Renovação',upgrade:'Upgrade'};
@@ -535,7 +534,6 @@ document.querySelectorAll('.pay').forEach(b=>b.addEventListener('click',()=>{
   calcConf();
 }));
 $('cartao_parcelas').innerHTML=Array.from({length:24},(_,i)=>`<option value="${i+1}">${i===0?'À vista (1x)':(i+1)+'x'}</option>`).join('');
-$('plataforma').addEventListener('change',e=>{$('plataforma_outra').style.display=e.target.value==='outra'?'':'none';});
 $('parcelas_qtd').addEventListener('input',calcConf);
 function calcConf(){
   const entrada=state.tem_entrada==='sim'?moneyVal($('entrada_valor')):0;
@@ -609,8 +607,7 @@ function coletar(){
 
   const total=moneyVal($('valor_total'));
   if(!total)bad('f-valor_total');
-  let plataforma=$('plataforma').value;
-  if(plataforma==='outra')plataforma=v('plataforma_outra');
+  const plataforma=$('plataforma').value;
   if(!plataforma)bad('f-plataforma');
   if(!state.forma)bad('f-forma');
 
@@ -715,7 +712,7 @@ $('again').onclick=()=>{
   $('form').reset();
   Object.assign(state,{tipo:'',forma:'',tem_entrada:''});
   document.querySelectorAll('.seg button,.pay').forEach(x=>x.classList.remove('on'));
-  ['box-cartao','box-rec','f-entrada_valor','f-entrada_forma','plataforma_outra'].forEach(id=>$(id).style.display='none');
+  ['box-cartao','box-rec','f-entrada_valor','f-entrada_forma'].forEach(id=>$(id).style.display='none');
   $('bonus-list').innerHTML='';$('bonus-list').style.display='';$('add-bonus').disabled=false;addBonus();
   $('documento').disabled=false;
   $('vendedor').value=vend;$('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
@@ -724,18 +721,13 @@ $('again').onclick=()=>{
 };
 
 // ── vendedor lembrado neste aparelho ──
-function lembrarVendedor(n){
-  let l=[];try{l=JSON.parse(store('vv_vendedores')||'[]');}catch(e){}
-  l=[n,...l.filter(x=>x.toLowerCase()!==n.toLowerCase())].slice(0,8);
-  store('vv_vendedores',JSON.stringify(l));store('vv_vendedor',n);
-}
+function lembrarVendedor(n){store('vv_vendedor',n);}
 
 // ── início ──
 (function init(){
   $('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
-  let l=[];try{l=JSON.parse(store('vv_vendedores')||'[]');}catch(e){}
-  $('vendedores-list').innerHTML=l.map(n=>`<option value="${esc(n)}">`).join('');
-  const ult=store('vv_vendedor');if(ult)$('vendedor').value=ult;
+  $('vendedor').innerHTML='<option value="">Selecione</option>'+VENDEDORES.map(n=>`<option>${n}</option>`).join('');
+  const ult=store('vv_vendedor');if(VENDEDORES.includes(ult))$('vendedor').value=ult;
   renderProdutos();addBonus();
 })();
 </script>
