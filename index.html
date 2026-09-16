@@ -288,6 +288,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-bonus li{font-size:13px;display:flex;gap:8px;line-height:1.45}
 .ob-bonus li::before{content:'—';color:var(--gold-dim);flex-shrink:0}
 .ob-acc.wait{color:var(--gold)}
+.ob-acc.ok{color:#3DA882}
+.ob-acc.fin{color:#E0913A}
 
 /* VENDAS E ALUNOS */
 .va-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
@@ -519,7 +521,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
         <input class="ob-search" id="al-q" type="search" placeholder="Buscar por nome, e-mail ou telefone" oninput="renderAlunos()">
       </div>
       <div class="va-filters">
-        <select class="va-sel" id="al-sit" onchange="renderAlunos()"><option value="">Qualquer situação</option><option value="ativo">Acesso ativo</option><option value="vence30">Vence em até 30 dias</option><option value="vencido">Acesso vencido</option><option value="a_confirmar">Acesso a confirmar</option><option value="sem_info">Sem informação de acesso</option></select>
+        <select class="va-sel" id="al-sit" onchange="renderAlunos()"><option value="">Qualquer situação</option><option value="ativo">Acesso ativo</option><option value="ativo_ok">Ativo com certeza (verde)</option><option value="ativo_fin">Ativo (planilha do financeiro)</option><option value="vence30">Vence em até 30 dias</option><option value="vencido">Acesso vencido</option><option value="a_confirmar">Acesso a confirmar</option><option value="sem_info">Sem informação de acesso</option></select>
         <select class="va-sel" id="al-tempo" onchange="renderAlunos()"><option value="">Qualquer tempo de acesso</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="outro">Outra duração</option><option value="a_confirmar">Tempo a confirmar</option></select>
         <select class="va-sel" id="al-produto" onchange="renderAlunos()"></select>
         <select class="va-sel" id="al-closer" onchange="renderAlunos()"></select>
@@ -1340,18 +1342,27 @@ function getClientes(){
     compras.forEach(x=>{if(x.meses)c.duracoes.add(x.meses);});
     c.ultima=[...c.vendas.map(v=>v.data_venda),...compras.map(x=>x.data).filter(Boolean)].sort().pop()||'';
     // Situação: venda confirmada manda; a base só entra como estimativa.
-    let fimConf='',aConf=false,fimEst='';
+    // Verde (certeza): venda confirmada, ou compra da planilha do financeiro com o prazo escrito no nome ("- 6 Meses", "- 1 Ano").
+    // Laranja: compra da planilha do financeiro com prazo deduzido (Pós, Master Legacy).
+    let fimConf='',aConf=false,fimEst='',fimNome='',fimDed='';
     c.vendas.filter(v=>v.status==='ativa').forEach(v=>v.acessos.forEach(a=>{
       if((OB_PROD[a.produto]||{}).evento)return;
       if(a.a_confirmar){aConf=true;return;}
       if(a.fim&&a.fim>fimConf)fimConf=a.fim;
     }));
-    compras.forEach(x=>{if(x.fim_estimado&&x.fim_estimado>fimEst)fimEst=x.fim_estimado;});
+    compras.forEach(x=>{
+      if(!x.fim_estimado)return;
+      if(x.fim_estimado>fimEst)fimEst=x.fim_estimado;
+      if(vaPrazoNoNome(x.nome)){if(x.fim_estimado>fimNome)fimNome=x.fim_estimado;}
+      else if(x.fim_estimado>fimDed)fimDed=x.fim_estimado;
+    });
     // removido do Grupo Mentoria na base antiga = não está mais ativo, mesmo que a data estimada não tenha passado
     const removido=!!(c.base&&c.base.grupo_mentoria==='removido');
     if(fimConf>=hoje&&fimConf)c.sit={s:'ativo',fim:fimConf};
     else if(aConf)c.sit={s:'a_confirmar'};
-    else if(fimEst>=hoje&&fimEst>fimConf)c.sit=removido?{s:'vencido',removido:true}:{s:'ativo',fim:fimEst,est:true};
+    else if(!removido&&fimNome>=hoje&&fimNome>fimConf)c.sit={s:'ativo',fim:fimNome,nome:true};
+    else if(!removido&&fimDed>=hoje&&fimDed>fimConf)c.sit={s:'ativo',fim:fimDed,fin:true};
+    else if(removido&&fimEst>=hoje&&fimEst>fimConf)c.sit={s:'vencido',removido:true};
     else if(fimConf)c.sit={s:'vencido',fim:fimConf};
     else if(fimEst)c.sit={s:'vencido',fim:fimEst,est:true};
     else c.sit={s:'sem_info'};
@@ -1365,11 +1376,12 @@ function getClientes(){
 }
 function vaAlertasBase(c){return c.base&&c.base.alerta?c.base.alerta.split(' · '):[];}
 
+function vaPrazoNoNome(nome){return /\d+\s*(mes|ano)/i.test(obNorm(nome));}
 function vaSitHtml(sit){
   const est=sit.est?' (estimado)':'';
   if(sit.s==='ativo'){
     const logo=sit.fim<=vaMaisDias(30);
-    return `<div class="ob-acc${logo?' wait':''}">${logo?'Vence em breve':'Ativo'}<small>até ${obBr(sit.fim,true)}${est}</small></div>`;
+    return `<div class="ob-acc ${sit.fin?'fin':'ok'}">${sit.fin?'Ativo (planilha do financeiro)':'Ativo'}<small>até ${obBr(sit.fim,true)}${logo?' · vence em breve':''}</small></div>`;
   }
   if(sit.removido)return '<div class="ob-acc venc">Inativo<small>removido do Grupo Mentoria</small></div>';
   if(sit.s==='vencido')return `<div class="ob-acc venc">Vencido<small>em ${obBr(sit.fim,true)}${est}</small></div>`;
@@ -1514,6 +1526,8 @@ function renderAlunos(){
     (!q||c.busca.includes(q)||(qd.length>=4&&c.telBusca.includes(qd))));
   const bate={
     ativo:c=>c.sit.s==='ativo',
+    ativo_ok:c=>c.sit.s==='ativo'&&!c.sit.fin,
+    ativo_fin:c=>c.sit.s==='ativo'&&!!c.sit.fin,
     vence30:c=>c.sit.s==='ativo'&&c.sit.fim<=em30,
     vencido:c=>c.sit.s==='vencido',
     a_confirmar:c=>c.sit.s==='a_confirmar',
@@ -1570,7 +1584,7 @@ function openAluno(id){
     <div class="ficha-name">${escH(c.nome)}</div>
     <div class="ficha-tagline-el">${vaContato(c.telefone,c.email)}</div>
     ${c.alertas.length?`<div class="va-alert">${c.alertas.map(a=>`<div><i class="ti ti-alert-triangle" style="vertical-align:-2px;margin-right:6px"></i>${escH(a)}</div>`).join('')}</div>`:''}
-    ${sec('Acesso',`<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">${vaSitHtml(c.sit)}${c.sit.est?'<span class="va-muted" style="max-width:360px;line-height:1.5">Estimado pela data de compra na base antiga e pela duração escrita no nome do produto. Confirme antes de informar o aluno.</span>':''}</div>`)}
+    ${sec('Acesso',`<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">${vaSitHtml(c.sit)}${c.sit.fin?'<span class="va-muted" style="max-width:360px;line-height:1.5">Prazo deduzido pelo produto na planilha do financeiro (Pós-Graduação e Master Legacy = 12 meses), porque o nome não traz a duração. Confirme antes de informar o aluno.</span>':c.sit.nome?'<span class="va-muted" style="max-width:360px;line-height:1.5">Data de compra da planilha do financeiro e prazo escrito no nome do produto.</span>':''}</div>`)}
     ${c.vendas.length?sec(`Vendas confirmadas (${c.vendas.length})`,vendas):''}
     ${b?sec('Base antiga · não confirmado',`<div class="va-muted" style="line-height:1.7;margin-bottom:6px">${nomeBase}Grupo Mentoria: ${b.grupo_mentoria==='ativo'?'ativo':'removido (assinatura vencida)'} · telefone na planilha: ${escH(b.telefone_original)} · ${escH(b.localizado_via||'')}</div>${compras||'<div class="va-muted">Nenhuma compra listada.</div>'}`):''}`;
   document.getElementById('ob-modal').classList.add('open');
