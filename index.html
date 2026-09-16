@@ -607,7 +607,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
     <div class="field" id="uf-senha-field"><label>Senha</label><input type="text" id="uf-senha"></div>
     <div class="field"><label>Nível</label>
       <select id="uf-nivel">
-        <option value="equipe">Equipe — Calendário, Produtos e Time</option>
+        <option value="equipe">Equipe — Calendário, Onboarding, Vendas e Alunos</option>
         <option value="adm">Administrativo — acesso completo</option>
       </select>
     </div>
@@ -644,8 +644,9 @@ const FICHA_SEC=[
   {title:'06 — Observações',fields:[{key:'observacoes',label:'Observações'}]},
 ];
 const ALL_TABS=['calendario','onboarding','vendas','alunos','produtos','time','acessos','usuarios'];
-const TABS_ADM=ALL_TABS;
-const TABS_EQ=['calendario','onboarding','vendas','alunos','produtos'];
+// Time e Produtos ocultas (código mantido): só sair destas listas.
+const TABS_ADM=['calendario','onboarding','vendas','alunos','acessos','usuarios'];
+const TABS_EQ=['calendario','onboarding','vendas','alunos'];
 const TAB_LABELS={calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
 const TAB_ICONS={calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
 
