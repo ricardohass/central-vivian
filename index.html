@@ -1358,10 +1358,12 @@ function getClientes(){
       else if(x.fim_estimado>fimDed)fimDed=x.fim_estimado;
     });
     const noGrupo=!!(c.base&&c.base.grupo_mentoria==='ativo'),removido=!!(c.base&&c.base.grupo_mentoria==='removido');
+    // Ativo = está na planilha de onboarding (ou venda com prazo valendo) + quem está no Grupo Mentoria na planilha do financeiro.
+    const naOnb=c.vendas.some(v=>v.status==='ativa'&&v.origem==='planilha_onboarding');
     if(fimConf>=hoje&&fimConf)c.sit={s:'ativo',fim:fimConf};
+    else if(naOnb||aConf)c.sit={s:'ativo',semPrazo:true};
     else if(noGrupo&&fimNome>=hoje)c.sit={s:'ativo',fim:fimNome,nome:true};
     else if(noGrupo)c.sit={s:'ativo',fin:true};
-    else if(aConf)c.sit={s:'a_confirmar'};
     else if(removido)c.sit={s:'vencido',removido:true};
     else if(fimConf)c.sit={s:'vencido',fim:fimConf};
     else if(fimEst)c.sit={s:'vencido',fim:fimEst,est:true};
@@ -1381,6 +1383,7 @@ function vaSitHtml(sit){
   const est=sit.est?' (estimado)':'';
   if(sit.s==='ativo'){
     if(sit.fin)return '<div class="ob-acc fin">Ativo (planilha do financeiro)<small>no Grupo Mentoria</small></div>';
+    if(sit.semPrazo)return '<div class="ob-acc ok">Ativo<small>prazo a confirmar</small></div>';
     const logo=sit.fim<=vaMaisDias(30);
     return `<div class="ob-acc ok">Ativo<small>até ${obBr(sit.fim,true)}${logo?' · vence em breve':''}</small></div>`;
   }
@@ -1531,7 +1534,7 @@ function renderAlunos(){
     ativo_fin:c=>c.sit.s==='ativo'&&!!c.sit.fin,
     vence30:c=>c.sit.s==='ativo'&&c.sit.fim<=em30,
     vencido:c=>c.sit.s==='vencido',
-    a_confirmar:c=>c.sit.s==='a_confirmar',
+    a_confirmar:c=>!!c.sit.semPrazo,
     sem_info:c=>c.sit.s==='sem_info',
   };
   const kpi=(key,n,l)=>`<button class="ob-kpi${sit===key?' active':''}" onclick="document.getElementById('al-sit').value='${sit===key?'':key}';renderAlunos()"><div class="ob-kpi-num">${n}</div><div class="ob-kpi-lbl">${l}</div></button>`;
