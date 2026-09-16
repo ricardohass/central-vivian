@@ -1342,8 +1342,9 @@ function getClientes(){
     compras.forEach(x=>{if(x.meses)c.duracoes.add(x.meses);});
     c.ultima=[...c.vendas.map(v=>v.data_venda),...compras.map(x=>x.data).filter(Boolean)].sort().pop()||'';
     // Situação: venda confirmada manda; a base só entra como estimativa.
-    // Verde (certeza): venda confirmada, ou compra da planilha do financeiro com o prazo escrito no nome ("- 6 Meses", "- 1 Ano").
-    // Laranja: compra da planilha do financeiro com prazo deduzido (Pós, Master Legacy).
+    // Verde (certeza): venda confirmada com prazo, ou compra da planilha do financeiro com o prazo escrito no nome ainda valendo.
+    // Laranja: está "Ativo (grupo Mentoria)" na planilha do financeiro. "Removido" lá = inativo.
+    // A planilha do financeiro manda sobre as datas estimadas; só a venda confirmada passa por cima dela.
     let fimConf='',aConf=false,fimEst='',fimNome='',fimDed='';
     c.vendas.filter(v=>v.status==='ativa').forEach(v=>v.acessos.forEach(a=>{
       if((OB_PROD[a.produto]||{}).evento)return;
@@ -1356,13 +1357,12 @@ function getClientes(){
       if(vaPrazoNoNome(x.nome)){if(x.fim_estimado>fimNome)fimNome=x.fim_estimado;}
       else if(x.fim_estimado>fimDed)fimDed=x.fim_estimado;
     });
-    // removido do Grupo Mentoria na base antiga = não está mais ativo, mesmo que a data estimada não tenha passado
-    const removido=!!(c.base&&c.base.grupo_mentoria==='removido');
+    const noGrupo=!!(c.base&&c.base.grupo_mentoria==='ativo'),removido=!!(c.base&&c.base.grupo_mentoria==='removido');
     if(fimConf>=hoje&&fimConf)c.sit={s:'ativo',fim:fimConf};
+    else if(noGrupo&&fimNome>=hoje)c.sit={s:'ativo',fim:fimNome,nome:true};
+    else if(noGrupo)c.sit={s:'ativo',fin:true};
     else if(aConf)c.sit={s:'a_confirmar'};
-    else if(!removido&&fimNome>=hoje&&fimNome>fimConf)c.sit={s:'ativo',fim:fimNome,nome:true};
-    else if(!removido&&fimDed>=hoje&&fimDed>fimConf)c.sit={s:'ativo',fim:fimDed,fin:true};
-    else if(removido&&fimEst>=hoje&&fimEst>fimConf)c.sit={s:'vencido',removido:true};
+    else if(removido)c.sit={s:'vencido',removido:true};
     else if(fimConf)c.sit={s:'vencido',fim:fimConf};
     else if(fimEst)c.sit={s:'vencido',fim:fimEst,est:true};
     else c.sit={s:'sem_info'};
@@ -1380,8 +1380,9 @@ function vaPrazoNoNome(nome){return /\d+\s*(mes|ano)/i.test(obNorm(nome));}
 function vaSitHtml(sit){
   const est=sit.est?' (estimado)':'';
   if(sit.s==='ativo'){
+    if(sit.fin)return '<div class="ob-acc fin">Ativo (planilha do financeiro)<small>no Grupo Mentoria</small></div>';
     const logo=sit.fim<=vaMaisDias(30);
-    return `<div class="ob-acc ${sit.fin?'fin':'ok'}">${sit.fin?'Ativo (planilha do financeiro)':'Ativo'}<small>até ${obBr(sit.fim,true)}${logo?' · vence em breve':''}</small></div>`;
+    return `<div class="ob-acc ok">Ativo<small>até ${obBr(sit.fim,true)}${logo?' · vence em breve':''}</small></div>`;
   }
   if(sit.removido)return '<div class="ob-acc venc">Inativo<small>removido do Grupo Mentoria</small></div>';
   if(sit.s==='vencido')return `<div class="ob-acc venc">Vencido<small>em ${obBr(sit.fim,true)}${est}</small></div>`;
@@ -1584,7 +1585,7 @@ function openAluno(id){
     <div class="ficha-name">${escH(c.nome)}</div>
     <div class="ficha-tagline-el">${vaContato(c.telefone,c.email)}</div>
     ${c.alertas.length?`<div class="va-alert">${c.alertas.map(a=>`<div><i class="ti ti-alert-triangle" style="vertical-align:-2px;margin-right:6px"></i>${escH(a)}</div>`).join('')}</div>`:''}
-    ${sec('Acesso',`<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">${vaSitHtml(c.sit)}${c.sit.fin?'<span class="va-muted" style="max-width:360px;line-height:1.5">Prazo deduzido pelo produto na planilha do financeiro (Pós-Graduação e Master Legacy = 12 meses), porque o nome não traz a duração. Confirme antes de informar o aluno.</span>':c.sit.nome?'<span class="va-muted" style="max-width:360px;line-height:1.5">Data de compra da planilha do financeiro e prazo escrito no nome do produto.</span>':''}</div>`)}
+    ${sec('Acesso',`<div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">${vaSitHtml(c.sit)}${c.sit.fin?'<span class="va-muted" style="max-width:360px;line-height:1.5">Consta como "Ativo (grupo Mentoria)" na planilha do financeiro. Não há venda confirmada com prazo para saber até quando.</span>':c.sit.nome?'<span class="va-muted" style="max-width:360px;line-height:1.5">Data de compra da planilha do financeiro e prazo escrito no nome do produto.</span>':''}</div>`)}
     ${c.vendas.length?sec(`Vendas confirmadas (${c.vendas.length})`,vendas):''}
     ${b?sec('Base antiga · não confirmado',`<div class="va-muted" style="line-height:1.7;margin-bottom:6px">${nomeBase}Grupo Mentoria: ${b.grupo_mentoria==='ativo'?'ativo':'removido (assinatura vencida)'} · telefone na planilha: ${escH(b.telefone_original)} · ${escH(b.localizado_via||'')}</div>${compras||'<div class="va-muted">Nenhuma compra listada.</div>'}`):''}`;
   document.getElementById('ob-modal').classList.add('open');
