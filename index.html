@@ -307,7 +307,14 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-prod.va-muted{color:var(--text-muted)}
 .ob-tag.ok{border-color:rgba(61,168,130,0.45);color:#5FC49E}
 .ob-tag.base{border-color:rgba(154,145,136,0.45);color:var(--text-muted)}
-.ob-tag.warn{border-color:rgba(224,179,95,0.5);color:#E0B35F;cursor:help}
+.ob-tag.warn{border-color:rgba(224,179,95,0.5);color:#E0B35F;cursor:help;display:inline-flex;align-items:center;gap:4px}
+.ob-tag.warn i{font-size:11px}
+.va-tip{position:fixed;z-index:9999;width:max-content;max-width:min(380px,calc(100vw - 32px));background:#1C1A16;border:1px solid rgba(224,179,95,0.55);border-radius:6px;padding:14px 16px;font-family:'Jost',sans-serif;font-size:14px;line-height:1.55;color:var(--text);box-shadow:0 10px 30px rgba(0,0,0,0.55);pointer-events:none;display:none}
+.va-tip-h{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#E0B35F;margin-bottom:8px}
+.va-tip ul{margin:0;padding:0;list-style:none}
+.va-tip li{position:relative;padding-left:14px;margin-top:8px}
+.va-tip li:first-child{margin-top:0}
+.va-tip li::before{content:'';position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:#E0B35F}
 .va-tags{display:flex;gap:4px;flex-wrap:wrap}
 .va-alert{font-size:12px;color:#E0B35F;background:rgba(224,179,95,0.07);border:0.5px solid rgba(224,179,95,0.3);padding:9px 11px;border-radius:2px;line-height:1.55;margin-bottom:16px}
 .va-alert div+div{margin-top:4px}
@@ -1376,6 +1383,33 @@ function getClientes(){
   CLIENTES=cl;
   return cl;
 }
+// Avisos da planilha do financeiro explicados para a equipe (pop-up do "Conferir")
+function vaAlertaTexto(a){
+  let m;
+  if((m=a.match(/^Telefone reconstruído: na planilha estava (.+)$/)))return `<b>Telefone corrigido pela Central.</b> Na planilha do financeiro o número estava embaralhado (${escH(m[1])}). Confirme com a aluna antes de usar.`;
+  if(/^Telefone ambíguo/.test(a))return `<b>DDD incerto.</b> ${escH(a)}. Confirme o número com a aluna.`;
+  if((m=a.match(/achou (\d+) compras/)))return `<b>Compras incompletas.</b> A planilha do financeiro tem ${m[1]} compras dessa pessoa, mas só lista as 5 primeiras. As outras não aparecem aqui.`;
+  if((m=a.match(/idêntica à de (.+?):/)))return `<b>Possível mistura de alunos.</b> As compras são idênticas às de ${escH(m[1])}. Algumas podem ser da outra pessoa.`;
+  return escH(a);
+}
+function vaTipHtml(alertas){return `<div class="va-tip-h">Por que conferir</div><ul>${alertas.map(a=>`<li>${vaAlertaTexto(a)}</li>`).join('')}</ul>`;}
+(function(){
+  let tip=null,alvo=null;
+  const mostrar=el=>{
+    if(!tip){tip=document.createElement('div');tip.className='va-tip';document.body.appendChild(tip);}
+    alvo=el;tip.innerHTML=el.getAttribute('data-tip');tip.style.display='block';
+    const r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+    let x=Math.min(Math.max(16,r.left),window.innerWidth-w-16),y=r.bottom+8;
+    if(y+h>window.innerHeight-16)y=Math.max(16,r.top-h-8);
+    tip.style.left=x+'px';tip.style.top=y+'px';
+  };
+  const esconder=()=>{if(tip)tip.style.display='none';alvo=null;};
+  document.addEventListener('mouseover',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el&&el!==alvo)mostrar(el);else if(!el&&alvo)esconder();});
+  document.addEventListener('focusin',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el)mostrar(el);});
+  document.addEventListener('focusout',esconder);
+  document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');el?mostrar(el):esconder();});
+  window.addEventListener('scroll',esconder,true);
+})();
 function vaAlertasBase(c){return c.base&&c.base.alerta?c.base.alerta.split(' · '):[];}
 
 function vaPrazoNoNome(nome){return /\d+\s*(mes|ano)/i.test(obNorm(nome));}
@@ -1398,7 +1432,7 @@ function vaProdHtml(k,muted,nome){
 }
 function vaContato(tel,email,aviso){
   const t=String(tel||'').replace(/\D/g,'');
-  return (t?`<div class="ob-contact"><a href="https://wa.me/${t}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>${escH(obTel(tel))}</a>${aviso?`<i class="ti ti-alert-triangle" style="color:#E0B35F;font-size:13px" title="${escH(aviso)}"></i>`:''}</div>`:'')
+  return (t?`<div class="ob-contact"><a href="https://wa.me/${t}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>${escH(obTel(tel))}</a>${aviso?`<i class="ti ti-alert-triangle" style="color:#E0B35F;font-size:13px;cursor:help" data-tip="${escH(vaTipHtml([aviso]))}"></i>`:''}</div>`:'')
     +(email?`<div class="ob-contact"><span>${escH(email)}</span><button class="ob-mini" title="Copiar e-mail" onclick="copyT(this,'${escQ(email)}')"><i class="ti ti-copy"></i></button></div>`:'');
 }
 
@@ -1550,7 +1584,7 @@ function renderAlunos(){
     const b=c.base;
     const tags=(c.vendas.length?'<span class="ob-tag ok">Confirmado</span>':'<span class="ob-tag base" title="Só aparece na planilha Clientes x Produtos">Base antiga</span>')
       +(c.colab?'<span class="ob-tag">Colaborador</span>':'')
-      +(c.alertas.length?`<span class="ob-tag warn" title="${escH(c.alertas.join('\n'))}">Conferir</span>`:'');
+      +(c.alertas.length?`<span class="ob-tag warn" tabindex="0" data-tip="${escH(vaTipHtml(c.alertas))}"><i class="ti ti-alert-triangle"></i>Conferir</span>`:'');
     const avisoTel=!c.vendas.length?c.alertas.find(x=>/^Telefone/.test(x)):'';
     const prods=[...c.prodConf].map(k=>vaProdHtml(k)).join('')+[...c.prodBase].map(k=>vaProdHtml(k,true)).join('');
     return `<div class="ob-row aa">
