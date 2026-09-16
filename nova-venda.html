@@ -52,8 +52,15 @@ button{font-family:inherit}
 .err{display:none;font-size:12px;color:var(--red);margin-top:6px}
 .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--red)}
 .field.invalid .err,.block.invalid>.err{display:block}
-.check-inline{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;color:var(--text-muted);cursor:pointer;user-select:none;width:fit-content}
-.check-inline input{accent-color:var(--gold);width:15px;height:15px}
+.field .check-inline,.check-inline{display:flex;align-items:center;gap:10px;margin:12px 0 0;padding:4px 0;font-size:13px;letter-spacing:0;text-transform:none;color:var(--text-muted);cursor:pointer;user-select:none;width:fit-content;position:relative}
+.check-inline input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px;padding:0;margin:0;border:0;pointer-events:none}
+.cbox{width:18px;height:18px;border:0.5px solid var(--border-hover);border-radius:2px;background:var(--dark3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:var(--dark);transition:all .2s}
+.check-inline:hover .cbox{border-color:var(--gold-dim)}
+.check-inline input:checked+.cbox{background:var(--gold);border-color:var(--gold)}
+.check-inline input:checked+.cbox::after{content:'✓'}
+.check-inline input:checked~.ctext{color:var(--text)}
+.check-inline input:focus-visible+.cbox{outline:1px solid var(--gold);outline-offset:2px}
+.field input:disabled{opacity:.4}
 
 /* SEGMENTADO */
 .seg{display:grid;grid-template-columns:repeat(3,1fr);border:0.5px solid var(--border);border-radius:2px;overflow:hidden}
@@ -215,7 +222,7 @@ button{font-family:inherit}
         <label>CPF ou CNPJ <span class="req">*</span></label>
         <input type="text" id="documento" inputmode="numeric" placeholder="000.000.000-00">
         <div class="err">CPF/CNPJ inválido, confira os dígitos.</div>
-        <label class="check-inline"><input type="checkbox" id="sem_documento">Estrangeiro, sem CPF</label>
+        <label class="check-inline"><input type="checkbox" id="sem_documento"><span class="cbox"></span><span class="ctext">Estrangeiro, sem CPF</span></label>
       </div>
       <div class="field" id="f-instagram">
         <label>Instagram</label>
@@ -349,7 +356,7 @@ button{font-family:inherit}
     <div class="block" id="f-bonus">
       <div class="bonus-list" id="bonus-list"></div>
       <button type="button" class="add-btn" id="add-bonus"><i class="ti ti-plus"></i>Adicionar bônus</button>
-      <label class="check-inline"><input type="checkbox" id="sem_bonus">Nenhum bônus foi prometido</label>
+      <label class="check-inline"><input type="checkbox" id="sem_bonus"><span class="cbox"></span><span class="ctext">Nenhum bônus foi prometido</span></label>
       <div class="err">Descreva os bônus ou marque que não houve bônus.</div>
     </div>
   </section>
