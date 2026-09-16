@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Venda</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23111010'/><circle cx='32' cy='32' r='26' fill='none' stroke='%23C9A84C' stroke-width='2'/><text x='32' y='41' font-family='Georgia,serif' font-size='24' fill='%23C9A84C' text-anchor='middle'>VA</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A3;--gold-dim:#7A6030;
+  --dark:#111010;--dark2:#1A1918;--dark3:#222120;--dark4:#2C2B2A;
+  --text:#F0EBE0;--text-muted:#9A9188;
+  --border:rgba(201,168,76,0.18);--border-hover:rgba(201,168,76,0.45);
+  --red:#C0463A;--green:#3DA882;
+}
+html,body{background:var(--dark);color:var(--text);font-family:'Jost',sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+button{font-family:inherit}
+
+/* TOPO */
+.topbar{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:0.5px solid var(--border);background:var(--dark);position:sticky;top:0;z-index:50}
+.brand-monogram{width:38px;height:38px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);font-weight:300;flex-shrink:0}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--text);letter-spacing:2px}
+.brand-sub{font-size:11px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+
+.wrap{max-width:720px;margin:0 auto;padding:36px 20px 80px}
+.intro{margin-bottom:30px}
+.intro h1{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--gold-light);letter-spacing:.5px;line-height:1.1}
+.intro p{font-size:14px;color:var(--text-muted);line-height:1.6;margin-top:8px;max-width:540px}
+
+/* SEÇÕES */
+.sec{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;padding:24px;margin-bottom:14px}
+.sec-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);padding-bottom:10px;border-bottom:0.5px solid var(--border);margin-bottom:18px;display:flex;justify-content:space-between;gap:10px}
+.sec-title em{font-style:normal;color:var(--text-muted);letter-spacing:1px;text-transform:none;font-size:11px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid .full{grid-column:1/-1}
+.field label,.lbl{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px}
+.req{color:var(--gold)}
+.field input,.field select,.field textarea{width:100%;background:var(--dark3);border:0.5px solid var(--border);color:var(--text);font-family:'Jost',sans-serif;font-size:16px;padding:10px 12px;border-radius:2px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--gold-dim) 50%),linear-gradient(135deg,var(--gold-dim) 50%,transparent 50%);background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.field select option{background:var(--dark3)}
+.field textarea{resize:vertical;min-height:84px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold-dim)}
+.field input::placeholder,.field textarea::placeholder{color:#5E5852}
+.field input[type=date]{color-scheme:dark}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.4}
+.err{display:none;font-size:12px;color:var(--red);margin-top:6px}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--red)}
+.field.invalid .err,.block.invalid>.err{display:block}
+.check-inline{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;color:var(--text-muted);cursor:pointer;user-select:none;width:fit-content}
+.check-inline input{accent-color:var(--gold);width:15px;height:15px}
+
+/* SEGMENTADO */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:0.5px solid var(--border);border-radius:2px;overflow:hidden}
+.seg.two{grid-template-columns:1fr 1fr}
+.seg button{background:var(--dark3);border:none;border-right:0.5px solid var(--border);color:var(--text-muted);font-size:13px;padding:11px 8px;cursor:pointer;transition:all .2s;line-height:1.3}
+.seg button:last-child{border-right:none}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:rgba(201,168,76,0.12);color:var(--gold-light)}
+.block.invalid .seg{border-color:var(--red)}
+
+/* PRODUTOS */
+.prods{display:flex;flex-direction:column;gap:8px}
+.prod{border:0.5px solid var(--border);border-radius:3px;background:var(--dark3);transition:border-color .2s}
+.prod-head{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;user-select:none}
+.prod:hover{border-color:var(--border-hover)}
+.prod.on{border-color:var(--pc)}
+.box{width:18px;height:18px;border:0.5px solid var(--border-hover);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:var(--dark);transition:all .2s}
+.prod.on .box{background:var(--pc);border-color:var(--pc)}
+.pdot{width:9px;height:9px;border-radius:50%;background:var(--pc);flex-shrink:0}
+.pname{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);line-height:1.15}
+.ptag{font-size:11px;color:var(--text-muted);margin-top:1px}
+.prod-body{display:none;padding:4px 14px 16px 44px}
+.prod.on .prod-body{display:block}
+.prod-body .grid{gap:12px}
+.fim{font-size:12px;color:var(--text-muted);margin-top:10px;display:flex;align-items:center;gap:6px}
+.fim b{color:var(--gold-light);font-weight:400}
+.block.invalid .prods .prod:not(.on){border-color:rgba(192,70,58,0.45)}
+
+/* PAGAMENTO */
+.pay-group{margin-bottom:12px}
+.pay-group-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:4px 0 8px;display:flex;align-items:center;gap:6px}
+.pays{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.pay{background:var(--dark3);border:0.5px solid var(--border);border-radius:3px;padding:12px 13px;text-align:left;cursor:pointer;color:var(--text);transition:all .2s}
+.pay:hover{border-color:var(--border-hover)}
+.pay.on{border-color:var(--gold);background:rgba(201,168,76,0.08)}
+.pay i{font-size:18px;color:var(--gold-dim)}
+.pay.on i{color:var(--gold)}
+.pay-name{font-size:14px;margin-top:6px}
+.pay-desc{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.35}
+.block.invalid .pay{border-color:rgba(192,70,58,0.45)}
+.sub{margin-top:16px;padding-top:16px;border-top:0.5px dashed var(--border)}
+.conf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px;border:0.5px solid var(--border);border-radius:2px;background:var(--dark3);font-size:13px;color:var(--text-muted)}
+.conf b{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--gold-light)}
+.conf.warn{border-color:rgba(192,70,58,0.45)}
+.conf.warn b{color:#E08A7F}
+.conf.ok b{color:var(--green)}
+
+/* BÔNUS */
+.bonus-list{display:flex;flex-direction:column;gap:8px}
+.bonus-row{display:flex;gap:8px}
+.bonus-row input{flex:1}
+.x-btn{background:none;border:0.5px solid var(--border);color:var(--text-muted);width:42px;border-radius:2px;cursor:pointer;font-size:15px;flex-shrink:0;transition:all .2s}
+.x-btn:hover{border-color:var(--red);color:var(--red)}
+.add-btn{background:none;border:0.5px dashed var(--gold-dim);color:var(--gold-dim);padding:10px 14px;border-radius:2px;cursor:pointer;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-top:10px;transition:all .2s}
+.add-btn:hover{border-color:var(--gold);color:var(--gold)}
+.add-btn:disabled{opacity:.35;cursor:default}
+
+/* ENVIO */
+.submit{width:100%;background:var(--gold-dim);border:none;color:var(--dark);font-size:13px;letter-spacing:2.5px;text-transform:uppercase;padding:16px;border-radius:2px;cursor:pointer;transition:background .2s;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500}
+.submit:hover{background:var(--gold)}
+.submit:disabled{opacity:.6;cursor:wait}
+.form-error{display:none;margin-top:12px;padding:11px 13px;border:0.5px solid rgba(192,70,58,0.45);background:rgba(192,70,58,0.08);color:#E08A7F;font-size:13px;border-radius:2px;line-height:1.5}
+.form-error.show{display:block}
+
+/* SUCESSO */
+#done{display:none}
+.done-head{text-align:center;padding:10px 0 26px}
+.done-ring{width:64px;height:64px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--gold);font-size:28px}
+.done-head h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--gold-light)}
+.done-head p{font-size:14px;color:var(--text-muted);margin-top:6px}
+.sum-row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:14px}
+.sum-row:last-child{border-bottom:none}
+.sum-row span:first-child{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding-top:3px}
+.sum-row span:last-child{white-space:pre-line;line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.done-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.btn-ghost{background:none;border:0.5px solid var(--border-hover);color:var(--text);padding:14px;border-radius:2px;cursor:pointer;font-size:12px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.done-actions .submit{margin-top:0}
+
+@media(max-width:600px){
+  .topbar{padding:12px 16px}
+  .brand-name{font-size:16px}.brand-sub{font-size:9px}
+  .brand-monogram{width:34px;height:34px;font-size:14px}
+  .wrap{padding:24px 16px 60px}
+  .intro h1{font-size:31px}
+  .sec{padding:18px 16px}
+  .grid{grid-template-columns:1fr}
+  .prod-body{padding:4px 14px 16px 14px}
+  .pays{grid-template-columns:1fr 1fr}
+  .seg button{font-size:12px;padding:11px 4px}
+  .sum-row{grid-template-columns:1fr;gap:2px}
+  .done-actions{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand-monogram">VA</div>
+  <div>
+    <div class="brand-name">Dra. Vivian Amaral</div>
+    <div class="brand-sub">Registro de venda</div>
+  </div>
+</div>
+
+<main class="wrap">
+<form id="form" novalidate>
+  <div class="intro">
+    <h1>Nova venda</h1>
+    <p>Preencha logo depois de fechar. Esse registro é a fonte oficial do aluno: produto, tempo de acesso, pagamento e bônus prometidos.</p>
+  </div>
+
+  <!-- 01 VENDA -->
+  <section class="sec">
+    <div class="sec-title">01 — Venda</div>
+    <div class="grid">
+      <div class="field" id="f-vendedor">
+        <label>Quem vendeu <span class="req">*</span></label>
+        <input type="text" id="vendedor" list="vendedores-list" autocomplete="off" placeholder="Seu nome">
+        <datalist id="vendedores-list"></datalist>
+        <div class="err">Informe quem fechou a venda.</div>
+      </div>
+      <div class="field" id="f-data_venda">
+        <label>Data da venda <span class="req">*</span></label>
+        <input type="date" id="data_venda">
+        <div class="err">Informe a data da venda.</div>
+      </div>
+      <div class="full block" id="f-tipo">
+        <span class="lbl">Tipo de venda <span class="req">*</span></span>
+        <div class="seg" data-name="tipo">
+          <button type="button" data-v="nova">Aluno novo</button>
+          <button type="button" data-v="renovacao">Renovação</button>
+          <button type="button" data-v="upgrade">Upgrade</button>
+        </div>
+        <div class="err">Escolha o tipo de venda.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ALUNO -->
+  <section class="sec">
+    <div class="sec-title">02 — Aluno</div>
+    <div class="grid">
+      <div class="field full" id="f-nome">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" autocomplete="off" placeholder="Como está no documento">
+        <div class="err">Informe nome e sobrenome.</div>
+      </div>
+      <div class="field" id="f-telefone">
+        <label>WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="telefone" inputmode="tel" placeholder="(11) 99999-9999">
+        <div class="err">Número inválido. Use DDD + número.</div>
+      </div>
+      <div class="field" id="f-email">
+        <label>E-mail <span class="req">*</span></label>
+        <input type="email" id="email" inputmode="email" autocomplete="off" autocapitalize="off" placeholder="aluno@email.com">
+        <div class="err">E-mail inválido.</div>
+      </div>
+      <div class="field" id="f-documento">
+        <label>CPF ou CNPJ <span class="req">*</span></label>
+        <input type="text" id="documento" inputmode="numeric" placeholder="000.000.000-00">
+        <div class="err">CPF/CNPJ inválido, confira os dígitos.</div>
+        <label class="check-inline"><input type="checkbox" id="sem_documento">Estrangeiro, sem CPF</label>
+      </div>
+      <div class="field" id="f-instagram">
+        <label>Instagram</label>
+        <input type="text" id="instagram" autocomplete="off" autocapitalize="off" placeholder="@perfil">
+      </div>
+      <div class="field" id="f-especialidade">
+        <label>Profissão / especialidade</label>
+        <input type="text" id="especialidade" placeholder="Ex: ginecologista">
+      </div>
+      <div class="field" id="f-cidade">
+        <label>Cidade / UF</label>
+        <input type="text" id="cidade" placeholder="Ex: Curitiba/PR">
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 PRODUTOS -->
+  <section class="sec">
+    <div class="sec-title">03 — Produto e acesso <em>marque tudo que entrou na venda</em></div>
+    <div class="block" id="f-produtos">
+      <div class="prods" id="prods"></div>
+      <div class="err" style="margin-top:10px">Marque ao menos um produto e preencha o acesso de cada um.</div>
+    </div>
+  </section>
+
+  <!-- 04 PAGAMENTO -->
+  <section class="sec">
+    <div class="sec-title">04 — Pagamento</div>
+    <div class="grid">
+      <div class="field" id="f-valor_total">
+        <label>Valor total negociado <span class="req">*</span></label>
+        <input type="text" id="valor_total" inputmode="numeric" class="money" placeholder="R$ 0,00">
+        <div class="hint">O valor fechado com o aluno, sem juros de parcelamento.</div>
+        <div class="err">Informe o valor da venda.</div>
+      </div>
+      <div class="field" id="f-plataforma">
+        <label>Plataforma de pagamento <span class="req">*</span></label>
+        <select id="plataforma">
+          <option value="">Selecione</option>
+          <option>Asaas</option><option>Hotmart</option><option>Hubla</option><option>Cispay</option><option>Transferência direta</option><option value="outra">Outra</option>
+        </select>
+        <div class="err">Selecione a plataforma.</div>
+        <input type="text" id="plataforma_outra" placeholder="Qual plataforma?" style="display:none;margin-top:8px">
+      </div>
+
+      <div class="full block" id="f-forma">
+        <div class="pay-group">
+          <div class="pay-group-lbl"><i class="ti ti-circle-check"></i>Pago na hora</div>
+          <div class="pays">
+            <button type="button" class="pay" data-v="pix"><i class="ti ti-bolt"></i><div class="pay-name">PIX à vista</div><div class="pay-desc">Valor integral recebido</div></button>
+            <button type="button" class="pay" data-v="cartao"><i class="ti ti-credit-card"></i><div class="pay-name">Cartão de crédito</div><div class="pay-desc">À vista ou parcelado no cartão</div></button>
+          </div>
+        </div>
+        <div class="pay-group">
+          <div class="pay-group-lbl"><i class="ti ti-clock-hour-4"></i>Cobrança recorrente</div>
+          <div class="pays">
+            <button type="button" class="pay" data-v="pix_recorrente"><i class="ti ti-repeat"></i><div class="pay-name">PIX recorrente</div><div class="pay-desc">Parcelas mensais via PIX</div></button>
+            <button type="button" class="pay" data-v="boleto_recorrente"><i class="ti ti-file-invoice"></i><div class="pay-name">Boleto recorrente</div><div class="pay-desc">Parcelas mensais via boleto</div></button>
+            <button type="button" class="pay" data-v="cartao_recorrente"><i class="ti ti-credit-card-refund"></i><div class="pay-name">Cartão recorrente</div><div class="pay-desc">Cobrança automática mensal</div></button>
+          </div>
+        </div>
+        <div class="err">Escolha a forma de pagamento.</div>
+      </div>
+
+      <!-- cartão -->
+      <div class="full" id="box-cartao" style="display:none">
+        <div class="grid sub">
+          <div class="field" id="f-cartao_parcelas">
+            <label>Parcelas no cartão <span class="req">*</span></label>
+            <select id="cartao_parcelas"></select>
+            <div class="err">Informe em quantas vezes.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- recorrente -->
+      <div class="full" id="box-rec" style="display:none">
+        <div class="grid sub">
+          <div class="full block" id="f-tem_entrada">
+            <span class="lbl">Teve entrada? <span class="req">*</span></span>
+            <div class="seg two" data-name="tem_entrada">
+              <button type="button" data-v="sim">Sim</button>
+              <button type="button" data-v="nao">Não</button>
+            </div>
+            <div class="err">Diga se houve entrada.</div>
+          </div>
+          <div class="field" id="f-entrada_valor" style="display:none">
+            <label>Valor da entrada <span class="req">*</span></label>
+            <input type="text" id="entrada_valor" inputmode="numeric" class="money" placeholder="R$ 0,00">
+            <div class="err">Informe o valor da entrada.</div>
+          </div>
+          <div class="field" id="f-entrada_forma" style="display:none">
+            <label>Entrada paga via <span class="req">*</span></label>
+            <select id="entrada_forma">
+              <option value="">Selecione</option>
+              <option value="pix">PIX</option><option value="cartao">Cartão de crédito</option><option value="boleto">Boleto</option>
+            </select>
+            <div class="err">Como a entrada foi paga?</div>
+          </div>
+          <div class="field" id="f-parcelas_qtd">
+            <label>Número de parcelas <span class="req">*</span></label>
+            <input type="number" id="parcelas_qtd" inputmode="numeric" min="1" max="60" placeholder="Ex: 10">
+            <div class="err">Informe quantas parcelas.</div>
+          </div>
+          <div class="field" id="f-parcela_valor">
+            <label>Valor de cada parcela <span class="req">*</span></label>
+            <input type="text" id="parcela_valor" inputmode="numeric" class="money" placeholder="R$ 0,00">
+            <div class="err">Informe o valor da parcela.</div>
+          </div>
+          <div class="field" id="f-primeiro_vencimento">
+            <label>1º vencimento <span class="req">*</span></label>
+            <input type="date" id="primeiro_vencimento">
+            <div class="err">Informe a data do primeiro vencimento.</div>
+          </div>
+          <div class="full">
+            <div class="conf" id="conf"><span>Entrada + parcelas</span><b id="conf-val">R$ 0,00</b></div>
+            <div class="hint" id="conf-hint">Serve pra conferir com o valor total.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field full" id="f-pagamento_detalhes">
+        <label>Condições combinadas</label>
+        <textarea id="pagamento_detalhes" placeholder="Ex: primeira parcela só após o evento de outubro; desconto por ser aluna da mentoria"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 BÔNUS -->
+  <section class="sec">
+    <div class="sec-title">05 — Bônus prometidos</div>
+    <div class="block" id="f-bonus">
+      <div class="bonus-list" id="bonus-list"></div>
+      <button type="button" class="add-btn" id="add-bonus"><i class="ti ti-plus"></i>Adicionar bônus</button>
+      <label class="check-inline"><input type="checkbox" id="sem_bonus">Nenhum bônus foi prometido</label>
+      <div class="err">Descreva os bônus ou marque que não houve bônus.</div>
+    </div>
+  </section>
+
+  <!-- 06 OBS -->
+  <section class="sec">
+    <div class="sec-title">06 — Contexto para o onboarding</div>
+    <div class="field" id="f-observacoes">
+      <label>Observações</label>
+      <textarea id="observacoes" placeholder="Momento do aluno, expectativas, combinados especiais, quem cuida do acesso, algo que o onboarding precisa saber"></textarea>
+    </div>
+  </section>
+
+  <button type="submit" class="submit" id="submit"><i class="ti ti-check"></i>Registrar venda</button>
+  <div class="form-error" id="form-error"></div>
+</form>
+
+<!-- SUCESSO -->
+<div id="done">
+  <div class="done-head">
+    <div class="done-ring"><i class="ti ti-check"></i></div>
+    <h1>Venda registrada</h1>
+    <p id="done-sub"></p>
+  </div>
+  <section class="sec">
+    <div class="sec-title">Resumo</div>
+    <div id="summary"></div>
+  </section>
+  <div class="done-actions">
+    <button type="button" class="btn-ghost" id="copy-sum"><i class="ti ti-copy"></i>Copiar resumo</button>
+    <button type="button" class="submit" id="again"><i class="ti ti-plus"></i>Registrar outra venda</button>
+  </div>
+</div>
+</main>
+
+<script>
+const SB_URL='https://zcfpurlpebhymlayrohn.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpjZnB1cmxwZWJoeW1sYXlyb2huIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2Njg2ODgsImV4cCI6MjA5NjI0NDY4OH0.PTMAtd8uzU7SxMNBsfdVpE95Kr4ZHTb39XXprNhjIko';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+// Catálogo. "evento" = acesso atrelado a uma data de evento, não a meses.
+// As chaves precisam bater com o check de produto da função registrar_venda.
+const PRODUTOS=[
+  {key:'mentoria', label:'Mentoria ÍntimaPro',            tag:'Acompanhamento com aulas ao vivo e comunidade', color:'#C9A84C', meses:6},
+  {key:'posgrad',  label:'Pós-Graduação',                 tag:'Formação com módulos práticos e certificação',  color:'#5B82E8', meses:12},
+  {key:'master',   label:'Master Legacy',                 tag:'Encontros presenciais e Mesa do Conselho',      color:'#C0463A', meses:12},
+  {key:'workshop', label:'Workshop Prático Presencial',   tag:'Evento presencial',                             color:'#3DA882', evento:true},
+  {key:'thunder',  label:'Thunder Legacy',                tag:'Evento presencial de marketing médico',         color:'#9B6BE0', evento:true},
+  {key:'outro',    label:'Outro produto',                 tag:'Algo que não está na lista',                    color:'#888077', meses:12, outro:true},
+];
+const DURACOES=[1,2,3,4,6,9,12,18,24,36];
+const FORMAS={pix:'PIX à vista',cartao:'Cartão de crédito',pix_recorrente:'PIX recorrente',boleto_recorrente:'Boleto recorrente',cartao_recorrente:'Cartão recorrente'};
+const TIPOS={nova:'Aluno novo',renovacao:'Renovação',upgrade:'Upgrade'};
+const RECORRENTES=['pix_recorrente','boleto_recorrente','cartao_recorrente'];
+
+const $=id=>document.getElementById(id);
+const state={tipo:'',forma:'',tem_entrada:'',produtos:{}};
+
+// ── utilidades ──
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){return null;}}
+function hojeISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function addMeses(iso,m){
+  const[y,mo,d]=iso.split('-').map(Number);
+  const alvo=new Date(y,mo-1+m,1);
+  const ult=new Date(alvo.getFullYear(),alvo.getMonth()+1,0).getDate();
+  alvo.setDate(Math.min(d,ult));
+  return `${alvo.getFullYear()}-${String(alvo.getMonth()+1).padStart(2,'0')}-${String(alvo.getDate()).padStart(2,'0')}`;
+}
+function br(iso){if(!iso)return '—';const[y,m,d]=iso.split('-');return `${d}/${m}/${y}`;}
+function brl(n){return (n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+function moneyVal(el){const d=(el.value||'').replace(/\D/g,'');return d?Number(d)/100:0;}
+function digits(s){return (s||'').replace(/\D/g,'');}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function cpfOk(c){
+  if(c.length!==11||/^(\d)\1+$/.test(c))return false;
+  for(const t of [9,10]){let s=0;for(let i=0;i<t;i++)s+=Number(c[i])*(t+1-i);let r=(s*10)%11;if(r===10)r=0;if(r!==Number(c[t]))return false;}
+  return true;
+}
+function cnpjOk(c){
+  if(c.length!==14||/^(\d)\1+$/.test(c))return false;
+  const calc=n=>{let s=0,p=n-7;for(let i=0;i<n;i++){s+=Number(c[i])*p--;if(p<2)p=9;}const r=s%11;return r<2?0:11-r;};
+  return calc(12)===Number(c[12])&&calc(13)===Number(c[13]);
+}
+
+// ── máscaras ──
+document.querySelectorAll('.money').forEach(el=>{
+  el.addEventListener('input',()=>{
+    const d=digits(el.value).replace(/^0+/,'').slice(0,11);
+    el.value=d?brl(Number(d)/100):'';
+    calcConf();
+  });
+});
+$('telefone').addEventListener('input',e=>{
+  let d=digits(e.target.value);
+  if(d.length>11&&d.startsWith('55'))d=d.slice(2);
+  d=d.slice(0,11);
+  let v=d;
+  if(d.length>2)v=`(${d.slice(0,2)}) ${d.slice(2)}`;
+  if(d.length>7)v=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;
+  e.target.value=v;
+});
+$('documento').addEventListener('input',e=>{
+  const d=digits(e.target.value).slice(0,14);
+  let v=d;
+  if(d.length<=11){v=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,'$1.$2.$3-$4');}
+  else{v=d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/,'$1.$2.$3/$4-$5');}
+  e.target.value=v;
+});
+$('sem_documento').addEventListener('change',e=>{
+  $('documento').disabled=e.target.checked;
+  if(e.target.checked){$('documento').value='';$('f-documento').classList.remove('invalid');}
+});
+
+// ── segmentados ──
+document.querySelectorAll('.seg').forEach(seg=>{
+  seg.addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    state[seg.dataset.name]=b.dataset.v;
+    seg.closest('.block').classList.remove('invalid');
+    if(seg.dataset.name==='tem_entrada'){
+      const sim=b.dataset.v==='sim';
+      $('f-entrada_valor').style.display=sim?'':'none';
+      $('f-entrada_forma').style.display=sim?'':'none';
+      calcConf();
+    }
+  });
+});
+
+// ── produtos ──
+function renderProdutos(){
+  const dv=$('data_venda').value||hojeISO();
+  $('prods').innerHTML=PRODUTOS.map(p=>{
+    const dur=DURACOES.map(m=>`<option value="${m}" ${m===p.meses?'selected':''}>${m===1?'1 mês':m+' meses'}</option>`).join('');
+    const acesso=p.evento
+      ?`<div class="field" data-f="inicio"><label>Data do evento <span class="req">*</span></label><input type="date" data-k="inicio"><div class="err">Informe a data da edição.</div></div>`
+      :`<div class="field" data-f="inicio"><label>Início do acesso <span class="req">*</span></label><input type="date" data-k="inicio" value="${dv}"><div class="err">Informe o início.</div></div>
+        <div class="field" data-f="meses"><label>Tempo de acesso <span class="req">*</span></label><select data-k="meses">${dur}</select><div class="err">Informe o tempo.</div></div>`;
+    const outro=p.outro?`<div class="field full" data-f="detalhe"><label>Qual produto? <span class="req">*</span></label><input type="text" data-k="detalhe" placeholder="Nome do produto"><div class="err">Descreva o produto.</div></div>`:'';
+    return `<div class="prod" data-key="${p.key}" style="--pc:${p.color}">
+      <div class="prod-head"><div class="box"></div><div class="pdot"></div><div><div class="pname">${p.label}</div><div class="ptag">${p.tag}</div></div></div>
+      <div class="prod-body"><div class="grid">${outro}${acesso}</div>${p.evento?'':'<div class="fim"><i class="ti ti-calendar-event"></i>Acesso até <b data-fim>—</b></div>'}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.prod').forEach(el=>{
+    el.querySelector('.prod-head').addEventListener('click',()=>{
+      el.classList.toggle('on');
+      el.querySelector('.box').textContent=el.classList.contains('on')?'✓':'';
+      $('f-produtos').classList.remove('invalid');
+      updFim(el);
+    });
+    el.querySelectorAll('[data-k]').forEach(i=>i.addEventListener('input',()=>{i.closest('.field').classList.remove('invalid');updFim(el);}));
+    updFim(el);
+  });
+}
+function updFim(el){
+  const out=el.querySelector('[data-fim]');if(!out)return;
+  const ini=el.querySelector('[data-k=inicio]').value,m=Number(el.querySelector('[data-k=meses]').value);
+  out.textContent=ini&&m?br(addMeses(ini,m)):'—';
+}
+// Início dos acessos acompanha a data da venda enquanto ninguém mexeu nele.
+let dataVendaAnterior='';
+$('data_venda').addEventListener('input',e=>{
+  const nova=e.target.value;
+  document.querySelectorAll('.prod [data-k=inicio]').forEach(i=>{
+    const p=PRODUTOS.find(x=>x.key===i.closest('.prod').dataset.key);
+    if(!p.evento&&(!i.value||i.value===dataVendaAnterior)){i.value=nova;updFim(i.closest('.prod'));}
+  });
+  dataVendaAnterior=nova;
+  $('f-data_venda').classList.remove('invalid');
+});
+
+// ── pagamento ──
+document.querySelectorAll('.pay').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.pay').forEach(x=>x.classList.toggle('on',x===b));
+  state.forma=b.dataset.v;
+  $('f-forma').classList.remove('invalid');
+  $('box-cartao').style.display=state.forma==='cartao'?'':'none';
+  $('box-rec').style.display=RECORRENTES.includes(state.forma)?'':'none';
+  calcConf();
+}));
+$('cartao_parcelas').innerHTML=Array.from({length:24},(_,i)=>`<option value="${i+1}">${i===0?'À vista (1x)':(i+1)+'x'}</option>`).join('');
+$('plataforma').addEventListener('change',e=>{$('plataforma_outra').style.display=e.target.value==='outra'?'':'none';});
+$('parcelas_qtd').addEventListener('input',calcConf);
+function calcConf(){
+  const entrada=state.tem_entrada==='sim'?moneyVal($('entrada_valor')):0;
+  const soma=entrada+Number($('parcelas_qtd').value||0)*moneyVal($('parcela_valor'));
+  const total=moneyVal($('valor_total'));
+  $('conf-val').textContent=brl(soma);
+  const conf=$('conf');conf.classList.remove('warn','ok');
+  if(soma&&total){
+    const dif=soma-total;
+    if(Math.abs(dif)<1){conf.classList.add('ok');$('conf-hint').textContent='Bate com o valor total.';}
+    else{conf.classList.add('warn');$('conf-hint').textContent=`Diferença de ${brl(Math.abs(dif))} ${dif>0?'acima':'abaixo'} do valor total. Se foi combinado assim, explique nas condições.`;}
+  }else $('conf-hint').textContent='Serve pra conferir com o valor total.';
+}
+
+// ── bônus ──
+function addBonus(v=''){
+  const row=document.createElement('div');row.className='bonus-row field';
+  row.innerHTML=`<input type="text" placeholder="Ex: 1 consultoria individual de 1h com a Dra." value="${esc(v)}"><button type="button" class="x-btn" title="Remover"><i class="ti ti-x"></i></button>`;
+  row.querySelector('input').addEventListener('input',()=>$('f-bonus').classList.remove('invalid'));
+  row.querySelector('button').onclick=()=>row.remove();
+  $('bonus-list').appendChild(row);
+  return row.querySelector('input');
+}
+$('add-bonus').onclick=()=>addBonus().focus();
+$('sem_bonus').addEventListener('change',e=>{
+  const on=e.target.checked;
+  $('bonus-list').style.display=on?'none':'';
+  $('add-bonus').disabled=on;
+  $('f-bonus').classList.remove('invalid');
+});
+
+// ── limpar erro ao digitar ──
+document.querySelectorAll('.field input,.field select,.field textarea').forEach(el=>{
+  el.addEventListener('input',()=>el.closest('.field')?.classList.remove('invalid'));
+});
+
+// ── validação e montagem ──
+function coletar(){
+  const erros=[];
+  const bad=id=>{$(id).classList.add('invalid');erros.push(id);};
+  const v=id=>$(id).value.trim();
+
+  if(!v('vendedor'))bad('f-vendedor');
+  if(!v('data_venda'))bad('f-data_venda');
+  if(!state.tipo)bad('f-tipo');
+
+  const nome=v('nome').replace(/\s+/g,' ');
+  if(nome.split(' ').length<2)bad('f-nome');
+  const tel=digits(v('telefone'));
+  if(tel.length<10||tel.length>11)bad('f-telefone');
+  const email=v('email').toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))bad('f-email');
+  const doc=digits(v('documento'));
+  const semDoc=$('sem_documento').checked;
+  if(!semDoc&&!(cpfOk(doc)||cnpjOk(doc)))bad('f-documento');
+
+  const acessos=[];let prodErr=false;
+  const marcados=[...document.querySelectorAll('.prod.on')];
+  if(!marcados.length)prodErr=true;
+  marcados.forEach(el=>{
+    const p=PRODUTOS.find(x=>x.key===el.dataset.key);
+    const get=k=>el.querySelector(`[data-k=${k}]`);
+    const inicio=get('inicio').value;
+    if(!inicio){get('inicio').closest('.field').classList.add('invalid');prodErr=true;}
+    let detalhe=null;
+    if(p.outro){detalhe=get('detalhe').value.trim();if(!detalhe){get('detalhe').closest('.field').classList.add('invalid');prodErr=true;}}
+    const meses=p.evento?null:Number(get('meses').value);
+    acessos.push({produto:p.key,produto_detalhe:detalhe,inicio,duracao_meses:meses,fim:p.evento?inicio:(inicio&&meses?addMeses(inicio,meses):null)});
+  });
+  if(prodErr)bad('f-produtos');
+
+  const total=moneyVal($('valor_total'));
+  if(!total)bad('f-valor_total');
+  let plataforma=$('plataforma').value;
+  if(plataforma==='outra')plataforma=v('plataforma_outra');
+  if(!plataforma)bad('f-plataforma');
+  if(!state.forma)bad('f-forma');
+
+  const pg={cartao_parcelas:null,entrada_valor:null,entrada_forma:null,parcelas_qtd:null,parcela_valor:null,primeiro_vencimento:null};
+  if(state.forma==='cartao')pg.cartao_parcelas=Number($('cartao_parcelas').value);
+  if(RECORRENTES.includes(state.forma)){
+    if(!state.tem_entrada)bad('f-tem_entrada');
+    if(state.tem_entrada==='sim'){
+      pg.entrada_valor=moneyVal($('entrada_valor'));if(!pg.entrada_valor)bad('f-entrada_valor');
+      pg.entrada_forma=$('entrada_forma').value;if(!pg.entrada_forma)bad('f-entrada_forma');
+    }
+    pg.parcelas_qtd=Number($('parcelas_qtd').value)||null;if(!pg.parcelas_qtd||pg.parcelas_qtd<1||pg.parcelas_qtd>60)bad('f-parcelas_qtd');
+    pg.parcela_valor=moneyVal($('parcela_valor'));if(!pg.parcela_valor)bad('f-parcela_valor');
+    pg.primeiro_vencimento=v('primeiro_vencimento')||null;if(!pg.primeiro_vencimento)bad('f-primeiro_vencimento');
+  }
+
+  const semBonus=$('sem_bonus').checked;
+  const bonus=semBonus?[]:[...document.querySelectorAll('#bonus-list input')].map(i=>i.value.trim()).filter(Boolean);
+  if(!semBonus&&!bonus.length)bad('f-bonus');
+
+  let ig=v('instagram').replace(/^.*instagram\.com\//i,'').replace(/[/?].*$/,'').replace(/^@/,'');
+  return {erros,payload:{
+    vendedor:v('vendedor'),tipo:state.tipo,data_venda:v('data_venda'),
+    aluno_nome:nome,aluno_email:email,aluno_telefone:tel?'55'+tel:'',
+    aluno_documento:semDoc?null:doc,aluno_instagram:ig?'@'+ig:null,
+    aluno_especialidade:v('especialidade')||null,aluno_cidade:v('cidade')||null,
+    valor_total:total,forma_pagamento:state.forma,plataforma,...pg,
+    pagamento_detalhes:v('pagamento_detalhes')||null,
+    bonus,sem_bonus:semBonus,observacoes:v('observacoes')||null,
+    acessos
+  }};
+}
+
+$('form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const fe=$('form-error');fe.classList.remove('show');
+  document.querySelectorAll('.invalid').forEach(x=>x.classList.remove('invalid'));
+  const{erros,payload}=coletar();
+  if(erros.length){
+    fe.textContent=`Faltam ${erros.length} ${erros.length===1?'campo':'campos'} obrigatórios. Estão marcados em vermelho.`;
+    fe.classList.add('show');
+    $(erros[0]).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  const btn=$('submit');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i>Registrando...';
+  try{
+    const{data,error}=await sb.rpc('registrar_venda',{p:payload});
+    if(error)throw error;
+    lembrarVendedor(payload.vendedor);
+    mostrarSucesso(payload,data);
+  }catch(err){
+    console.error(err);
+    fe.textContent='Não foi possível registrar agora. Seus dados continuam preenchidos; tente de novo em instantes. Se persistir, avise a gestão. ('+(err.message||err)+')';
+    fe.classList.add('show');
+  }finally{
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i>Registrar venda';
+  }
+});
+
+// ── sucesso ──
+function textoPagamento(p){
+  let t=`${brl(p.valor_total)} · ${FORMAS[p.forma_pagamento]}`;
+  if(p.cartao_parcelas)t+=p.cartao_parcelas===1?' à vista':` em ${p.cartao_parcelas}x`;
+  if(p.parcelas_qtd){
+    if(p.entrada_valor)t+=`\nEntrada ${brl(p.entrada_valor)} (${{pix:'PIX',cartao:'cartão',boleto:'boleto'}[p.entrada_forma]})`;
+    t+=`\n${p.parcelas_qtd}x de ${brl(p.parcela_valor)} a partir de ${br(p.primeiro_vencimento)}`;
+  }
+  return t+`\nPlataforma: ${p.plataforma}`+(p.pagamento_detalhes?`\n${p.pagamento_detalhes}`:'');
+}
+function textoAcessos(p){
+  return p.acessos.map(a=>{
+    const prod=PRODUTOS.find(x=>x.key===a.produto);
+    const nome=a.produto_detalhe||prod.label;
+    return prod.evento?`${nome} · evento em ${br(a.inicio)}`:`${nome} · ${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'} (${br(a.inicio)} a ${br(a.fim)})`;
+  }).join('\n');
+}
+let resumoTexto='';
+function mostrarSucesso(p){
+  const linhas=[
+    ['Aluno',p.aluno_nome],
+    ['Contato',[p.aluno_telefone&&'+'+p.aluno_telefone,p.aluno_email,p.aluno_instagram].filter(Boolean).join('\n')],
+    ['Tipo',TIPOS[p.tipo]],
+    ['Produtos',textoAcessos(p)],
+    ['Pagamento',textoPagamento(p)],
+    ['Bônus',p.bonus.length?p.bonus.map(b=>'• '+b).join('\n'):'Nenhum'],
+    ['Vendido por',`${p.vendedor} em ${br(p.data_venda)}`],
+  ];
+  if(p.observacoes)linhas.push(['Observações',p.observacoes]);
+  $('summary').innerHTML=linhas.map(([k,v])=>`<div class="sum-row"><span>${k}</span><span>${esc(v)}</span></div>`).join('');
+  resumoTexto='*Nova venda registrada*\n\n'+linhas.map(([k,v])=>`*${k}:*\n${v}`).join('\n\n');
+  $('done-sub').textContent=`${p.aluno_nome} já está na base.`;
+  $('form').style.display='none';$('done').style.display='block';
+  window.scrollTo({top:0});
+}
+$('copy-sum').onclick=async()=>{
+  try{await navigator.clipboard.writeText(resumoTexto);$('copy-sum').innerHTML='<i class="ti ti-check"></i>Copiado';}
+  catch(e){$('copy-sum').innerHTML='<i class="ti ti-x"></i>Não copiou';}
+  setTimeout(()=>$('copy-sum').innerHTML='<i class="ti ti-copy"></i>Copiar resumo',1800);
+};
+$('again').onclick=()=>{
+  const vend=$('vendedor').value;
+  $('form').reset();
+  Object.assign(state,{tipo:'',forma:'',tem_entrada:''});
+  document.querySelectorAll('.seg button,.pay').forEach(x=>x.classList.remove('on'));
+  ['box-cartao','box-rec','f-entrada_valor','f-entrada_forma','plataforma_outra'].forEach(id=>$(id).style.display='none');
+  $('bonus-list').innerHTML='';$('bonus-list').style.display='';$('add-bonus').disabled=false;addBonus();
+  $('documento').disabled=false;
+  $('vendedor').value=vend;$('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
+  renderProdutos();calcConf();
+  $('done').style.display='none';$('form').style.display='block';window.scrollTo({top:0});
+};
+
+// ── vendedor lembrado neste aparelho ──
+function lembrarVendedor(n){
+  let l=[];try{l=JSON.parse(store('vv_vendedores')||'[]');}catch(e){}
+  l=[n,...l.filter(x=>x.toLowerCase()!==n.toLowerCase())].slice(0,8);
+  store('vv_vendedores',JSON.stringify(l));store('vv_vendedor',n);
+}
+
+// ── início ──
+(function init(){
+  $('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
+  let l=[];try{l=JSON.parse(store('vv_vendedores')||'[]');}catch(e){}
+  $('vendedores-list').innerHTML=l.map(n=>`<option value="${esc(n)}">`).join('');
+  const ult=store('vv_vendedor');if(ult)$('vendedor').value=ult;
+  renderProdutos();addBonus();
+})();
+</script>
+</body>
+</html>
