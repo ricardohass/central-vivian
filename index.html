@@ -1289,7 +1289,7 @@ async function loadVendasAlunos(force){
   vaLoading=true;
   ['vd-list','al-list'].forEach(id=>{if(!OB_DATA||!BASE_DATA)document.getElementById(id).innerHTML='<div class="ob-empty">Carregando...</div>';});
   try{
-    const[v,b]=await Promise.all([obRpc('onboarding_listar',{}),obRpc('base_antiga_listar',{})]);
+    const[v,b]=await Promise.all([obRpc('onboarding_listar',{}),obRpc('base_antiga_listar',{}),carregarVendedores()]);
     OB_DATA=v;BASE_DATA=b;CLIENTES=null;obLastLoad=new Date();
     render();
   }catch(e){
@@ -1297,6 +1297,17 @@ async function loadVendasAlunos(force){
     const msg='<div class="ob-empty">Não foi possível carregar.<br>'+escH(e.message||'')+'</div>';
     ['vd-list','al-list'].forEach(id=>document.getElementById(id).innerHTML=msg);
   }finally{vaLoading=false;}
+}
+
+// Quem tem usuário na Central entra como vendedor sozinho, sem duplicar pelo primeiro nome.
+async function carregarVendedores(){
+  try{
+    const{data,error}=await sb.from('usuarios').select('nome').order('created_at');
+    if(error||!data)return;
+    data.map(u=>(u.nome||'').trim()).filter(Boolean).forEach(n=>{
+      if(!VENDEDORES.some(x=>vaPrimeiroNome(x)===vaPrimeiroNome(n)))VENDEDORES.push(n);
+    });
+  }catch(e){console.error(e);}
 }
 
 function vaPreencherSelects(){

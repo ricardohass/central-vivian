@@ -731,10 +731,28 @@ $('again').onclick=()=>{
 function lembrarVendedor(n){store('vv_vendedor',n);}
 
 // ── início ──
+// Quem tem usuário na Central entra na lista sozinho (mesmo nome do cadastro).
+// Nome que já está na lista pelo primeiro nome não duplica ("Alicia CS" = "Alicia").
+function renderVendedores(){
+  const cur=$('vendedor').value||store('vv_vendedor');
+  $('vendedor').innerHTML='<option value="">Selecione</option>'+VENDEDORES.map(n=>`<option>${n}</option>`).join('');
+  if(VENDEDORES.includes(cur))$('vendedor').value=cur;
+}
+async function carregarVendedores(){
+  const pn=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().split(/\s+/)[0];
+  try{
+    const{data,error}=await sb.from('usuarios').select('nome').order('created_at');
+    if(error||!data)return;
+    data.map(u=>(u.nome||'').trim()).filter(Boolean).forEach(n=>{
+      if(!VENDEDORES.some(x=>pn(x)===pn(n)))VENDEDORES.push(n);
+    });
+    renderVendedores();
+  }catch(e){console.error(e);}
+}
+
 (function init(){
   $('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
-  $('vendedor').innerHTML='<option value="">Selecione</option>'+VENDEDORES.map(n=>`<option>${n}</option>`).join('');
-  const ult=store('vv_vendedor');if(VENDEDORES.includes(ult))$('vendedor').value=ult;
+  renderVendedores();carregarVendedores();
   renderProdutos();addBonus();
 })();
 </script>
