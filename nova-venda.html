@@ -108,15 +108,46 @@ button{font-family:inherit}
 .conf.warn b{color:#E08A7F}
 .conf.ok b{color:var(--green)}
 
-/* BÔNUS */
-.bonus-list{display:flex;flex-direction:column;gap:8px}
-.bonus-row{display:flex;gap:8px}
-.bonus-row input{flex:1}
-.x-btn{background:none;border:0.5px solid var(--border);color:var(--text-muted);width:42px;border-radius:2px;cursor:pointer;font-size:15px;flex-shrink:0;transition:all .2s}
-.x-btn:hover{border-color:var(--red);color:var(--red)}
-.add-btn{background:none;border:0.5px dashed var(--gold-dim);color:var(--gold-dim);padding:10px 14px;border-radius:2px;cursor:pointer;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-top:10px;transition:all .2s}
-.add-btn:hover{border-color:var(--gold);color:var(--gold)}
-.add-btn:disabled{opacity:.35;cursor:default}
+/* BÔNUS (lista fechada; mesmo bloco no index.html) */
+.bn-list{display:flex;flex-direction:column;gap:6px}
+.bn-item{border:0.5px solid var(--border);border-radius:3px;background:var(--dark3);transition:border-color .2s,box-shadow .3s}
+.bn-item:hover{border-color:var(--border-hover)}
+.bn-item.on{border-color:var(--gold)}
+.bn-item.flash{box-shadow:0 0 0 2px rgba(201,168,76,0.4)}
+.bn-head{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;background:none;border:none;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;text-align:left;cursor:pointer;line-height:1.35}
+.bn-box{width:18px;height:18px;border:0.5px solid var(--border-hover);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:var(--dark);transition:all .2s}
+.bn-item.on .bn-box{background:var(--gold);border-color:var(--gold)}
+.bn-item.on .bn-box::after{content:'✓'}
+.bn-nome{flex:1;min-width:0;overflow-wrap:anywhere}
+.bn-usos{font-size:11px;color:var(--text-muted);flex-shrink:0}
+.bn-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 6px;border:0.5px solid var(--gold-dim);color:var(--gold);border-radius:1px;flex-shrink:0}
+.bn input[type=text],.bn input[type=search]{width:100%;background:var(--dark2);border:0.5px solid var(--border);color:var(--text);font-family:'Jost',sans-serif;font-size:16px;padding:9px 11px;border-radius:2px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.bn input:focus{border-color:var(--gold-dim)}
+.bn input::placeholder{color:#5E5852}
+.bn .bn-busca{margin-bottom:8px;background:var(--dark3)}
+.bn input.bn-obs{display:none;width:calc(100% - 52px);margin:0 12px 12px 40px;font-size:14px}
+.bn-item.on .bn-obs{display:block}
+.bn-vazio{font-size:13px;color:var(--text-muted);padding:4px 0 2px;line-height:1.5}
+.bn-add{background:none;border:0.5px dashed var(--gold-dim);color:var(--gold-dim);padding:10px 14px;border-radius:2px;cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;margin-top:10px;transition:all .2s;text-align:left;line-height:1.4}
+.bn-add:hover{border-color:var(--gold);color:var(--gold)}
+.bn-novo{margin-top:10px;padding:14px;border:0.5px dashed var(--gold-dim);border-radius:3px;background:rgba(201,168,76,0.04)}
+.bn-novo label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px}
+.bn-dica{font-size:12px;color:var(--text-muted);margin-top:7px;line-height:1.45}
+.bn-sug:not(:empty){margin-top:12px}
+.bn-sug-t{font-size:12px;color:#E0B35F;margin-bottom:6px;line-height:1.4}
+.bn-sug-t.err{color:#E08A7F;margin-bottom:0}
+.bn-sug.alerta .bn-sug-t{font-size:14px;font-weight:500}
+.bn-sug-i{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:5px;padding:10px 11px;background:rgba(224,179,95,0.07);border:0.5px solid rgba(224,179,95,0.4);border-radius:2px;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;text-align:left;cursor:pointer;line-height:1.35;transition:border-color .2s}
+.bn-sug-i:hover{border-color:#E0B35F}
+.bn-sug-i span{min-width:0;overflow-wrap:anywhere}
+.bn-sug-i b{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;color:#E0B35F;flex-shrink:0}
+.bn-novo-btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bn-cancel,.bn-ok{font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;border-radius:2px;cursor:pointer;transition:all .2s;line-height:1.3}
+.bn-cancel{background:none;border:0.5px solid var(--border);color:var(--text-muted)}
+.bn-cancel:hover{border-color:var(--gold-dim);color:var(--text)}
+.bn-ok{flex:1;background:var(--gold-dim);border:0.5px solid var(--gold-dim);color:var(--dark);font-weight:500}
+.bn-ok:hover{background:var(--gold)}
+.block.invalid .bn-item:not(.on){border-color:rgba(192,70,58,0.45)}
 
 /* ENVIO */
 .submit{width:100%;background:var(--gold-dim);border:none;color:var(--dark);font-size:13px;letter-spacing:2.5px;text-transform:uppercase;padding:16px;border-radius:2px;cursor:pointer;transition:background .2s;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500}
@@ -352,12 +383,11 @@ button{font-family:inherit}
 
   <!-- 05 BÔNUS -->
   <section class="sec">
-    <div class="sec-title">05 — Bônus prometidos</div>
+    <div class="sec-title">05 — Bônus prometidos <em>marque os que entraram na venda</em></div>
     <div class="block" id="f-bonus">
-      <div class="bonus-list" id="bonus-list"></div>
-      <button type="button" class="add-btn" id="add-bonus"><i class="ti ti-plus"></i>Adicionar bônus</button>
+      <div id="bonus-picker"></div>
       <label class="check-inline"><input type="checkbox" id="sem_bonus"><span class="cbox"></span><span class="ctext">Nenhum bônus foi prometido</span></label>
-      <div class="err">Descreva os bônus ou marque que não houve bônus.</div>
+      <div class="err" id="bonus-err"></div>
     </div>
   </section>
 
@@ -555,20 +585,173 @@ function calcConf(){
   }else $('conf-hint').textContent='Serve pra conferir com o valor total.';
 }
 
-// ── bônus ──
-function addBonus(v=''){
-  const row=document.createElement('div');row.className='bonus-row field';
-  row.innerHTML=`<input type="text" placeholder="Ex: 1 consultoria individual de 1h com a Dra." value="${esc(v)}"><button type="button" class="x-btn" title="Remover"><i class="ti ti-x"></i></button>`;
-  row.querySelector('input').addEventListener('input',()=>$('f-bonus').classList.remove('invalid'));
-  row.querySelector('button').onclick=()=>row.remove();
-  $('bonus-list').appendChild(row);
-  return row.querySelector('input');
+// ── BÔNUS: lista fechada + cadastro na hora (mesmo bloco em nova-venda.html e index.html) ──
+// A lista vive em bonus_catalogo (sql/005). Bônus novo entra nela quando a venda é salva.
+// BN_OK: null = carregando, false = banco ainda sem a lista (cai no modo antigo, texto livre).
+let BN_CAT=[],BN_OK=null;
+const BN_STOP=new Set('bonus de da do das dos para pra com e a o as os em no na um uma por ao que'.split(' '));
+const BN_SIN={reuniao:'call',consultoria:'call',sessao:'call',chamada:'call',ligacao:'call',entrada:'ingresso',convite:'ingresso',vaga:'ingresso',ticket:'ingresso',vitalicia:'vitalicio'};
+function bnEsc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function bnNorm(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
+// bnNome e bnChave espelham bonus_nome() e bonus_chave() do banco.
+function bnNome(s){const x=String(s||'').replace(/\s+/g,' ').trim().replace(/^b[oô]nus( ?[:\-–] ?| )(d[aeo] )?/i,'').slice(0,120).trim();return x.charAt(0).toUpperCase()+x.slice(1);}
+function bnChave(s){return bnNorm(bnNome(s));}
+function bnRaiz(w){
+  if(w.length>4&&w.endsWith('ais'))return w.slice(0,-3)+'al';
+  if(w.length>4&&w.endsWith('oes'))return w.slice(0,-3)+'ao';
+  if(w.length>4&&/[rsz]es$/.test(w))return w.slice(0,-2);
+  if(w.length>3&&w.endsWith('s'))return w.slice(0,-1);
+  return w;
 }
-$('add-bonus').onclick=()=>addBonus().focus();
+// Palavras que identificam o bônus: sem artigos, sem quantidade ("2", "3x", "1h"), no singular,
+// com sinônimos juntos e "ano que vem" trocado pelo ano.
+function bnTokens(s){
+  const ano=new Date().getFullYear();
+  return [...new Set(bnNorm(s)
+    .replace(/\b(ano que vem|proximo ano)\b/g,String(ano+1)).replace(/\b(d?es[st]e ano)\b/g,String(ano))
+    .split(' ').filter(w=>w&&!BN_STOP.has(w)&&!/^\d{1,2}(x|h)?$/.test(w))
+    .map(bnRaiz).map(w=>BN_SIN[w]||w))];
+}
+function bnLev1(a,b){
+  if(Math.abs(a.length-b.length)>1)return false;
+  let i=0,j=0,d=0;
+  while(i<a.length&&j<b.length){
+    if(a[i]===b[j]){i++;j++;continue;}
+    if(++d>1)return false;
+    if(a.length>b.length)i++;else if(b.length>a.length)j++;else{i++;j++;}
+  }
+  return d+(a.length-i)+(b.length-j)<=1;
+}
+function bnIgual(a,b){
+  const m=Math.min(a.length,b.length);
+  return a===b||(m>=4&&(a.startsWith(b)||b.startsWith(a)))||(m>=5&&bnLev1(a,b));
+}
+function bnDice(a,b){
+  const g=s=>{const m=new Map();for(let i=0;i<s.length-1;i++){const k=s.slice(i,i+2);m.set(k,(m.get(k)||0)+1);}return m;};
+  const A=g(a),B=g(b);let n=0,tot=0;
+  A.forEach((v,k)=>{tot+=v;n+=Math.min(v,B.get(k)||0);});B.forEach(v=>tot+=v);
+  return tot?2*n/tot:0;
+}
+// Bônus da lista que podem ser o mesmo que `texto` com outro nome. Erra para o lado de perguntar.
+function bnParecidos(texto,lista){
+  const tq=bnTokens(texto),cq=bnChave(texto);
+  if(!cq)return[];
+  return lista.map(c=>{
+    const tc=bnTokens(c.nome);
+    const comuns=tq.filter(a=>tc.some(b=>bnIgual(a,b))).length;
+    const s=Math.max(tq.length&&tc.length?comuns/Math.min(tq.length,tc.length):0,bnDice(cq,bnChave(c.nome)));
+    return{c,s,comuns};
+  }).filter(x=>bnChave(x.c.nome)!==cq&&((x.comuns>=1&&x.s>=0.5)||x.s>=0.62))
+    .sort((a,b)=>b.s-a.s||(b.c.usos||0)-(a.c.usos||0)).map(x=>x.c);
+}
+async function bnCarregar(){
+  try{
+    const{data,error}=await sb.rpc('bonus_listar');
+    if(error)throw error;
+    BN_CAT=data||[];BN_OK=true;
+  }catch(e){console.error(e);BN_CAT=[];BN_OK=false;}
+}
+// Monta o seletor em `root`. sel = [{nome,obs}] já marcados. Avisa mudanças pelo evento "bn-change".
+function bnMontar(root,sel){
+  sel=sel||[];
+  const itens=BN_CAT.map(c=>({...c}));
+  sel.forEach(s=>{if(!itens.some(c=>bnChave(c.nome)===bnChave(s.nome)))itens.push({nome:s.nome,usos:0,novo:true});});
+  root.classList.add('bn');
+  root.innerHTML=`<input type="search" class="bn-busca" placeholder="Buscar na lista de bônus" style="display:none">
+    <div class="bn-list"></div>
+    <div class="bn-vazio" style="display:none"></div>
+    <button type="button" class="bn-add"><i class="ti ti-plus"></i>Cadastrar um bônus que não está na lista</button>
+    <div class="bn-novo" style="display:none">
+      <label>Nome do novo bônus</label>
+      <input type="text" class="bn-novo-in" maxlength="120" autocomplete="off" placeholder="Ex: Call individual com a Vivian">
+      <div class="bn-dica">Antes de cadastrar, confira se ele já não está na lista com outro nome. Use o nome geral, sem quantidade: a quantidade vai no detalhe da venda.</div>
+      <div class="bn-sug"></div>
+      <div class="bn-novo-btns"><button type="button" class="bn-cancel">Cancelar</button><button type="button" class="bn-ok">Cadastrar bônus</button></div>
+    </div>`;
+  const q=s=>root.querySelector(s);
+  const list=q('.bn-list'),box=q('.bn-novo'),inp=q('.bn-novo-in'),sug=q('.bn-sug'),busca=q('.bn-busca'),vazio=q('.bn-vazio'),ok=q('.bn-ok');
+  let confirmado=''; // chave do nome que a pessoa já disse ser diferente dos parecidos
+  const mudou=()=>root.dispatchEvent(new CustomEvent('bn-change'));
+  const cat=()=>[...list.children].map(e=>e._c);
+  function estado(){
+    vazio.style.display=list.children.length?'none':'';
+    vazio.textContent=BN_OK===null?'Carregando a lista de bônus...':'Ainda não há bônus na lista. Cadastre o primeiro logo abaixo.';
+    busca.style.display=list.children.length>8?'':'none';
+  }
+  function addItem(c,on,obs){
+    const el=document.createElement('div');el.className='bn-item'+(on?' on':'');el._c=c;
+    el.innerHTML=`<button type="button" class="bn-head"><span class="bn-box"></span><span class="bn-nome">${bnEsc(c.nome)}</span>${c.novo?'<span class="bn-tag">novo</span>':''}${c.usos?`<span class="bn-usos">${c.usos} ${c.usos===1?'venda':'vendas'}</span>`:''}</button>
+      <input type="text" class="bn-obs" maxlength="300" placeholder="Detalhe nesta venda (opcional). Ex: 2 calls de 1h" value="${bnEsc(obs||'')}">`;
+    el.querySelector('.bn-head').onclick=()=>{el.classList.toggle('on');mudou();};
+    list.appendChild(el);
+    return el;
+  }
+  function marcar(c){
+    const el=[...list.children].find(e=>e._c===c);if(!el)return;
+    el.classList.add('on','flash');el.style.display='';
+    el.scrollIntoView({block:'nearest'});
+    setTimeout(()=>el.classList.remove('flash'),1400);
+    mudou();
+  }
+  function fechar(){
+    box.style.display='none';q('.bn-add').style.display='';
+    inp.value='';sug.innerHTML='';sug.classList.remove('alerta');ok.textContent='Cadastrar bônus';confirmado='';
+  }
+  function sugerir(){
+    const nome=bnNome(inp.value),ch=bnChave(nome);
+    if(ch.length<3){sug.innerHTML='';return[];}
+    const igual=cat().find(c=>bnChave(c.nome)===ch);
+    const par=igual?[igual]:bnParecidos(nome,cat()).slice(0,6);
+    sug.innerHTML=par.length?`<div class="bn-sug-t">${igual?'Esse bônus já está na lista:':'Já existe bônus parecido. Não é um destes?'}</div>`
+      +par.map((c,i)=>`<button type="button" class="bn-sug-i" data-i="${i}"><span>${bnEsc(c.nome)}</span><b>É este</b></button>`).join(''):'';
+    sug.querySelectorAll('.bn-sug-i').forEach(b=>b.onclick=()=>{marcar(par[b.dataset.i]);fechar();});
+    return igual?[]:par;
+  }
+  q('.bn-add').onclick=()=>{box.style.display='';q('.bn-add').style.display='none';inp.focus();};
+  q('.bn-cancel').onclick=fechar;
+  inp.oninput=()=>{confirmado='';sug.classList.remove('alerta');ok.textContent='Cadastrar bônus';sugerir();mudou();};
+  inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok.click();}};
+  ok.onclick=()=>{
+    const nome=bnNome(inp.value),ch=bnChave(nome);
+    if(ch.length<3){sug.innerHTML='<div class="bn-sug-t err">Escreva o nome do bônus.</div>';inp.focus();return;}
+    const igual=cat().find(c=>bnChave(c.nome)===ch);
+    if(igual){marcar(igual);fechar();return;}
+    // Tem parecido: só cadastra depois de a pessoa confirmar que não é nenhum deles.
+    if(confirmado!==ch&&sugerir().length){
+      confirmado=ch;sug.classList.add('alerta');ok.textContent='Não é nenhum desses, cadastrar novo';
+      return;
+    }
+    const el=addItem({nome,usos:0,novo:true},true,'');
+    fechar();estado();mudou();
+    el.querySelector('.bn-obs').focus();
+  };
+  busca.oninput=()=>{
+    const t=bnNorm(busca.value);
+    [...list.children].forEach(e=>e.style.display=!t||e.classList.contains('on')||bnNorm(e._c.nome).includes(t)?'':'none');
+  };
+  itens.forEach(c=>{const s=sel.find(x=>bnChave(x.nome)===bnChave(c.nome));addItem(c,!!s,s&&s.obs);});
+  estado();
+  return{
+    get:()=>[...list.children].filter(e=>e.classList.contains('on')).map(e=>({nome:e._c.nome,obs:e.querySelector('.bn-obs').value.trim()})),
+    // começou a digitar um bônus novo e não confirmou
+    pendente:()=>box.style.display!=='none'&&!!inp.value.trim(),
+  };
+}
+// Campos da venda a partir do que está marcado. Sem a lista no banco, o detalhe vai junto do texto.
+function bnPayload(sel){
+  if(!BN_OK)return{bonus:sel.map(b=>b.obs?`${b.nome} (${b.obs})`:b.nome),bonus_obs:{}};
+  const bonus_obs={};sel.forEach(b=>{if(b.obs)bonus_obs[b.nome]=b.obs;});
+  return{bonus:sel.map(b=>b.nome),bonus_obs};
+}
+
+// ── bônus no formulário ──
+let bonusUI=null;
+function montarBonus(sel){bonusUI=bnMontar($('bonus-picker'),sel);}
+// Monta na hora e remonta quando a lista chega, sem perder o que já foi marcado.
+function iniciarBonus(){montarBonus();bnCarregar().then(()=>montarBonus(bonusUI.get()));}
+$('bonus-picker').addEventListener('bn-change',()=>$('f-bonus').classList.remove('invalid'));
 $('sem_bonus').addEventListener('change',e=>{
-  const on=e.target.checked;
-  $('bonus-list').style.display=on?'none':'';
-  $('add-bonus').disabled=on;
+  $('bonus-picker').style.display=e.target.checked?'none':'';
   $('f-bonus').classList.remove('invalid');
 });
 
@@ -632,8 +815,12 @@ function coletar(){
   }
 
   const semBonus=$('sem_bonus').checked;
-  const bonus=semBonus?[]:[...document.querySelectorAll('#bonus-list input')].map(i=>i.value.trim()).filter(Boolean);
-  if(!semBonus&&!bonus.length)bad('f-bonus');
+  const marcados_bonus=semBonus?[]:bonusUI.get();
+  $('bonus-err').textContent='Marque os bônus prometidos ou marque que não houve bônus.';
+  if(!semBonus&&bonusUI.pendente()){
+    $('bonus-err').textContent='Você começou a cadastrar um bônus novo. Confirme em "Cadastrar bônus" ou cancele.';
+    bad('f-bonus');
+  }else if(!semBonus&&!marcados_bonus.length)bad('f-bonus');
 
   let ig=v('instagram').replace(/^.*instagram\.com\//i,'').replace(/[/?].*$/,'').replace(/^@/,'');
   return {erros,payload:{
@@ -643,7 +830,7 @@ function coletar(){
     aluno_especialidade:v('especialidade')||null,aluno_cidade:v('cidade')||null,
     valor_total:total,forma_pagamento:state.forma,plataforma,...pg,
     pagamento_detalhes:v('pagamento_detalhes')||null,
-    bonus,sem_bonus:semBonus,observacoes:v('observacoes')||null,
+    ...bnPayload(marcados_bonus),sem_bonus:semBonus,observacoes:v('observacoes')||null,
     acessos
   }};
 }
@@ -699,7 +886,7 @@ function mostrarSucesso(p){
     ['Tipo',TIPOS[p.tipo]],
     ['Produtos',textoAcessos(p)],
     ['Pagamento',textoPagamento(p)],
-    ['Bônus',p.bonus.length?p.bonus.map(b=>'• '+b).join('\n'):'Nenhum'],
+    ['Bônus',p.bonus.length?p.bonus.map(b=>'• '+b+(p.bonus_obs[b]?` (${p.bonus_obs[b]})`:'')).join('\n'):'Nenhum'],
     ['Vendido por',`${p.vendedor} em ${br(p.data_venda)}`],
   ];
   if(p.observacoes)linhas.push(['Observações',p.observacoes]);
@@ -720,7 +907,7 @@ $('again').onclick=()=>{
   Object.assign(state,{tipo:'',forma:'',tem_entrada:''});
   document.querySelectorAll('.seg button,.pay').forEach(x=>x.classList.remove('on'));
   ['box-cartao','box-rec','f-entrada_valor','f-entrada_forma'].forEach(id=>$(id).style.display='none');
-  $('bonus-list').innerHTML='';$('bonus-list').style.display='';$('add-bonus').disabled=false;addBonus();
+  $('bonus-picker').style.display='';iniciarBonus();
   $('documento').disabled=false;
   $('vendedor').value=vend;$('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
   renderProdutos();calcConf();
@@ -753,7 +940,7 @@ async function carregarVendedores(){
 (function init(){
   $('data_venda').value=hojeISO();dataVendaAnterior=hojeISO();
   renderVendedores();carregarVendedores();
-  renderProdutos();addBonus();
+  renderProdutos();iniciarBonus();
 })();
 </script>
 </body>
