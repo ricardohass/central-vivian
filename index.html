@@ -438,8 +438,10 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .hm-ring{width:92px;height:92px;margin:0 auto 22px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--gold);letter-spacing:1px}
 .hm-ring::before{content:'';position:absolute;inset:-9px;border:0.5px solid rgba(201,168,76,0.3);border-radius:50%}
 .hm-kicker{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim)}
-.hm-hello{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;color:var(--text);margin:14px 0 10px;letter-spacing:.5px}
-.hm-hello em{font-style:italic;color:var(--gold-light)}
+.hm-hello{font-size:15px;color:var(--text);margin:18px 0 18px;letter-spacing:.5px}
+.hm-hello em{font-style:normal;color:var(--gold-light)}
+.hm-frase{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(32px,4.6vw,56px);line-height:1.12;color:var(--text);max-width:880px;margin:0 auto 18px;letter-spacing:.3px;text-wrap:balance}
+.hm-frase em{font-style:italic;color:var(--gold-light)}
 .hm-date{font-size:13px;color:var(--text-muted);letter-spacing:1px}
 .hm-date::first-letter{text-transform:uppercase}
 .hm-rule{display:flex;align-items:center;justify-content:center;gap:12px;margin:26px auto 0;width:min(260px,70%)}
@@ -627,7 +629,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <section class="hm-hero">
         <div class="hm-ring">VA</div>
         <div class="hm-kicker">Dra. Vivian Amaral · Central de Gestão</div>
-        <h1 class="hm-hello" id="hm-hello"></h1>
+        <div class="hm-hello" id="hm-hello"></div>
+        <h1 class="hm-frase">Da técnica premiada como a melhor do mundo para os consultórios que vão <em>liderar a estética íntima no Brasil</em>.</h1>
         <div class="hm-date" id="hm-date"></div>
         <div class="hm-rule"><span></span></div>
       </section>
