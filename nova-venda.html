@@ -140,7 +140,6 @@ button{font-family:inherit}
 .bn button:focus-visible{outline:1px solid var(--gold);outline-offset:2px}
 .bn-opt{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;padding:10px 14px;text-align:left;cursor:pointer;line-height:1.35}
 .bn-opt-n{flex:1;min-width:0;overflow-wrap:anywhere}
-.bn-opt small{font-size:11px;color:var(--text-muted);flex-shrink:0}
 .bn-opt.act{background:rgba(201,168,76,0.09)}
 .bn-nada{padding:12px 14px;font-size:13px;color:var(--text-muted);line-height:1.45}
 .bn-foot{border-top:0.5px solid var(--border);padding:10px 12px}
@@ -708,7 +707,7 @@ function bnMontar(root,sel){
       if(ch.length>=3)par=bnParecidos(t,livres).filter(c=>!lista.includes(c));
     }
     visiveis=[...lista,...par];
-    const opt=(c,i)=>`<button type="button" class="bn-opt" data-i="${i}"><span class="bn-opt-n">${bnEsc(c.nome)}</span>${c.novo?'<span class="bn-tag">novo</span>':''}<small>${c.usos?c.usos+(c.usos===1?' venda':' vendas'):''}</small></button>`;
+    const opt=(c,i)=>`<button type="button" class="bn-opt" data-i="${i}"><span class="bn-opt-n">${bnEsc(c.nome)}</span>${c.novo?'<span class="bn-tag">novo</span>':''}</button>`;
     let h=lista.map(opt).join('');
     if(par.length)h+='<div class="bn-grp">Parecidos: confira se não é um destes</div>'+par.map((c,i)=>opt(c,lista.length+i)).join('');
     if(!visiveis.length)h=`<div class="bn-nada">${

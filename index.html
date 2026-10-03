@@ -247,12 +247,26 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-list{min-width:1230px}
 .ob-row{display:grid;grid-template-columns:92px minmax(170px,1.2fr) minmax(190px,1.2fr) minmax(170px,1.1fr) 150px 140px 140px 140px minmax(200px,1.5fr);align-items:stretch;border-bottom:0.5px solid var(--border);transition:background .15s}
 .ob-row:last-child{border-bottom:none}
+/* Linhas de altura fixa (Onboarding, Vendas, Alunos): uma informação por célula, o resto no "+N" */
+.ob-row:not(.ob-head){height:64px}
+.ob-row:not(.ob-head) .ob-cell{overflow:hidden}
+.ob-row:not(.ob-head) .ob-cell>*{max-width:100%}
+.ob-row:not(.ob-head) .ob-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-row:not(.ob-head) .va-tags{flex-wrap:nowrap;overflow:hidden}
+.ob-row.vv:not(.ob-head) .va-tags{flex-wrap:wrap}
+.ob-row:not(.ob-head) .ob-tag{flex-shrink:0}
+.ob-row:not(.ob-head) .ob-acc,.ob-row:not(.ob-head) .ob-acc small,.ob-row:not(.ob-head) .va-bonus,.ob-row:not(.ob-head) .va-bonus small,.ob-row:not(.ob-head) .ob-cell>.va-muted,.va-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ob-row:not(.ob-head) .ob-obs{height:46px;min-height:0;overflow-y:auto;resize:none}
+.va-um{display:flex;align-items:center;gap:6px;min-width:0}
+.va-um>:first-child{flex:1;min-width:0}
+.va-mais{flex-shrink:0;font-size:10px;line-height:1.5;color:var(--gold);border:0.5px solid var(--gold-dim);border-radius:9px;padding:0 7px;cursor:help}
+.va-mais:hover,.va-mais:focus{border-color:var(--gold);outline:none}
 .ob-row:not(.ob-head):hover{background:rgba(201,168,76,0.03)}
 .ob-head{background:var(--dark3);position:sticky;top:0;z-index:2}
 .ob-cell{padding:9px 11px;font-size:13px;color:var(--text);border-right:0.5px solid var(--border);display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0}
 .ob-cell:last-child{border-right:none}
 .ob-head .ob-cell{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);line-height:1.3}
-.ob-row.nova .ob-cell:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+.ob-row.nova>.ob-cell:first-child{box-shadow:inset 3px 0 0 var(--gold)}
 .ob-date{font-size:13px;color:var(--text)}
 .ob-vend{font-size:11px;color:var(--text-muted)}
 .ob-name{background:none;border:none;padding:0;text-align:left;font-family:'Jost',sans-serif;font-size:14px;font-weight:500;color:var(--gold-light);cursor:pointer;line-height:1.3}
@@ -370,7 +384,6 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .bn button:focus-visible{outline:1px solid var(--gold);outline-offset:2px}
 .bn-opt{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;padding:10px 14px;text-align:left;cursor:pointer;line-height:1.35}
 .bn-opt-n{flex:1;min-width:0;overflow-wrap:anywhere}
-.bn-opt small{font-size:11px;color:var(--text-muted);flex-shrink:0}
 .bn-opt.act{background:rgba(201,168,76,0.09)}
 .bn-nada{padding:12px 14px;font-size:13px;color:var(--text-muted);line-height:1.45}
 .bn-foot{border-top:0.5px solid var(--border);padding:10px 12px}
@@ -428,10 +441,12 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .ob-scroll{border:none;overflow:visible}
   .ob-list{min-width:0;display:flex;flex-direction:column;gap:10px}
   .ob-row.ob-head{display:none}
+  .ob-row:not(.ob-head){height:auto}
+  .ob-row:not(.ob-head) .ob-obs{height:auto;overflow:hidden}
   .ob-row{display:flex;flex-direction:column;background:var(--dark2);border:0.5px solid var(--border);border-radius:3px}
   .ob-row:last-child{border-bottom:0.5px solid var(--border)}
   .ob-row.nova{border-left:3px solid var(--gold)}
-  .ob-row.nova .ob-cell:first-child{box-shadow:none}
+  .ob-row.nova>.ob-cell:first-child{box-shadow:none}
   .ob-cell{border-right:none;border-bottom:0.5px solid var(--border);padding:10px 12px}
   .ob-cell:last-child{border-bottom:none}
   .ob-cell[data-l]::before{content:attr(data-l);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px}
@@ -1163,8 +1178,8 @@ function obAccHtml(a,v){
   return `<div class="ob-acc${venc?' venc':''}">${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'}<small>${venc?'venceu':'até'} ${obBr(a.fim,true)}</small></div>`;
 }
 function obTagsVenda(v){
-  return (v.tipo&&v.tipo!=='nova'?`<span class="ob-tag">${OB_TIPOS[v.tipo]}</span>`:'')
-    +(v.status!=='ativa'?`<span class="ob-tag off">${escH(v.status)}</span>`:'')
+  return (v.status!=='ativa'?`<span class="ob-tag off">${escH(v.status)}</span>`:'')
+    +(v.tipo&&v.tipo!=='nova'?`<span class="ob-tag">${OB_TIPOS[v.tipo]}</span>`:'')
     +(v.origem==='planilha_onboarding'?'<span class="ob-tag base" title="Importada da planilha de acompanhamento de onboarding">Planilha</span>':'');
 }
 function obNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
@@ -1241,14 +1256,15 @@ function renderOnboarding(){
   const head=`<div class="ob-row ob-head"><div class="ob-cell">Data</div><div class="ob-cell">Nome</div><div class="ob-cell">Contato</div><div class="ob-cell">Produto</div><div class="ob-cell">Tempo de acesso</div><div class="ob-cell">Chamado?</div><div class="ob-cell">Onboarding realizado?</div><div class="ob-cell">Call realizada?</div><div class="ob-cell">Observação</div></div>`;
   const hoje=obHoje();
   const html=rows.map(v=>{
-    const prods=v.acessos.map(a=>{const p=OB_PROD[a.produto]||OB_PROD.outro;return `<div class="ob-prod"><span class="ob-dot" style="background:${p.color}"></span>${escH(a.produto_detalhe||p.label)}</div>`;}).join('');
-    const accs=v.acessos.map(a=>obAccHtml(a,v)).join('');
+    const lista=v.acessos.map(vaAccTexto);
+    const prods=vaMais(v.acessos.map(a=>vaProdHtml(a.produto,false,a.produto_detalhe)),lista);
+    const accs=vaMais(v.acessos.map(a=>obAccHtml(a,v)),lista);
     const sel=campo=>`<select class="ob-sel ${OB_TONE[v[campo]]||''}" onchange="saveOb('${v.id}','${campo}',this)">${OB_OPTS[campo].map(([val,l])=>`<option value="${val}"${(v[campo]||'')===val?' selected':''}>${l}</option>`).join('')}</select>`;
     const tags=obTagsVenda(v);
     const tel=(v.aluno_telefone||'').replace(/\D/g,'');
     return `<div class="ob-row${!v.chamado&&v.status==='ativa'?' nova':''}">
       <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(v.data_venda)}</span><span class="ob-vend">${escH(v.vendedor||'')}</span></div>
-      <div class="ob-cell" data-l="Nome"><button class="ob-name" onclick="openObVenda('${v.id}')">${escH(v.aluno_nome)}</button>${tags}</div>
+      <div class="ob-cell" data-l="Nome"><button class="ob-name" onclick="openObVenda('${v.id}')" title="${escH(v.aluno_nome)}">${escH(v.aluno_nome)}</button>${tags?`<div class="va-tags">${tags}</div>`:''}</div>
       <div class="ob-cell" data-l="Contato">
         <div class="ob-contact"><a href="https://wa.me/${tel}" target="_blank" rel="noopener"><i class="ti ti-brand-whatsapp"></i>${escH(obTel(v.aluno_telefone))}</a></div>
         <div class="ob-contact"><span>${escH(v.aluno_email)}</span><button class="ob-mini" title="Copiar e-mail" onclick="copyT(this,'${escQ(v.aluno_email)}')"><i class="ti ti-copy"></i></button></div>
@@ -1272,7 +1288,8 @@ function renderOnboarding(){
   document.getElementById('ob-updated').textContent=obLastLoad?`Atualizado às ${obLastLoad.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'';
 }
 
-function obGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+// No celular a observação cresce com o texto; no computador a linha tem altura fixa e o campo rola.
+function obGrow(el){if(!matchMedia('(max-width:680px)').matches){el.style.height='';return;}el.style.height='auto';el.style.height=el.scrollHeight+'px';}
 
 async function saveOb(id,campo,el){
   const v=OB_DATA.find(x=>x.id===id);if(!v)return;
@@ -1515,9 +1532,18 @@ function vaSitHtml(sit){
   if(sit.s==='a_confirmar')return '<div class="ob-acc wait">A confirmar<small>tempo não informado</small></div>';
   return '<span class="va-muted">Sem informação</span>';
 }
+// Célula de uma linha só: primeiro item e "+N" com a lista inteira no balão.
+function vaMais(itens,textos){
+  if(itens.length<=1)return itens[0]||'';
+  return `<div class="va-um">${itens[0]}<span class="va-mais" tabindex="0" data-tip="${escH('<ul>'+textos.map(t=>`<li>${escH(t)}</li>`).join('')+'</ul>')}">+${itens.length-1}</span></div>`;
+}
+function vaAccTexto(a){
+  const p=OB_PROD[a.produto]||OB_PROD.outro,nome=a.produto_detalhe||p.label;
+  return nome+' · '+(a.a_confirmar?'acesso a confirmar':p.evento?'evento em '+obBr(a.inicio):`${a.duracao_meses} ${a.duracao_meses===1?'mês':'meses'}, até ${obBr(a.fim)}`);
+}
 function vaProdHtml(k,muted,nome){
   const p=OB_PROD[k]||OB_PROD.outro;
-  return `<div class="ob-prod${muted?' va-muted':''}"${muted?' title="Só na base antiga (não confirmado)"':''}><span class="ob-dot" style="background:${p.color}${muted?';opacity:.55':''}"></span>${escH(nome||p.label)}</div>`;
+  return `<div class="ob-prod${muted?' va-muted':''}"${muted?' title="Só na base antiga (não confirmado)"':''}><span class="ob-dot" style="background:${p.color}${muted?';opacity:.55':''}"></span><span class="va-txt">${escH(nome||p.label)}</span></div>`;
 }
 function vaContato(tel,email,aviso){
   const t=String(tel||'').replace(/\D/g,'');
@@ -1643,7 +1669,7 @@ function bnMontar(root,sel){
       if(ch.length>=3)par=bnParecidos(t,livres).filter(c=>!lista.includes(c));
     }
     visiveis=[...lista,...par];
-    const opt=(c,i)=>`<button type="button" class="bn-opt" data-i="${i}"><span class="bn-opt-n">${bnEsc(c.nome)}</span>${c.novo?'<span class="bn-tag">novo</span>':''}<small>${c.usos?c.usos+(c.usos===1?' venda':' vendas'):''}</small></button>`;
+    const opt=(c,i)=>`<button type="button" class="bn-opt" data-i="${i}"><span class="bn-opt-n">${bnEsc(c.nome)}</span>${c.novo?'<span class="bn-tag">novo</span>':''}</button>`;
     let h=lista.map(opt).join('');
     if(par.length)h+='<div class="bn-grp">Parecidos: confira se não é um destes</div>'+par.map((c,i)=>opt(c,lista.length+i)).join('');
     if(!visiveis.length)h=`<div class="bn-nada">${
@@ -1740,7 +1766,7 @@ function vdBonusOpts(){
 function vaBonusHtml(v){
   if(!(v.bonus||[]).length)return '<span class="va-muted">—</span>';
   const obs=v.bonus_obs||{};
-  return v.bonus.map(b=>`<div class="va-bonus">${escH(b)}${obs[b]?`<small>${escH(obs[b])}</small>`:''}</div>`).join('');
+  return vaMais(v.bonus.map(b=>`<div class="va-bonus">${escH(b)}${obs[b]?`<small>${escH(obs[b])}</small>`:''}</div>`),v.bonus.map(b=>b+(obs[b]?` (${obs[b]})`:'')));
 }
 
 // Lista de bônus (só adm): renomear, unificar nomes do mesmo bônus, excluir o que não tem venda.
@@ -1856,7 +1882,7 @@ function renderVendas(){
       const x=r.x;
       return `<div class="ob-row vv">
         <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(r.data)}</span></div>
-        <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${r.c.id}')">${escH(r.nome)}</button></div>
+        <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${r.c.id}')" title="${escH(r.nome)}">${escH(r.nome)}</button></div>
         <div class="ob-cell" data-l="Produto">${vaProdHtml(x.produtos[0],false,x.nome+(x.qtd>1?' (×'+x.qtd+')':''))}</div>
         <div class="ob-cell" data-l="Tempo de acesso">${x.meses?`<div class="ob-acc">${x.meses} meses<small>até ~${obBr(x.fim_estimado,true)}</small></div>`:'<span class="va-muted">—</span>'}</div>
         <div class="ob-cell" data-l="Bônus"><span class="va-muted">—</span></div>
@@ -1873,9 +1899,9 @@ function renderVendas(){
     if(v.parcelas_qtd)pag+=`<span class="va-muted">${v.entrada_valor?'entrada + ':''}${v.parcelas_qtd}x ${obBrl(v.parcela_valor)}</span>`;
     return `<div class="ob-row vv">
       <div class="ob-cell ob-date-cell"><span class="ob-date">${obBr(v.data_venda)}</span></div>
-      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openObVenda('${v.id}')">${escH(v.aluno_nome)}</button></div>
-      <div class="ob-cell" data-l="Produto">${v.acessos.map(a=>vaProdHtml(a.produto,false,a.produto_detalhe)).join('')}</div>
-      <div class="ob-cell" data-l="Tempo de acesso">${v.acessos.map(a=>obAccHtml(a,v)).join('')}</div>
+      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openObVenda('${v.id}')" title="${escH(v.aluno_nome)}">${escH(v.aluno_nome)}</button></div>
+      <div class="ob-cell" data-l="Produto">${vaMais(v.acessos.map(a=>vaProdHtml(a.produto,false,a.produto_detalhe)),v.acessos.map(vaAccTexto))}</div>
+      <div class="ob-cell" data-l="Tempo de acesso">${vaMais(v.acessos.map(a=>obAccHtml(a,v)),v.acessos.map(vaAccTexto))}</div>
       <div class="ob-cell" data-l="Bônus">${vaBonusHtml(v)}</div>
       <div class="ob-cell" data-l="Valor">${r.valor!=null?`<span class="va-val">${obBrl(r.valor)}</span>`:'<span class="va-muted">não informado</span>'}</div>
       <div class="ob-cell" data-l="Pagamento">${pag}</div>
@@ -1948,14 +1974,15 @@ function renderAlunos(){
       +(c.colab?'<span class="ob-tag">Colaborador</span>':'')
       +(c.alertas.length?`<span class="ob-tag warn" tabindex="0" data-tip="${escH(vaTipHtml(c.alertas))}"><i class="ti ti-alert-triangle"></i>Conferir</span>`:'');
     const avisoTel=!c.vendas.length?c.alertas.find(x=>/^Telefone/.test(x)):'';
-    const prods=[...c.prodConf].map(k=>vaProdHtml(k)).join('')+[...c.prodBase].map(k=>vaProdHtml(k,true)).join('');
+    const prods=vaMais([...[...c.prodConf].map(k=>vaProdHtml(k)),...[...c.prodBase].map(k=>vaProdHtml(k,true))],
+      [...[...c.prodConf].map(k=>(OB_PROD[k]||OB_PROD.outro).label),...[...c.prodBase].map(k=>(OB_PROD[k]||OB_PROD.outro).label+' (base antiga, não confirmado)')]);
     return `<div class="ob-row aa">
-      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${c.id}')">${escH(c.nome)}</button><div class="va-tags">${tags}</div></div>
+      <div class="ob-cell" data-l="Aluno"><button class="ob-name" onclick="openAluno('${c.id}')" title="${escH(c.nome)}">${escH(c.nome)}</button><div class="va-tags">${tags}</div></div>
       <div class="ob-cell" data-l="Contato">${vaContato(c.telefone,c.email,avisoTel)||'<span class="va-muted">—</span>'}</div>
       <div class="ob-cell" data-l="Produtos">${prods||'<span class="va-muted">Nenhum produto listado</span>'}</div>
       <div class="ob-cell" data-l="Acesso">${vaSitHtml(c.sit)}</div>
       <div class="ob-cell" data-l="Grupo Mentoria">${b?(b.grupo_mentoria==='ativo'?'No grupo':'<span class="va-muted">Removido</span>'):'<span class="va-muted">—</span>'}</div>
-      <div class="ob-cell" data-l="Closer">${c.closers.length?escH(c.closers.join(', ')):'<span class="va-muted">—</span>'}</div>
+      <div class="ob-cell" data-l="Closer">${c.closers.length?`<span class="va-txt" title="${escH(c.closers.join(', '))}">${escH(c.closers.join(', '))}</span>`:'<span class="va-muted">—</span>'}</div>
       <div class="ob-cell" data-l="Última compra">${c.ultima?obBr(c.ultima):'<span class="va-muted">—</span>'}</div>
     </div>`;
   }).join('');
