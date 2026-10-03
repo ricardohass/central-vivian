@@ -230,13 +230,13 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .nivel-badge.equipe{color:var(--text-muted);border-color:var(--border)}
 
 /* ONBOARDING */
-.ob-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.ob-kpi{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;padding:14px 16px;text-align:left;cursor:pointer;transition:border-color .2s;font-family:'Jost',sans-serif;color:var(--text)}
+.ob-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.ob-kpi{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;padding:10px 14px;text-align:left;cursor:pointer;transition:border-color .2s;font-family:'Jost',sans-serif;color:var(--text);display:flex;align-items:baseline;gap:10px;min-width:0}
 .ob-kpi:hover{border-color:var(--border-hover)}
 .ob-kpi.active{border-color:var(--gold)}
-.ob-kpi-num{font-variant-numeric:lining-nums;font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--gold-light);line-height:1}
-.ob-kpi-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:6px}
-.ob-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.ob-kpi-num{font-variant-numeric:lining-nums;font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-light);line-height:1;white-space:nowrap}
+.ob-kpi-lbl{font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);line-height:1.3;min-width:0}
+.ob-toolbar{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .ob-search{flex:1;min-width:200px;background:var(--dark2);border:0.5px solid var(--border);color:var(--text);font-family:'Jost',sans-serif;font-size:14px;padding:8px 12px;border-radius:2px;outline:none;height:34px}
 .ob-search:focus{border-color:var(--gold-dim)}
 .ob-chips{display:flex;border:0.5px solid var(--border);border-radius:2px;overflow:hidden}
@@ -306,7 +306,35 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-acc.fin{color:#E0913A}
 
 /* VENDAS E ALUNOS */
-.va-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.va-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.va-filters .ob-search{flex:1 1 220px;min-width:180px;height:34px}
+/* filtro de múltipla escolha */
+.ms{position:relative}
+.ms-trig{display:flex;align-items:center;gap:8px;height:34px;max-width:230px;background:var(--dark2);border:0.5px solid var(--border);border-radius:2px;color:var(--text-muted);font-family:'Jost',sans-serif;font-size:13px;padding:0 10px;cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap}
+.ms-trig span{overflow:hidden;text-overflow:ellipsis}
+.ms-trig i{font-size:13px;transition:transform .2s;flex-shrink:0}
+.ms-trig:hover{border-color:var(--border-hover);color:var(--text)}
+.ms.on .ms-trig{border-color:var(--gold-dim);color:var(--gold-light)}
+.ms.open .ms-trig{border-color:var(--gold);color:var(--text)}
+.ms.open .ms-trig i{transform:rotate(180deg)}
+.ms-pop{display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:60;width:max(100%,300px);background:var(--dark2);border:0.5px solid var(--gold-dim);border-radius:3px;box-shadow:0 16px 36px rgba(0,0,0,0.55)}
+.ms.open .ms-pop{display:block;animation:hmUp .15s ease both}
+.ms-q{display:flex;align-items:center;gap:8px;padding:4px 12px;border-bottom:0.5px solid var(--border)}
+.ms-q i{color:var(--text-muted);font-size:14px}
+.ms-q input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;padding:8px 0}
+.ms-q input::placeholder{color:#5E5852}
+.ms-list{max-height:290px;overflow-y:auto;padding:4px 0}
+.ms-opt{width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--text);font-family:'Jost',sans-serif;font-size:13px;padding:8px 12px;text-align:left;cursor:pointer;line-height:1.35}
+.ms-opt:hover{background:rgba(201,168,76,0.08)}
+.ms-opt span:not(.ms-box){flex:1;min-width:0;overflow-wrap:anywhere}
+.ms-opt.esp span{color:var(--text-muted);font-style:italic}
+.ms-sep{height:0.5px;background:var(--border);margin:4px 0}
+.ms-box{width:16px;height:16px;border:0.5px solid var(--border-hover);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--dark)}
+.ms-opt.sel .ms-box{background:var(--gold);border-color:var(--gold)}
+.ms-opt.sel .ms-box::after{content:'✓'}
+.ms-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:0.5px solid var(--border);font-size:11px;color:var(--text-muted)}
+.ms-foot button{background:none;border:none;color:var(--gold);font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.ms-vazio{padding:10px 12px;font-size:13px;color:var(--text-muted)}
 .va-sel{background-color:var(--dark2);border:0.5px solid var(--border);color:var(--text-muted);font-family:'Jost',sans-serif;font-size:13px;height:34px;padding:0 28px 0 10px;border-radius:2px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 14px) 50%,calc(100% - 10px) 50%;background-size:4px 4px;background-repeat:no-repeat;max-width:230px}
 .va-sel option{background:var(--dark3);color:var(--text)}
 .va-sel.on{border-color:var(--gold-dim);color:var(--gold-light)}
@@ -345,13 +373,6 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ve-x:hover{color:#C0463A;border-color:#C0463A}
 .va-bonus{font-size:12px;line-height:1.35}
 .va-bonus small{display:block;font-size:11px;color:var(--text-muted)}
-.bn-adm{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:0.5px solid var(--border)}
-.bn-adm:last-child{border-bottom:none}
-.bn-adm-n{min-width:0;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
-.bn-adm-n small{display:block;font-size:11px;color:var(--text-muted);margin-top:2px}
-.bn-adm-n small.warn{color:#E0B35F}
-.bn-adm-a{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.bn-adm-a .va-sel{width:170px}
 /* BÔNUS (lista fechada; mesmo bloco no nova-venda.html) */
 .bn-sel{display:flex;flex-direction:column;gap:6px}
 .bn-sel:not(:empty){margin-bottom:8px}
@@ -411,14 +432,82 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .hamburger{display:flex}
 }
 
+/* HOME */
+#tab-home{max-width:1180px;margin:0 auto}
+.hm-hero{position:relative;text-align:center;padding:46px 20px 40px;margin:-28px -28px 8px;background:radial-gradient(ellipse 60% 100% at 50% 0%,rgba(201,168,76,0.11),transparent 70%)}
+.hm-ring{width:92px;height:92px;margin:0 auto 22px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--gold);letter-spacing:1px}
+.hm-ring::before{content:'';position:absolute;inset:-9px;border:0.5px solid rgba(201,168,76,0.3);border-radius:50%}
+.hm-kicker{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim)}
+.hm-hello{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;color:var(--text);margin:14px 0 10px;letter-spacing:.5px}
+.hm-hello em{font-style:italic;color:var(--gold-light)}
+.hm-date{font-size:13px;color:var(--text-muted);letter-spacing:1px}
+.hm-date::first-letter{text-transform:uppercase}
+.hm-rule{display:flex;align-items:center;justify-content:center;gap:12px;margin:26px auto 0;width:min(260px,70%)}
+.hm-rule::before,.hm-rule::after{content:'';flex:1;height:0.5px;background:linear-gradient(90deg,transparent,var(--gold-dim))}
+.hm-rule::after{transform:scaleX(-1)}
+.hm-rule span{width:6px;height:6px;border:0.5px solid var(--gold);transform:rotate(45deg)}
+.hm-sec{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin:30px 0 12px;display:flex;align-items:center;gap:14px}
+.hm-sec::after{content:'';flex:1;height:0.5px;background:var(--border)}
+.hm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hm-kpi{position:relative;background:linear-gradient(180deg,var(--dark2),#151413);border:0.5px solid var(--border);border-radius:3px;padding:22px 22px 20px;overflow:hidden;animation:hmUp .5s ease both}
+.hm-kpi::before{content:'';position:absolute;left:22px;right:22px;top:0;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.hm-kpi:nth-child(2){animation-delay:.05s}.hm-kpi:nth-child(3){animation-delay:.1s}.hm-kpi:nth-child(4){animation-delay:.15s}
+.hm-kpi-l{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted)}
+.hm-kpi-n{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:42px;line-height:1;color:var(--gold-light);margin:14px 0 8px;font-variant-numeric:lining-nums;white-space:nowrap}
+.hm-kpi-n small{font-size:22px;color:var(--gold-dim);margin-right:6px}
+.hm-kpi-s{font-size:12px;color:var(--text-muted);line-height:1.4}
+.hm-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-top:12px}
+.hm-card{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;padding:22px 24px;animation:hmUp .5s .15s ease both;min-width:0}
+.hm-card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px}
+.hm-card-h h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:23px;color:var(--gold-light);letter-spacing:.5px}
+.hm-card-h span,.hm-card-h button{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.hm-card-h button{background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;display:inline-flex;align-items:center;gap:4px;transition:color .2s}
+.hm-card-h button:hover{color:var(--gold)}
+.hm-rk{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:6px 14px;padding:13px 0;border-bottom:0.5px solid var(--border)}
+.hm-rk:last-child{border-bottom:none;padding-bottom:0}
+.hm-rk-p{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-dim);line-height:1;grid-row:span 2}
+.hm-rk:first-child .hm-rk-p{color:var(--gold)}
+.hm-rk-n{font-size:15px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-rk-n small{display:block;font-size:11px;color:var(--text-muted);margin-top:2px}
+.hm-rk-v{font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--gold-light);font-variant-numeric:lining-nums;white-space:nowrap}
+.hm-bar{grid-column:2/-1;height:2px;background:rgba(201,168,76,0.08);border-radius:1px;overflow:hidden}
+.hm-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:1px}
+.hm-pd{padding:10px 0;border-bottom:0.5px solid var(--border)}
+.hm-pd:last-child{border-bottom:none;padding-bottom:0}
+.hm-pd-t{display:flex;align-items:center;gap:10px;font-size:14px;margin-bottom:8px}
+.hm-pd-t span:not(.ob-dot){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-pd-t b{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--gold-light)}
+.hm-pd .hm-bar{grid-column:auto}
+.hm-ev{display:flex;align-items:center;gap:16px;padding:11px 0;border-bottom:0.5px solid var(--border)}
+.hm-ev:last-child{border-bottom:none;padding-bottom:0}
+.hm-ev-d{width:52px;flex-shrink:0;text-align:center;border-right:0.5px solid var(--border);padding-right:14px}
+.hm-ev-d b{display:block;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold-light);line-height:1}
+.hm-ev-d small{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.hm-ev-t{min-width:0;font-size:14px;line-height:1.4}
+.hm-ev-t small{display:block;font-size:11px;color:var(--text-muted);margin-top:2px}
+.hm-ev.hoje .hm-ev-d b{color:var(--gold)}
+.hm-ob{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 0;border:none;border-bottom:0.5px solid var(--border);background:none;color:var(--text);font-family:'Jost',sans-serif;font-size:14px;text-align:left;cursor:pointer;transition:color .2s}
+.hm-ob:last-child{border-bottom:none;padding-bottom:0}
+.hm-ob:hover{color:var(--gold-light)}
+.hm-ob b{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--gold-light);line-height:1}
+.hm-ob.alerta b{color:#E0B35F}
+.hm-vazio{font-size:13px;color:var(--text-muted);padding:6px 0;line-height:1.5}
+.hm-foot{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#5E5852;margin:40px 0 10px}
+#tab-home b,.hm-rk-p,.hm-rk-v{font-variant-numeric:lining-nums}
+@keyframes hmUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:900px){.hm-kpis{grid-template-columns:1fr 1fr}.hm-grid{grid-template-columns:1fr}}
+
 /* MOBILE */
 @media(max-width:680px){
   .ob-list.vl,.ob-list.al{min-width:0}
-  .va-filters .va-sel{flex:1 1 calc(50% - 4px);max-width:none;min-width:0;width:0}
+  .va-filters .va-sel,.va-filters .ms{flex:1 1 calc(50% - 3px);max-width:none;min-width:0;width:0}
+  .va-filters .ob-search{flex-basis:100%}
+  .ms-trig{max-width:none;width:100%}
+  .ms-pop{width:min(300px,calc(100vw - 28px))}
+  .va-filters .ms:nth-of-type(even) .ms-pop{left:auto;right:0}
+  .ob-kpi{flex-direction:column;gap:4px}
   .ve-grid{grid-template-columns:1fr}
   .va-item{grid-template-columns:1fr}
-  .bn-adm{flex-direction:column;align-items:stretch;gap:8px}
-  .bn-adm-a .va-sel{width:auto;max-width:none;flex:1}
   .nav,.topbar-right{display:none}
   .hamburger{display:flex}
   .topbar{padding:12px 16px}
@@ -426,6 +515,11 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .brand-sub{font-size:9px}
   .brand-monogram{width:34px;height:34px;font-size:14px}
   .content{padding:14px}
+  .hm-hero{margin:-14px -14px 4px;padding:34px 16px 30px}
+  .hm-kpi{padding:18px 16px 16px}
+  .hm-kpi::before{left:16px;right:16px}
+  .hm-kpi-n{font-size:32px}
+  .hm-card{padding:18px 16px}
   .week-grid{grid-template-columns:1fr;gap:8px}
   .day-col{flex-direction:row;min-height:auto}
   .day-header{padding:12px 14px;border-bottom:none;border-right:0.5px solid var(--border);flex-direction:column;align-items:center;justify-content:center;min-width:62px;flex-shrink:0}
@@ -529,6 +623,26 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
 
   <div class="content">
+    <div id="tab-home" style="display:none">
+      <section class="hm-hero">
+        <div class="hm-ring">VA</div>
+        <div class="hm-kicker">Dra. Vivian Amaral · Central de Gestão</div>
+        <h1 class="hm-hello" id="hm-hello"></h1>
+        <div class="hm-date" id="hm-date"></div>
+        <div class="hm-rule"><span></span></div>
+      </section>
+      <div class="hm-sec" id="hm-mes"></div>
+      <div class="hm-kpis" id="hm-kpis"></div>
+      <div class="hm-grid">
+        <section class="hm-card"><div class="hm-card-h"><h3>Ranking de closers</h3><span id="hm-rank-sub"></span></div><div id="hm-rank"></div></section>
+        <section class="hm-card"><div class="hm-card-h"><h3>Produtos do mês</h3><span>vendas</span></div><div id="hm-prods"></div></section>
+      </div>
+      <div class="hm-grid">
+        <section class="hm-card"><div class="hm-card-h"><h3>Próximos eventos</h3><button onclick="switchTab('calendario')">Calendário<i class="ti ti-arrow-right"></i></button></div><div id="hm-eventos"></div></section>
+        <section class="hm-card"><div class="hm-card-h"><h3>Onboarding</h3><button onclick="switchTab('onboarding')">Abrir<i class="ti ti-arrow-right"></i></button></div><div id="hm-ob"></div></section>
+      </div>
+      <div class="hm-foot">Dra. Vivian Amaral · Central de Gestão · <span id="hm-ano"></span></div>
+    </div>
     <div id="tab-calendario">
       <div class="week-toolbar">
         <div class="week-nav">
@@ -550,7 +664,6 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
         <div class="sec-title">Onboarding</div>
         <div style="display:flex;gap:8px">
           <a class="icon-btn" href="/nova-venda" target="_blank" style="text-decoration:none"><i class="ti ti-plus" style="font-size:12px"></i>Nova venda</a>
-          <button class="icon-btn" onclick="loadOnboarding(true)"><i class="ti ti-refresh" style="font-size:12px"></i>Atualizar</button>
         </div>
       </div>
       <div class="ob-kpis" id="ob-kpis"></div>
@@ -570,24 +683,20 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
         <div class="sec-title">Vendas</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <a class="icon-btn" href="/nova-venda" target="_blank" style="text-decoration:none"><i class="ti ti-plus" style="font-size:12px"></i>Nova venda</a>
-          <button class="icon-btn" id="vd-bonus-adm" onclick="openBonusAdm()" style="display:none"><i class="ti ti-gift" style="font-size:12px"></i>Bônus</button>
           <button class="icon-btn" onclick="exportVendas()"><i class="ti ti-download" style="font-size:12px"></i>CSV</button>
-          <button class="icon-btn" onclick="loadVendasAlunos(true)"><i class="ti ti-refresh" style="font-size:12px"></i>Atualizar</button>
         </div>
       </div>
       <div class="ob-kpis" id="vd-kpis"></div>
-      <div class="ob-toolbar">
-        <input class="ob-search" id="vd-q" type="search" placeholder="Buscar por aluno, e-mail, telefone ou produto" oninput="renderVendas()">
-      </div>
       <div class="va-filters">
+        <input class="ob-search" id="vd-q" type="search" placeholder="Buscar aluno, e-mail, telefone ou produto" oninput="renderVendas()">
         <select class="va-sel" id="vd-periodo" onchange="renderVendas()">
           <option value="">Todo o período</option><option value="mes">Este mês</option><option value="mes_ant">Mês passado</option><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="ano">Este ano</option><option value="custom">Escolher datas</option>
         </select>
         <input type="date" class="va-sel va-date" id="vd-de" title="De" style="display:none" onchange="renderVendas()">
         <input type="date" class="va-sel va-date" id="vd-ate" title="Até" style="display:none" onchange="renderVendas()">
-        <select class="va-sel" id="vd-produto" onchange="renderVendas()"></select>
-        <select class="va-sel" id="vd-closer" onchange="renderVendas()"></select>
-        <select class="va-sel" id="vd-bonus" onchange="renderVendas()"></select>
+        <div class="ms" id="vd-produto"></div>
+        <div class="ms" id="vd-closer"></div>
+        <div class="ms" id="vd-bonus"></div>
         <select class="va-sel" id="vd-tipo" onchange="renderVendas()"><option value="">Todos os tipos</option><option value="nova">Aluno novo</option><option value="renovacao">Renovação</option><option value="upgrade">Upgrade</option></select>
         <select class="va-sel" id="vd-status" onchange="renderVendas()"><option value="">Qualquer status</option><option value="ativa">Ativa</option><option value="reembolsada">Reembolsada</option><option value="cancelada">Cancelada</option></select>
         <select class="va-sel" id="vd-fonte" onchange="renderVendas()"><option value="">Só vendas confirmadas</option><option value="todas">Incluir base antiga</option><option value="base">Só base antiga</option></select>
@@ -599,17 +708,14 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
     <div id="tab-alunos" style="display:none">
       <div class="sec-header">
         <div class="sec-title">Alunos</div>
-        <button class="icon-btn" onclick="loadVendasAlunos(true)"><i class="ti ti-refresh" style="font-size:12px"></i>Atualizar</button>
       </div>
       <div class="ob-kpis" id="al-kpis"></div>
-      <div class="ob-toolbar">
-        <input class="ob-search" id="al-q" type="search" placeholder="Buscar por nome, e-mail ou telefone" oninput="renderAlunos()">
-      </div>
       <div class="va-filters">
+        <input class="ob-search" id="al-q" type="search" placeholder="Buscar nome, e-mail ou telefone" oninput="renderAlunos()">
         <select class="va-sel" id="al-sit" onchange="renderAlunos()"><option value="">Qualquer situação</option><option value="ativo">Acesso ativo</option><option value="ativo_ok">Ativo com certeza (verde)</option><option value="ativo_fin">Ativo (planilha do financeiro)</option><option value="vence30">Vence em até 30 dias</option><option value="vencido">Acesso vencido</option><option value="a_confirmar">Acesso a confirmar</option><option value="sem_info">Sem informação de acesso</option></select>
         <select class="va-sel" id="al-tempo" onchange="renderAlunos()"><option value="">Qualquer tempo de acesso</option><option value="6">6 meses</option><option value="12">12 meses</option><option value="outro">Outra duração</option><option value="a_confirmar">Tempo a confirmar</option></select>
-        <select class="va-sel" id="al-produto" onchange="renderAlunos()"></select>
-        <select class="va-sel" id="al-closer" onchange="renderAlunos()"></select>
+        <div class="ms" id="al-produto"></div>
+        <div class="ms" id="al-closer"></div>
         <select class="va-sel" id="al-grupo" onchange="renderAlunos()"><option value="">Grupo Mentoria: todos</option><option value="ativo">No grupo (base antiga)</option><option value="removido">Removido do grupo (base antiga)</option></select>
         <select class="va-sel" id="al-fonte" onchange="renderAlunos()"><option value="">Todas as fontes</option><option value="conf">Com venda confirmada</option><option value="base">Só na base antiga</option><option value="colab">Colaboradores</option></select>
         <button class="icon-btn" onclick="limparFiltros('al')">Limpar</button>
@@ -651,18 +757,6 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <button class="btn-cancel" onclick="closeVendaEdit()">Cancelar</button>
       <button class="btn-primary" id="ve-save" onclick="saveVendaEdit()">Salvar</button>
     </div>
-  </div>
-</div>
-
-<!-- Modal lista de bônus (adm) -->
-<div class="add-modal" id="bn-modal" onclick="if(event.target===this)closeBonusAdm()">
-  <div class="add-box" style="width:min(680px,95vw)">
-    <button class="mclose-sm" onclick="closeBonusAdm()"><i class="ti ti-x"></i></button>
-    <h3>Lista de bônus</h3>
-    <div class="add-date-lbl">As opções que o closer marca ao registrar a venda</div>
-    <div class="hint" style="margin:0 0 12px">Unificar junta dois nomes do mesmo bônus: as vendas do primeiro passam para o segundo, o primeiro sai da lista e o texto antigo fica guardado como detalhe da venda.</div>
-    <div id="bn-adm-list"></div>
-    <div class="add-actions"><button class="btn-cancel" style="flex:1" onclick="closeBonusAdm()">Fechar</button></div>
   </div>
 </div>
 
@@ -742,12 +836,12 @@ const FICHA_SEC=[
   {title:'05 — Entrega',fields:[{key:'oQueIncluso',label:'O que está incluso'},{key:'linksGrupos',label:'Links dos grupos'},{key:'politicaCancelamento',label:'Política de cancelamento'}]},
   {title:'06 — Observações',fields:[{key:'observacoes',label:'Observações'}]},
 ];
-const ALL_TABS=['calendario','onboarding','vendas','alunos','produtos','time','acessos','usuarios'];
+const ALL_TABS=['home','calendario','onboarding','vendas','alunos','produtos','time','acessos','usuarios'];
 // Time e Produtos ocultas (código mantido): só sair destas listas.
-const TABS_ADM=['calendario','onboarding','vendas','alunos','acessos','usuarios'];
-const TABS_EQ=['calendario','onboarding','vendas','alunos'];
-const TAB_LABELS={calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
-const TAB_ICONS={calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
+const TABS_ADM=['home','calendario','onboarding','vendas','alunos','acessos','usuarios'];
+const TABS_EQ=['home','calendario','onboarding','vendas','alunos'];
+const TAB_LABELS={home:'Home',calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
+const TAB_ICONS={home:'ti-home',calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
 
 let EVENTS=[],PRODUCTS=[],USUARIOS=[];
 let currentUser=null,currentNivel=null;
@@ -771,6 +865,7 @@ function showApp(){
   document.getElementById('m-nivel').textContent=currentNivel==='adm'?'Administrativo':'Equipe';
   buildNav();
   renderWeek();
+  loadHome();
 }
 
 window.addEventListener('load',async()=>{
@@ -825,6 +920,86 @@ function doLogout(){
   showLogin();
 }
 
+// ── HOME ──
+// Tela de entrada de todo mundo: números do mês (pela data da venda, sem reembolsadas e canceladas),
+// ranking de closers, produtos vendidos, próximos eventos do calendário e pendências do onboarding.
+let hmLoading=false;
+async function loadHome(){
+  renderHome();
+  if(hmLoading)return;
+  hmLoading=true;
+  try{OB_DATA=await obRpc('onboarding_listar',{});CLIENTES=null;obLastLoad=new Date();renderHome();}
+  catch(e){console.error(e);if(!OB_DATA)document.getElementById('hm-kpis').innerHTML='<div class="hm-vazio">Não foi possível carregar as vendas. '+escH(e.message||'')+'</div>';}
+  finally{hmLoading=false;}
+}
+function renderHome(){
+  if(!currentUser)return;
+  const agora=new Date(),h=agora.getHours();
+  const nome=String(currentUser.nome||'').trim().split(/\s+/)[0];
+  document.getElementById('hm-hello').innerHTML=`${h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'}${nome?`, <em>${escH(nome)}</em>`:''}`;
+  document.getElementById('hm-date').textContent=agora.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('hm-ano').textContent=agora.getFullYear();
+  const mes=MONTHS[agora.getMonth()];
+  document.getElementById('hm-mes').textContent=`${mes} de ${agora.getFullYear()}`;
+  document.getElementById('hm-rank-sub').textContent=mes;
+  renderHomeEventos();
+  if(!OB_DATA){document.getElementById('hm-kpis').innerHTML='<div class="hm-vazio">Carregando...</div>';return;}
+
+  const hoje=obHoje(),ini=hoje.slice(0,8)+'01';
+  const doMes=OB_DATA.filter(v=>v.status==='ativa'&&v.data_venda>=ini&&v.data_venda<=hoje);
+  const deHoje=doMes.filter(v=>v.data_venda===hoje);
+  const soma=l=>l.reduce((s,v)=>s+(v.valor_total!=null?Number(v.valor_total):0),0);
+  const comValor=doMes.filter(v=>v.valor_total!=null);
+  const rs=n=>`<small>R$</small>${Math.round(n).toLocaleString('pt-BR')}`;
+  const kpi=(l,n,sub)=>`<div class="hm-kpi"><div class="hm-kpi-l">${l}</div><div class="hm-kpi-n">${n}</div><div class="hm-kpi-s">${sub}</div></div>`;
+  document.getElementById('hm-kpis').innerHTML=
+    kpi('Vendas no mês',doMes.length,'sem reembolsadas e canceladas')+
+    kpi('Vendido no mês',rs(soma(doMes)),'valor negociado com os alunos')+
+    kpi('Ticket médio',comValor.length?rs(soma(comValor)/comValor.length):'—',comValor.length?`média de ${comValor.length} ${comValor.length===1?'venda':'vendas'}`:'sem vendas com valor')+
+    kpi('Vendido hoje',rs(soma(deHoje)),`${deHoje.length} ${deHoje.length===1?'venda':'vendas'} hoje`);
+
+  // ranking: quem vendeu mais em valor no mês
+  const por={};
+  doMes.forEach(v=>{if(!v.vendedor)return;const r=por[v.vendedor]||(por[v.vendedor]={nome:v.vendedor,n:0,valor:0});r.n++;r.valor+=Number(v.valor_total||0);});
+  const rank=Object.values(por).sort((a,b)=>b.valor-a.valor||b.n-a.n);
+  const topo=rank.length?rank[0].valor||1:1;
+  document.getElementById('hm-rank').innerHTML=rank.length?rank.map((r,i)=>`<div class="hm-rk">
+      <div class="hm-rk-p">${String(i+1).padStart(2,'0')}</div>
+      <div class="hm-rk-n">${escH(r.nome)}<small>${r.n} ${r.n===1?'venda':'vendas'}</small></div>
+      <div class="hm-rk-v">${obBrl(r.valor)}</div>
+      <div class="hm-bar"><i style="width:${Math.max(3,r.valor/topo*100)}%"></i></div>
+    </div>`).join(''):'<div class="hm-vazio">Nenhuma venda registrada neste mês ainda.</div>';
+
+  // produtos: em quantas vendas do mês cada produto entrou
+  const pc={};
+  doMes.forEach(v=>[...new Set(v.acessos.map(a=>a.produto))].forEach(k=>pc[k]=(pc[k]||0)+1));
+  const prods=Object.entries(pc).sort((a,b)=>b[1]-a[1]);
+  const maxP=prods.length?prods[0][1]:1;
+  document.getElementById('hm-prods').innerHTML=prods.length?prods.map(([k,n])=>{const p=OB_PROD[k]||OB_PROD.outro;return `<div class="hm-pd">
+      <div class="hm-pd-t"><span class="ob-dot" style="background:${p.color}"></span><span>${escH(p.label)}</span><b>${n}</b></div>
+      <div class="hm-bar"><i style="width:${n/maxP*100}%;background:${p.color}"></i></div>
+    </div>`;}).join(''):'<div class="hm-vazio">Sem vendas no mês.</div>';
+
+  // onboarding: o que está esperando alguém da equipe
+  const ativas=OB_DATA.filter(v=>v.status==='ativa');
+  const naoCham=ativas.filter(v=>!v.chamado).length,pend=ativas.filter(obPendente).length,calls=ativas.filter(v=>v.call_status==='agendada').length;
+  const ob=(n,l,f,al)=>`<button class="hm-ob${al&&n?' alerta':''}" onclick="obFiltro='${f}';switchTab('onboarding')"><span>${l}</span><b>${n}</b></button>`;
+  document.getElementById('hm-ob').innerHTML=
+    ob(naoCham,'Alunos ainda não chamados','chamar',true)+
+    ob(pend,'Onboarding pendente','pend',true)+
+    ob(calls,'Calls agendadas','call');
+}
+function renderHomeEventos(){
+  const hoje=obHoje();
+  const evs=(EVENTS||[]).filter(e=>e.date>=hoje).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+  document.getElementById('hm-eventos').innerHTML=evs.length?evs.map(e=>{
+    const[y,m,d]=e.date.split('-').map(Number),dt=new Date(y,m-1,d);
+    const pr=(e.products||[]).map(k=>(PROD_OPTS.find(o=>o.key===k)||{}).label).filter(Boolean);
+    return `<div class="hm-ev${e.date===hoje?' hoje':''}"><div class="hm-ev-d"><b>${d}</b><small>${MONTHS[m-1].slice(0,3)}</small></div>
+      <div class="hm-ev-t">${escH(e.label)}<small>${e.date===hoje?'Hoje':DAYS[dt.getDay()]}${pr.length?' · '+escH(pr.join(', ')):''}</small></div></div>`;
+  }).join(''):'<div class="hm-vazio">Nenhum evento marcado no calendário.</div>';
+}
+
 // ── NAV ──
 function buildNav(){
   const tabs=currentNivel==='adm'?TABS_ADM:TABS_EQ;
@@ -859,10 +1034,11 @@ function switchTab(tab){
   });
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{b.classList.toggle('active',tabs[i]===tab);});
   document.querySelectorAll('.mobile-nav-btn').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
+  if(tab==='home')loadHome();
   if(tab==='calendario')renderWeek();
-  if(tab==='onboarding')loadOnboarding(false);
-  if(tab==='vendas')loadVendasAlunos(false);
-  if(tab==='alunos')loadVendasAlunos(false);
+  // ao abrir a guia mostra o que já tem e busca de novo no banco (substitui o antigo botão Atualizar)
+  if(tab==='onboarding')loadOnboarding(true);
+  if(tab==='vendas'||tab==='alunos')loadVendasAlunos(true);
   if(tab==='produtos')renderProducts();
   if(tab==='time')renderTeam();
   if(tab==='acessos')renderAcessos();
@@ -1196,7 +1372,7 @@ async function obRpc(fn,args){
 
 async function loadOnboarding(force){
   if(obLoading)return;
-  if(OB_DATA&&!force){renderOnboarding();return;}
+  if(OB_DATA){renderOnboarding();if(!force)return;}
   obLoading=true;
   if(!OB_DATA)document.getElementById('ob-list').innerHTML='<div class="ob-empty">Carregando vendas...</div>';
   try{
@@ -1377,7 +1553,7 @@ function vaTab(t){const el=document.getElementById('tab-'+t);return el&&el.style
 async function loadVendasAlunos(force){
   if(vaLoading)return;
   const render=()=>{vaPreencherSelects();if(vaTab('vendas'))renderVendas();if(vaTab('alunos'))renderAlunos();};
-  if(OB_DATA&&BASE_DATA&&!force){render();return;}
+  if(OB_DATA&&BASE_DATA){render();if(!force)return;}
   vaLoading=true;
   ['vd-list','al-list'].forEach(id=>{if(!OB_DATA||!BASE_DATA)document.getElementById(id).innerHTML='<div class="ob-empty">Carregando...</div>';});
   try{
@@ -1403,6 +1579,60 @@ async function carregarVendedores(){
   }catch(e){console.error(e);}
 }
 
+// ── Filtro de múltipla escolha (Vendas e Alunos) ──
+// opts = [[valor, rótulo]]; valor começando com "__" é opção especial ("Sem closer", "Com algum bônus").
+const MS={};
+function msMontar(id,ph,plural,opts,onchange){
+  const el=document.getElementById(id);
+  const st=MS[id]||(MS[id]={sel:new Set()});
+  Object.assign(st,{opts,ph,plural,onchange});
+  st.sel=new Set([...st.sel].filter(v=>opts.some(o=>o[0]===v)));
+  if(!el.dataset.ok){
+    el.dataset.ok='1';
+    el.innerHTML=`<button type="button" class="ms-trig"><span></span><i class="ti ti-chevron-down"></i></button>
+      <div class="ms-pop"><div class="ms-q"><i class="ti ti-search"></i><input type="text" placeholder="Buscar"></div><div class="ms-list"></div><div class="ms-foot"><span></span><button type="button">Limpar</button></div></div>`;
+    const inp=el.querySelector('.ms-q input');
+    el.querySelector('.ms-trig').onclick=()=>{
+      const abrir=!el.classList.contains('open');
+      document.querySelectorAll('.ms.open').forEach(x=>x.classList.remove('open'));
+      if(abrir){el.classList.add('open');inp.value='';msLista(id);if(matchMedia('(pointer:fine)').matches)inp.focus();}
+    };
+    inp.oninput=()=>msLista(id);
+    inp.onkeydown=e=>{if(e.key==='Escape')el.classList.remove('open');};
+    el.querySelector('.ms-foot button').onclick=()=>{st.sel.clear();msDesenhar(id);msLista(id);st.onchange();};
+  }
+  msDesenhar(id);
+}
+function msDesenhar(id){
+  const st=MS[id],el=document.getElementById(id),n=st.sel.size;
+  const rot=v=>(st.opts.find(o=>o[0]===v)||[,''])[1];
+  el.querySelector('.ms-trig span').textContent=!n?st.ph:n===1?rot([...st.sel][0]):`${n} ${st.plural}`;
+  el.classList.toggle('on',n>0);
+  el.querySelector('.ms-foot span').textContent=n?`${n} ${n===1?'selecionado':'selecionados'}`:'Nenhum selecionado';
+}
+function msLista(id){
+  const st=MS[id],el=document.getElementById(id);
+  const t=obNorm(el.querySelector('.ms-q input').value);
+  el.querySelector('.ms-q').style.display=st.opts.length>7?'':'none';
+  const vis=st.opts.filter(o=>!t||obNorm(o[1]).includes(t));
+  let h='',esp=false;
+  vis.forEach(([v,l],i)=>{
+    const e=v.startsWith('__');
+    if(esp&&!e)h+='<div class="ms-sep"></div>';
+    esp=e;
+    h+=`<button type="button" class="ms-opt${e?' esp':''}${st.sel.has(v)?' sel':''}" data-v="${escH(v)}"><span class="ms-box"></span><span>${escH(l)}</span></button>`;
+  });
+  const list=el.querySelector('.ms-list');
+  list.innerHTML=h||'<div class="ms-vazio">Nada encontrado.</div>';
+  list.querySelectorAll('.ms-opt').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.v;st.sel.has(v)?st.sel.delete(v):st.sel.add(v);
+    b.classList.toggle('sel');msDesenhar(id);st.onchange();
+  });
+}
+function msVal(id){return MS[id]?[...MS[id].sel]:[];}
+function msLimpar(id){if(MS[id]){MS[id].sel.clear();msDesenhar(id);}}
+document.addEventListener('pointerdown',e=>{document.querySelectorAll('.ms.open').forEach(x=>{if(!x.contains(e.target))x.classList.remove('open');});});
+
 function vaPreencherSelects(){
   const closers=[...new Set([...VENDEDORES,...OB_DATA.map(v=>v.vendedor).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const fill=(id,first,opts)=>{
@@ -1412,14 +1642,16 @@ function vaPreencherSelects(){
   };
   const prods=Object.entries(OB_PROD).map(([k,p])=>[k,p.label]);
   const cl=[['__sem','Sem closer informado'],...closers.map(c=>[c,c])];
-  fill('vd-produto','Todos os produtos',prods);fill('al-produto','Todos os produtos',prods);
-  fill('vd-closer','Todos os closers',cl);fill('al-closer','Todos os closers',cl);
-  fill('vd-bonus','Qualquer bônus',vdBonusOpts());
-  document.getElementById('vd-bonus-adm').style.display=currentNivel==='adm'?'':'none';
+  msMontar('vd-produto','Todos os produtos','produtos',prods,renderVendas);
+  msMontar('al-produto','Todos os produtos','produtos',prods,renderAlunos);
+  msMontar('vd-closer','Todos os closers','closers',cl,renderVendas);
+  msMontar('al-closer','Todos os closers','closers',cl,renderAlunos);
+  msMontar('vd-bonus','Qualquer bônus','bônus',vdBonusOpts(),renderVendas);
 }
 
 function limparFiltros(pre){
   document.querySelectorAll(`#tab-${pre==='vd'?'vendas':'alunos'} .va-sel, #${pre}-q`).forEach(el=>el.value='');
+  (pre==='vd'?['vd-produto','vd-closer','vd-bonus']:['al-produto','al-closer']).forEach(msLimpar);
   vdIncompletas=false;
   pre==='vd'?renderVendas():renderAlunos();
 }
@@ -1761,61 +1993,12 @@ async function bnAtualizar(){
 function vdBonusOpts(){
   const m=bnDasVendas();
   BN_CAT.forEach(c=>{const k=bnChave(c.nome),x=m.get(k);if(x)x.nome=c.nome;else m.set(k,{chave:k,nome:c.nome,usos:0});});
-  return[['__com','Com algum bônus'],['__sem','Sem bônus'],...[...m.values()].sort(bnOrdem).map(x=>[x.chave,`${x.nome} (${x.usos})`])];
+  return[['__com','Com algum bônus'],['__sem','Sem bônus'],...[...m.values()].sort(bnOrdem).map(x=>[x.chave,x.nome])];
 }
 function vaBonusHtml(v){
   if(!(v.bonus||[]).length)return '<span class="va-muted">—</span>';
   const obs=v.bonus_obs||{};
   return vaMais(v.bonus.map(b=>`<div class="va-bonus">${escH(b)}${obs[b]?`<small>${escH(obs[b])}</small>`:''}</div>`),v.bonus.map(b=>b+(obs[b]?` (${obs[b]})`:'')));
-}
-
-// Lista de bônus (só adm): renomear, unificar nomes do mesmo bônus, excluir o que não tem venda.
-function openBonusAdm(){renderBonusAdm();document.getElementById('bn-modal').classList.add('open');}
-function closeBonusAdm(){document.getElementById('bn-modal').classList.remove('open');}
-function renderBonusAdm(){
-  const el=document.getElementById('bn-adm-list');
-  if(!BN_OK){el.innerHTML='<div class="ob-empty">A lista de bônus ainda não existe no banco.<br>Rode o sql/005_bonus.sql no Supabase e clique em Atualizar.</div>';return;}
-  if(!BN_CAT.length){el.innerHTML='<div class="ob-empty">Nenhum bônus cadastrado ainda.</div>';return;}
-  el.innerHTML=BN_CAT.map(c=>{
-    const outros=BN_CAT.filter(x=>x.id!==c.id),par=bnParecidos(c.nome,outros);
-    return `<div class="bn-adm">
-      <div class="bn-adm-n">${escH(c.nome)}<small>${c.usos} ${c.usos===1?'venda':'vendas'}</small>${par.length?`<small class="warn">Parecido com: ${par.slice(0,3).map(p=>escH(p.nome)).join(' · ')}</small>`:''}</div>
-      <div class="bn-adm-a">
-        <button class="ob-mini" title="Renomear" onclick="bonusRenomear('${c.id}')"><i class="ti ti-pencil"></i></button>
-        <select class="va-sel" onchange="bonusUnificar('${c.id}',this)"><option value="">Unificar com...</option>${[...par,...outros.filter(x=>!par.includes(x))].map(x=>`<option value="${x.id}">${escH(x.nome)}</option>`).join('')}</select>
-        ${c.usos?'':`<button class="ob-mini" title="Excluir (sem vendas)" onclick="bonusExcluir('${c.id}')"><i class="ti ti-trash"></i></button>`}
-      </div>
-    </div>`;
-  }).join('');
-}
-async function bonusAcao(fn,args){
-  try{
-    await obRpc(fn,args);
-    OB_DATA=await obRpc('onboarding_listar',{});CLIENTES=null;
-    await bnAtualizar();
-    vaPreencherSelects();renderVendas();
-  }catch(e){
-    console.error(e);
-    alert('Não foi possível concluir. '+(e.message||''));
-  }
-  renderBonusAdm();
-}
-function bonusRenomear(id){
-  const c=BN_CAT.find(x=>x.id===id);if(!c)return;
-  const nome=prompt('Novo nome do bônus (vale para todas as vendas que já têm esse bônus):',c.nome);
-  if(nome===null||!nome.trim()||nome.trim()===c.nome)return;
-  bonusAcao('bonus_renomear',{p_id:id,p_nome:nome});
-}
-function bonusUnificar(id,sel){
-  const de=BN_CAT.find(x=>x.id===id),para=BN_CAT.find(x=>x.id===sel.value);
-  if(!de||!para){sel.value='';return;}
-  if(!confirm(`Unificar "${de.nome}" em "${para.nome}"?\n\n${de.usos} ${de.usos===1?'venda passa':'vendas passam'} a ter "${para.nome}" e "${de.nome}" sai da lista. Não dá para desfazer.`)){sel.value='';return;}
-  bonusAcao('bonus_unificar',{p_de:de.id,p_para:para.id});
-}
-function bonusExcluir(id){
-  const c=BN_CAT.find(x=>x.id===id);if(!c)return;
-  if(!confirm(`Excluir "${c.nome}" da lista de bônus?`))return;
-  bonusAcao('bonus_excluir',{p_id:id});
 }
 
 // ── Vendas ──
@@ -1854,13 +2037,13 @@ function renderVendas(){
   vaMarcarFiltros('vd');
   const[de,ate]=vdIntervalo();
   const q=obNorm($v('vd-q')),qd=q.replace(/\D/g,'');
-  const prod=$v('vd-produto'),closer=$v('vd-closer'),tipo=$v('vd-tipo'),status=$v('vd-status'),bonus=$v('vd-bonus');
+  const prods=msVal('vd-produto'),closers=msVal('vd-closer'),bonus=msVal('vd-bonus'),tipo=$v('vd-tipo'),status=$v('vd-status');
   // base antiga não tem bônus registrado: só entra quando o filtro de bônus está vazio
   let rows=vdLinhas().filter(r=>
     (!de||r.data>=de)&&(!ate||r.data<=ate)&&
-    (!prod||r.produtos.includes(prod))&&
-    (!closer||(closer==='__sem'?!r.vendedor:r.vendedor===closer))&&
-    (!bonus||(r.k==='v'&&(bonus==='__com'?r.bonus.length>0:bonus==='__sem'?!r.bonus.length:r.bonus.includes(bonus))))&&
+    (!prods.length||r.produtos.some(p=>prods.includes(p)))&&
+    (!closers.length||closers.some(c=>c==='__sem'?!r.vendedor:r.vendedor===c))&&
+    (!bonus.length||(r.k==='v'&&bonus.some(b=>b==='__com'?r.bonus.length>0:b==='__sem'?!r.bonus.length:r.bonus.includes(b))))&&
     (!tipo||r.tipo===tipo)&&(!status||r.status===status)&&
     (!q||r.busca.includes(q)||(qd.length>=4&&String(r.tel||'').includes(qd))));
   const conf=rows.filter(r=>r.k==='v');
@@ -1940,14 +2123,14 @@ function renderAlunos(){
   if(!OB_DATA||!BASE_DATA)return;
   vaMarcarFiltros('al');
   const q=obNorm($v('al-q')),qd=q.replace(/\D/g,'');
-  const sit=$v('al-sit'),tempo=$v('al-tempo'),prod=$v('al-produto'),closer=$v('al-closer'),grupo=$v('al-grupo'),fonte=$v('al-fonte');
+  const sit=$v('al-sit'),tempo=$v('al-tempo'),prods=msVal('al-produto'),closers=msVal('al-closer'),grupo=$v('al-grupo'),fonte=$v('al-fonte');
   const em30=vaMaisDias(30);
   const pre=getClientes().filter(c=>
     (fonte==='colab'?c.colab:!c.colab)&&
     (fonte!=='conf'||c.vendas.length)&&(fonte!=='base'||!c.vendas.length)&&
-    (!prod||c.prodConf.has(prod)||c.prodBase.has(prod))&&
+    (!prods.length||prods.some(p=>c.prodConf.has(p)||c.prodBase.has(p)))&&
     (!tempo||(tempo==='outro'?[...c.duracoes].some(d=>typeof d==='number'&&d!==6&&d!==12):c.duracoes.has(tempo==='a_confirmar'?tempo:Number(tempo))))&&
-    (!closer||(closer==='__sem'?!c.closers.length:c.closers.includes(closer)))&&
+    (!closers.length||closers.some(x=>x==='__sem'?!c.closers.length:c.closers.includes(x)))&&
     (!grupo||(c.base&&c.base.grupo_mentoria===grupo))&&
     (!q||c.busca.includes(q)||(qd.length>=4&&c.telBusca.includes(qd))));
   const bate={
