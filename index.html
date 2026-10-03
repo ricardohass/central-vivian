@@ -97,6 +97,22 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .day-num{font-size:30px;font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--text-muted);line-height:1}
 .day-col.today .day-num,.day-col.today .day-name{color:var(--gold)}
 .day-events{padding:7px 6px;display:flex;flex-direction:column;gap:4px;flex:1}
+.mes-sem{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:4px}
+.mes-sem div{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);padding:0 10px 4px}
+.mes-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mes-dia{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;min-height:118px;padding:8px 7px 9px;display:flex;flex-direction:column;gap:5px;min-width:0;transition:border-color .2s}
+.mes-dia.fora{background:transparent;border-color:rgba(201,168,76,0.07)}
+.mes-dia.fora .mes-num,.mes-dia.fora .cal-event{opacity:.4}
+.mes-dia.fds:not(.fora){background:#171615}
+.mes-dia.today{border-color:var(--gold)}
+.mes-dia.edit-active{cursor:pointer}
+.mes-dia.edit-active:hover{border-color:var(--gold-dim)}
+.mes-num{display:flex;align-items:center;gap:6px;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text-muted);line-height:1;padding:0 3px 2px;font-variant-numeric:lining-nums}
+.mes-num small{display:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.mes-dia.today .mes-num b{font-weight:400;background:var(--gold);color:var(--dark);border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+.mes-dia .cal-event{font-size:11.5px;padding:5px 7px;overflow-wrap:anywhere}
+.mes-vazio{display:none}
+.mes-ev{display:flex;flex-direction:column;gap:5px;min-width:0}
 .cal-event{font-size:12px;padding:5px 8px;border-radius:2px;line-height:1.4;display:flex;justify-content:space-between;align-items:flex-start;gap:4px}
 .ev-rm{opacity:.35;cursor:pointer;font-size:13px;flex-shrink:0;line-height:1;margin-top:1px}
 .ev-rm:hover{opacity:1;color:#fff}
@@ -450,7 +466,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .hm-rule span{width:6px;height:6px;border:0.5px solid var(--gold);transform:rotate(45deg)}
 .hm-sec{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin:30px 0 12px;display:flex;align-items:center;gap:14px}
 .hm-sec::after{content:'';flex:1;height:0.5px;background:var(--border)}
-.hm-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hm-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .hm-kpi{position:relative;background:linear-gradient(180deg,var(--dark2),#151413);border:0.5px solid var(--border);border-radius:3px;padding:22px 22px 20px;overflow:hidden;animation:hmUp .5s ease both}
 .hm-kpi::before{content:'';position:absolute;left:22px;right:22px;top:0;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
 .hm-kpi:nth-child(2){animation-delay:.05s}.hm-kpi:nth-child(3){animation-delay:.1s}.hm-kpi:nth-child(4){animation-delay:.15s}
@@ -459,6 +475,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .hm-kpi-n small{font-size:22px;color:var(--gold-dim);margin-right:6px}
 .hm-kpi-s{font-size:12px;color:var(--text-muted);line-height:1.4}
 .hm-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-top:12px}
+.hm-grid.um{grid-template-columns:1fr}
 .hm-card{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;padding:22px 24px;animation:hmUp .5s .15s ease both;min-width:0}
 .hm-card-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:16px}
 .hm-card-h h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:23px;color:var(--gold-light);letter-spacing:.5px}
@@ -474,12 +491,6 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .hm-rk-v{font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--gold-light);font-variant-numeric:lining-nums;white-space:nowrap}
 .hm-bar{grid-column:2/-1;height:2px;background:rgba(201,168,76,0.08);border-radius:1px;overflow:hidden}
 .hm-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:1px}
-.hm-pd{padding:10px 0;border-bottom:0.5px solid var(--border)}
-.hm-pd:last-child{border-bottom:none;padding-bottom:0}
-.hm-pd-t{display:flex;align-items:center;gap:10px;font-size:14px;margin-bottom:8px}
-.hm-pd-t span:not(.ob-dot){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hm-pd-t b{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--gold-light)}
-.hm-pd .hm-bar{grid-column:auto}
 .hm-ev{display:flex;align-items:center;gap:16px;padding:11px 0;border-bottom:0.5px solid var(--border)}
 .hm-ev:last-child{border-bottom:none;padding-bottom:0}
 .hm-ev-d{width:52px;flex-shrink:0;text-align:center;border-right:0.5px solid var(--border);padding-right:14px}
@@ -497,7 +508,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .hm-foot{text-align:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#5E5852;margin:40px 0 10px}
 #tab-home b,.hm-rk-p,.hm-rk-v{font-variant-numeric:lining-nums}
 @keyframes hmUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media(max-width:900px){.hm-kpis{grid-template-columns:1fr 1fr}.hm-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.hm-grid{grid-template-columns:1fr}}
 
 /* MOBILE */
 @media(max-width:680px){
@@ -523,6 +534,16 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .hm-kpi-n{font-size:32px}
   .hm-card{padding:18px 16px}
   .week-grid{grid-template-columns:1fr;gap:8px}
+  .mes-sem{display:none}
+  .mes-grid{grid-template-columns:1fr;gap:6px}
+  .mes-dia{min-height:0;flex-direction:row;align-items:flex-start;gap:12px;padding:10px 12px}
+  .mes-dia.fora,.mes-dia.sem-ev:not(.today){display:none}
+  .mes-num{flex-direction:column;width:44px;flex-shrink:0;font-size:26px;gap:2px;padding:2px 0 0}
+  .mes-num small{display:block}
+  .mes-dia>.cal-event:first-of-type{margin-top:0}
+  .mes-ev{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .mes-dia .cal-event{font-size:13px}
+  .mes-vazio{display:block;font-size:13px;color:var(--text-muted);padding:14px 2px}
   .day-col{flex-direction:row;min-height:auto}
   .day-header{padding:12px 14px;border-bottom:none;border-right:0.5px solid var(--border);flex-direction:column;align-items:center;justify-content:center;min-width:62px;flex-shrink:0}
   .day-name{font-size:10px}
@@ -638,20 +659,19 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <div class="hm-kpis" id="hm-kpis"></div>
       <div class="hm-grid">
         <section class="hm-card"><div class="hm-card-h"><h3>Ranking de closers</h3><span id="hm-rank-sub"></span></div><div id="hm-rank"></div></section>
-        <section class="hm-card"><div class="hm-card-h"><h3>Produtos do mês</h3><span>vendas</span></div><div id="hm-prods"></div></section>
-      </div>
-      <div class="hm-grid">
-        <section class="hm-card"><div class="hm-card-h"><h3>Próximos eventos</h3><button onclick="switchTab('calendario')">Calendário<i class="ti ti-arrow-right"></i></button></div><div id="hm-eventos"></div></section>
         <section class="hm-card"><div class="hm-card-h"><h3>Onboarding</h3><button onclick="switchTab('onboarding')">Abrir<i class="ti ti-arrow-right"></i></button></div><div id="hm-ob"></div></section>
+      </div>
+      <div class="hm-grid um">
+        <section class="hm-card"><div class="hm-card-h"><h3>Próximos eventos</h3><button onclick="switchTab('calendario')">Calendário<i class="ti ti-arrow-right"></i></button></div><div id="hm-eventos"></div></section>
       </div>
       <div class="hm-foot">Dra. Vivian Amaral · Central de Gestão · <span id="hm-ano"></span></div>
     </div>
     <div id="tab-calendario">
       <div class="week-toolbar">
         <div class="week-nav">
-          <button class="wnav-btn" onclick="changeWeek(-1)"><i class="ti ti-chevron-left"></i></button>
+          <button class="wnav-btn" onclick="changeMonth(-1)" title="Mês anterior"><i class="ti ti-chevron-left"></i></button>
           <div class="week-label" id="week-label"></div>
-          <button class="wnav-btn" onclick="changeWeek(1)"><i class="ti ti-chevron-right"></i></button>
+          <button class="wnav-btn" onclick="changeMonth(1)" title="Próximo mês"><i class="ti ti-chevron-right"></i></button>
         </div>
         <div style="display:flex;gap:8px">
           <button class="icon-btn" onclick="goToday()">Hoje</button>
@@ -659,7 +679,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
         </div>
       </div>
       <div class="edit-hint-bar" id="edit-hint-bar"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:6px"></i>Clique em qualquer dia para adicionar. × para remover.</div>
-      <div class="week-grid" id="week-grid"></div>
+      <div class="mes-sem"><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div></div>
+      <div class="mes-grid" id="week-grid"></div>
       <div class="cal-legend" id="cal-legend"></div>
     </div>
     <div id="tab-onboarding" style="display:none">
@@ -848,7 +869,7 @@ const TAB_ICONS={home:'ti-home',calendario:'ti-calendar',onboarding:'ti-user-che
 
 let EVENTS=[],PRODUCTS=[],USUARIOS=[];
 let currentUser=null,currentNivel=null;
-let anchorMonday=getMondayOf(new Date()),editMode=false,addTarget=null,currentProdId=null;
+let anchorMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),editMode=false,addTarget=null,currentProdId=null;
 let editingAcessoId=null,editingUsuarioId=null;
 let ACESSOS=[];
 
@@ -950,16 +971,12 @@ function renderHome(){
 
   const hoje=obHoje(),ini=hoje.slice(0,8)+'01';
   const doMes=OB_DATA.filter(v=>v.status==='ativa'&&v.data_venda>=ini&&v.data_venda<=hoje);
-  const deHoje=doMes.filter(v=>v.data_venda===hoje);
   const soma=l=>l.reduce((s,v)=>s+(v.valor_total!=null?Number(v.valor_total):0),0);
-  const comValor=doMes.filter(v=>v.valor_total!=null);
   const rs=n=>`<small>R$</small>${Math.round(n).toLocaleString('pt-BR')}`;
   const kpi=(l,n,sub)=>`<div class="hm-kpi"><div class="hm-kpi-l">${l}</div><div class="hm-kpi-n">${n}</div><div class="hm-kpi-s">${sub}</div></div>`;
   document.getElementById('hm-kpis').innerHTML=
     kpi('Vendas no mês',doMes.length,'sem reembolsadas e canceladas')+
-    kpi('Vendido no mês',rs(soma(doMes)),'valor negociado com os alunos')+
-    kpi('Ticket médio',comValor.length?rs(soma(comValor)/comValor.length):'—',comValor.length?`média de ${comValor.length} ${comValor.length===1?'venda':'vendas'}`:'sem vendas com valor')+
-    kpi('Vendido hoje',rs(soma(deHoje)),`${deHoje.length} ${deHoje.length===1?'venda':'vendas'} hoje`);
+    kpi('Vendido no mês',rs(soma(doMes)),'valor negociado com os alunos');
 
   // ranking: quem vendeu mais em valor no mês
   const por={};
@@ -972,16 +989,6 @@ function renderHome(){
       <div class="hm-rk-v">${obBrl(r.valor)}</div>
       <div class="hm-bar"><i style="width:${Math.max(3,r.valor/topo*100)}%"></i></div>
     </div>`).join(''):'<div class="hm-vazio">Nenhuma venda registrada neste mês ainda.</div>';
-
-  // produtos: em quantas vendas do mês cada produto entrou
-  const pc={};
-  doMes.forEach(v=>[...new Set(v.acessos.map(a=>a.produto))].forEach(k=>pc[k]=(pc[k]||0)+1));
-  const prods=Object.entries(pc).sort((a,b)=>b[1]-a[1]);
-  const maxP=prods.length?prods[0][1]:1;
-  document.getElementById('hm-prods').innerHTML=prods.length?prods.map(([k,n])=>{const p=OB_PROD[k]||OB_PROD.outro;return `<div class="hm-pd">
-      <div class="hm-pd-t"><span class="ob-dot" style="background:${p.color}"></span><span>${escH(p.label)}</span><b>${n}</b></div>
-      <div class="hm-bar"><i style="width:${n/maxP*100}%;background:${p.color}"></i></div>
-    </div>`;}).join(''):'<div class="hm-vazio">Sem vendas no mês.</div>';
 
   // onboarding: o que está esperando alguém da equipe
   const ativas=OB_DATA.filter(v=>v.status==='ativa');
@@ -1056,8 +1063,8 @@ function toggleDrawer(){
 // ── CALENDÁRIO ──
 function getMondayOf(d){const day=d.getDay();return new Date(d.getFullYear(),d.getMonth(),d.getDate()-(day===0?6:day-1));}
 function dStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-function changeWeek(dir){anchorMonday=new Date(anchorMonday.getFullYear(),anchorMonday.getMonth(),anchorMonday.getDate()+dir*7);renderWeek();}
-function goToday(){anchorMonday=getMondayOf(new Date());renderWeek();}
+function changeMonth(dir){anchorMonth=new Date(anchorMonth.getFullYear(),anchorMonth.getMonth()+dir,1);renderWeek();}
+function goToday(){anchorMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);renderWeek();}
 function toggleEdit(){
   editMode=!editMode;
   document.getElementById('edit-btn').classList.toggle('active',editMode);
@@ -1065,36 +1072,38 @@ function toggleEdit(){
   document.getElementById('edit-hint-bar').style.display=editMode?'block':'none';
   renderWeek();
 }
+// Mês inteiro (semanas de segunda a domingo), com cada evento escrito por extenso dentro do dia.
+// No celular vira lista só com os dias que têm evento.
+function calEventoHtml(e){
+  const pr=e.products||[];
+  const opt=pr.length===1?PROD_OPTS.find(o=>o.key===pr[0]):null;
+  const bg=opt?opt.bg:'rgba(201,168,76,0.07)',bc=opt?opt.color:'#7A6030',tc=opt?opt.color:'#E8D5A3';
+  const rm=editMode?`<span class="ev-rm" style="color:${tc}" onclick="removeEv(event,'${e.id}')">×</span>`:'';
+  const tags=pr.length>1?`<div class="ev-tags">${pr.map(pk=>{const o=PROD_OPTS.find(x=>x.key===pk);return o?`<span class="ev-tag" style="background:${o.bg};color:${o.color}">${o.label}</span>`:''}).join('')}</div>`:'';
+  const CALL_LINKS=`<div class="ev-links"><a href="https://meet.google.com/oqg-tdre-xiy?authuser=1" target="_blank" onclick="event.stopPropagation()"><i class="ti ti-video"></i>Meet</a><a href="https://docs.google.com/document/d/13vmCojSZcjyvto8hKdiAn-ZzIuB1WqJbt-j3ZNAedqM/edit?usp=sharing" target="_blank" onclick="event.stopPropagation()"><i class="ti ti-file-text"></i>Pauta</a></div>`;
+  const isCall=e.label.startsWith('Call interna');
+  return `<div class="cal-event" style="background:${bg};border-left:3px solid ${bc};color:${tc}"><div><div>${e.label}</div>${tags}${isCall?CALL_LINKS:''}</div>${rm}</div>`;
+}
 function renderWeek(){
-  const end=new Date(anchorMonday.getFullYear(),anchorMonday.getMonth(),anchorMonday.getDate()+6);
-  const sM=MONTHS[anchorMonday.getMonth()].substring(0,3),eM=MONTHS[end.getMonth()].substring(0,3);
-  document.getElementById('week-label').textContent=
-    anchorMonday.getMonth()===end.getMonth()
-    ?`${anchorMonday.getDate()} — ${end.getDate()} de ${sM} ${end.getFullYear()}`
-    :`${anchorMonday.getDate()} ${sM} — ${end.getDate()} ${eM} ${end.getFullYear()}`;
+  const y=anchorMonth.getFullYear(),m=anchorMonth.getMonth();
+  document.getElementById('week-label').textContent=`${MONTHS[m]} ${y}`;
   const grid=document.getElementById('week-grid');grid.innerHTML='';
   const todayStr=dStr(new Date());
-  for(let i=0;i<7;i++){
-    const d=new Date(anchorMonday.getFullYear(),anchorMonday.getMonth(),anchorMonday.getDate()+i);
-    const ds=dStr(d);
-    const col=document.createElement('div');
-    col.className='day-col'+(ds===todayStr?' today':'')+(editMode?' edit-active':'');
+  const ini=getMondayOf(new Date(y,m,1));
+  const ult=new Date(y,m+1,0),fimDow=ult.getDay();
+  const fim=new Date(y,m,ult.getDate()+(fimDow===0?0:7-fimDow));
+  let algum=false;
+  for(let d=new Date(ini);d<=fim;d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)){
+    const ds=dStr(d),fora=d.getMonth()!==m;
     const evs=EVENTS.filter(e=>e.date===ds);
-    let evHtml='';
-    evs.forEach(e=>{
-      const pr=e.products||[];
-      const opt=pr.length===1?PROD_OPTS.find(o=>o.key===pr[0]):null;
-      const bg=opt?opt.bg:'rgba(201,168,76,0.07)',bc=opt?opt.color:'#7A6030',tc=opt?opt.color:'#E8D5A3';
-      const rm=editMode?`<span class="ev-rm" style="color:${tc}" onclick="removeEv(event,'${e.id}')">×</span>`:'';
-      const tags=pr.length>1?`<div class="ev-tags">${pr.map(pk=>{const o=PROD_OPTS.find(x=>x.key===pk);return o?`<span class="ev-tag" style="background:${o.bg};color:${o.color}">${o.label}</span>`:''}).join('')}</div>`:'';
-      const CALL_LINKS=`<div class="ev-links"><a href="https://meet.google.com/oqg-tdre-xiy?authuser=1" target="_blank" onclick="event.stopPropagation()"><i class="ti ti-video"></i>Meet</a><a href="https://docs.google.com/document/d/13vmCojSZcjyvto8hKdiAn-ZzIuB1WqJbt-j3ZNAedqM/edit?usp=sharing" target="_blank" onclick="event.stopPropagation()"><i class="ti ti-file-text"></i>Pauta</a></div>`;
-      const isCall=e.label.startsWith('Call interna');
-      evHtml+=`<div class="cal-event" style="background:${bg};border-left:3px solid ${bc};color:${tc}"><div><div>${e.label}</div>${tags}${isCall?CALL_LINKS:''}</div>${rm}</div>`;
-    });
-    col.innerHTML=`<div class="day-header"><div class="day-name">${DAYS[d.getDay()]}</div><div class="day-num">${d.getDate()}</div></div><div class="day-events">${evHtml}</div>`;
-    if(editMode)col.addEventListener('click',()=>openAdd(ds,d));
-    grid.appendChild(col);
+    if(evs.length&&!fora)algum=true;
+    const cel=document.createElement('div');
+    cel.className='mes-dia'+(fora?' fora':'')+(d.getDay()%6===0?' fds':'')+(ds===todayStr?' today':'')+(editMode?' edit-active':'')+(evs.length?'':' sem-ev');
+    cel.innerHTML=`<div class="mes-num"><b>${d.getDate()}</b><small>${DAYS[d.getDay()]}</small></div><div class="mes-ev">${evs.map(calEventoHtml).join('')}</div>`;
+    if(editMode)cel.addEventListener('click',()=>openAdd(ds,d));
+    grid.appendChild(cel);
   }
+  if(!algum)grid.insertAdjacentHTML('beforeend','<div class="mes-vazio">Nenhum evento neste mês.</div>');
   document.getElementById('cal-legend').innerHTML=PROD_OPTS.map(o=>`<div class="leg-item"><div class="leg-dot" style="background:${o.color}"></div><span class="leg-name">${o.label}</span></div>`).join('');
 }
 function openAdd(ds,d){
