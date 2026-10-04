@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dra. Vivian Amaral — Central de Gestão</title>
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/logo-simbolo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,7 +24,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 #login-screen{display:none;position:fixed;inset:0;background:var(--dark);z-index:900;align-items:center;justify-content:center}
 .login-box{width:min(380px,94vw);padding:40px 36px;background:var(--dark2);border:0.5px solid var(--border);border-radius:3px}
 .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
-.login-monogram{width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-weight:300}
+.login-logo-img{display:block;height:130px;width:auto;margin:0 auto 10px}
 .login-brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:2px}
 .login-brand-sub{font-size:10px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
 .login-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-light);margin-bottom:24px;text-align:center}
@@ -38,14 +40,15 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 #app{display:none}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:0.5px solid var(--border);background:var(--dark);position:sticky;top:0;z-index:50;gap:16px}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.brand-monogram{width:38px;height:38px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);font-weight:300}
+.brand-logo{height:40px;width:auto;display:block}
+.brand-div{width:0.5px;height:30px;background:var(--border-hover)}
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--text);letter-spacing:2px}
 .brand-sub{font-size:11px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
 .nav{display:flex;gap:4px}
 .nav-btn{background:none;border:none;padding:8px 16px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:color .2s;position:relative}
 .nav-btn:hover{color:var(--gold)}
 .nav-btn.active{color:var(--gold)}
-.nav-btn.active::after{content:'';position:absolute;bottom:-17px;left:0;right:0;height:1px;background:var(--gold)}
+.nav-btn.active::after{content:'';position:absolute;bottom:-20px;left:0;right:0;height:1px;background:var(--gold)}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .user-badge{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:6px}
 .user-nivel{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;border-radius:1px;border:0.5px solid}
@@ -62,7 +65,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .drawer-overlay.open{display:block}
 .mobile-drawer-top{display:flex;align-items:center;justify-content:space-between;padding:24px 18px 18px;border-bottom:0.5px solid var(--border)}
 .mobile-user-info{display:flex;align-items:center;gap:12px}
-.mobile-monogram{width:42px;height:42px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold);font-weight:300;flex-shrink:0}
+.mobile-monogram{width:42px;height:42px;object-fit:contain;flex-shrink:0}
 .mobile-user-nome{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);font-weight:300}
 .mobile-user-nivel{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
 .mobile-close{background:none;border:none;color:var(--text-muted);font-size:22px;cursor:pointer;padding:4px}
@@ -451,8 +454,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 /* HOME */
 #tab-home{max-width:1180px;margin:0 auto}
 .hm-hero{position:relative;text-align:center;padding:46px 20px 40px;margin:-28px -28px 8px;background:radial-gradient(ellipse 60% 100% at 50% 0%,rgba(201,168,76,0.11),transparent 70%)}
-.hm-ring{width:92px;height:92px;margin:0 auto 22px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--gold);letter-spacing:1px}
-.hm-ring::before{content:'';position:absolute;inset:-9px;border:0.5px solid rgba(201,168,76,0.3);border-radius:50%}
+.hm-logo{display:block;height:150px;width:auto;margin:0 auto 22px;filter:drop-shadow(0 6px 24px rgba(201,168,76,0.12))}
 .hm-kicker{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim)}
 .hm-hello{font-size:15px;color:var(--text);margin:18px 0 18px;letter-spacing:.5px}
 .hm-hello em{font-style:normal;color:var(--gold-light)}
@@ -526,7 +528,9 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .topbar{padding:12px 16px}
   .brand-name{font-size:16px}
   .brand-sub{font-size:9px}
-  .brand-monogram{width:34px;height:34px;font-size:14px}
+  .brand-logo{height:32px}
+  .brand-div,.brand .brand-sub{display:none}
+  .hm-logo{height:118px}
   .content{padding:14px}
   .hm-hero{margin:-14px -14px 4px;padding:34px 16px 30px}
   .hm-kpi{padding:18px 16px 16px}
@@ -598,12 +602,9 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">
-      <div class="login-monogram">VA</div>
-      <div class="login-brand">
-        <div class="login-brand-name">Dra. Vivian Amaral</div>
-        <div class="login-brand-sub">Central de Gestão</div>
-      </div>
+    <div class="login-logo" style="flex-direction:column;gap:0">
+      <img class="login-logo-img" src="/img/logo-vertical.png" alt="Dra. Vivian Amaral">
+      <div class="login-brand-sub">Central de Gestão</div>
     </div>
     <div class="login-title">Acesso restrito</div>
     <div class="login-field"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com"></div>
@@ -617,11 +618,9 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 <div id="app">
   <div class="topbar">
     <div class="brand">
-      <div class="brand-monogram">VA</div>
-      <div>
-        <div class="brand-name">Dra. Vivian Amaral</div>
-        <div class="brand-sub">Central de Gestão</div>
-      </div>
+      <img class="brand-logo" src="/img/logo-horizontal.png" alt="Dra. Vivian Amaral">
+      <span class="brand-div"></span>
+      <div class="brand-sub" style="margin-top:0">Central<br>de Gestão</div>
     </div>
     <nav class="nav" id="main-nav"></nav>
     <div class="topbar-right" id="topbar-right">
@@ -635,7 +634,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="mobile-drawer-top">
       <div class="mobile-user-info">
-        <div class="mobile-monogram">VA</div>
+        <img class="mobile-monogram" src="/img/logo-simbolo.png" alt="">
         <div><div class="mobile-user-nome" id="m-nome"></div><div class="mobile-user-nivel" id="m-nivel"></div></div>
       </div>
       <button class="mobile-close" onclick="toggleDrawer()"><i class="ti ti-x"></i></button>
@@ -648,8 +647,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   <div class="content">
     <div id="tab-home" style="display:none">
       <section class="hm-hero">
-        <div class="hm-ring">VA</div>
-        <div class="hm-kicker">Dra. Vivian Amaral · Central de Gestão</div>
+        <img class="hm-logo" src="/img/logo-vertical.png" alt="Dra. Vivian Amaral">
+        <div class="hm-kicker">Central de Gestão</div>
         <div class="hm-hello" id="hm-hello"></div>
         <h1 class="hm-frase">Da técnica premiada como a melhor do mundo para os consultórios que vão <em>liderar a estética íntima no Brasil</em>.</h1>
         <div class="hm-date" id="hm-date"></div>
