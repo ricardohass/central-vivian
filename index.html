@@ -263,8 +263,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-chip:last-child{border-right:none}
 .ob-chip.active{background:rgba(201,168,76,0.1);color:var(--gold)}
 .ob-scroll{overflow-x:auto;border:0.5px solid var(--border);border-radius:3px}
-.ob-list{min-width:1230px}
-.ob-row{display:grid;grid-template-columns:92px minmax(170px,1.2fr) minmax(190px,1.2fr) minmax(170px,1.1fr) 150px 140px 140px 140px minmax(200px,1.5fr);align-items:stretch;border-bottom:0.5px solid var(--border);transition:background .15s}
+.ob-list{min-width:1270px}
+.ob-row{display:grid;grid-template-columns:92px minmax(170px,1.2fr) minmax(190px,1.2fr) minmax(170px,1.1fr) 150px 140px 140px 180px minmax(200px,1.5fr);align-items:stretch;border-bottom:0.5px solid var(--border);transition:background .15s}
 .ob-row:last-child{border-bottom:none}
 /* Linhas de altura fixa (Onboarding, Vendas, Alunos): uma informação por célula, o resto no "+N" */
 .ob-row:not(.ob-head){height:64px}
@@ -308,6 +308,9 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .ob-sel.ok{color:#5FC49E;border-color:rgba(61,168,130,0.45);background-color:rgba(61,168,130,0.08)}
 .ob-sel.wait{color:var(--gold);border-color:var(--gold-dim);background-color:rgba(201,168,76,0.08)}
 .ob-sel.no{color:#E08A7F;border-color:rgba(192,70,58,0.45);background-color:rgba(192,70,58,0.07)}
+.ob-form{display:flex;align-items:center;gap:8px;min-width:0}
+.ob-form .ob-sel{flex:1;min-width:0}
+.ob-form .ob-mini{font-size:16px}
 .ob-obs{width:100%;min-height:34px;overflow:hidden;background:transparent;border:0.5px solid transparent;color:var(--text);font-family:'Jost',sans-serif;font-size:12px;line-height:1.45;padding:6px 7px;border-radius:2px;outline:none;resize:vertical}
 .ob-obs:hover{border-color:var(--border)}
 .ob-obs:focus{border-color:var(--gold-dim);background:var(--dark3)}
@@ -572,12 +575,14 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .ob-cell:last-child{border-bottom:none}
   .ob-cell[data-l]::before{content:attr(data-l);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px}
   .ob-date-cell{flex-direction:row;justify-content:space-between;align-items:center}
-  .ob-status-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .ob-status-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0}
   .ob-status-wrap .ob-cell{border-right:0.5px solid var(--border)}
-  .ob-status-wrap .ob-cell:last-child{border-right:none}
+  .ob-status-wrap .ob-cell:nth-child(2){border-right:none}
   .ob-sel{font-size:13px;padding:7px 20px 7px 7px;background-position:calc(100% - 11px) 50%,calc(100% - 7px) 50%}
   .ob-status-wrap{border-bottom:0.5px solid var(--border)}
   .ob-status-wrap .ob-cell{padding:10px 8px;border-bottom:none}
+  .ob-status-wrap .ob-cell:last-child{grid-column:1/-1;border-right:none;border-top:0.5px solid var(--border)}
+  .ob-form .ob-mini{font-size:20px;padding:4px}
   .ob-obs{font-size:14px;border-color:var(--border);background:var(--dark3)}
   .ficha-grid{grid-template-columns:1fr}
   .team-grid{grid-template-columns:1fr}
@@ -991,12 +996,12 @@ function renderHome(){
 
   // onboarding: o que está esperando alguém da equipe
   const ativas=OB_DATA.filter(v=>v.status==='ativa');
-  const naoCham=ativas.filter(v=>!v.chamado).length,pend=ativas.filter(obPendente).length,calls=ativas.filter(v=>v.call_status==='agendada').length;
+  const naoCham=ativas.filter(v=>!v.chamado).length,pend=ativas.filter(obPendente).length,semForm=ativas.filter(v=>v.form_pos==='nao_enviado').length;
   const ob=(n,l,f,al)=>`<button class="hm-ob${al&&n?' alerta':''}" onclick="obFiltro='${f}';switchTab('onboarding')"><span>${l}</span><b>${n}</b></button>`;
   document.getElementById('hm-ob').innerHTML=
     ob(naoCham,'Alunos ainda não chamados','chamar',true)+
     ob(pend,'Onboarding pendente','pend',true)+
-    ob(calls,'Calls agendadas','call');
+    ob(semForm,'Formulário da pós não enviado','form');
 }
 function renderHomeEventos(){
   const hoje=obHoje();
@@ -1342,9 +1347,11 @@ const OB_PROD={
 const OB_OPTS={
   chamado:[['','—'],['sim','Sim'],['sem_resposta','Sem resposta'],['nao','Não']],
   onboarding_status:[['','—'],['feito','Feito'],['agendado','Agendado'],['nao','Não']],
-  call_status:[['','—'],['feita','Feita'],['agendada','Agendada'],['nao','Não']],
+  form_pos:[['','—'],['enviado','Enviado'],['nao_enviado','Não enviado'],['nao_se_aplica','Não se aplica']],
 };
-const OB_TONE={sim:'ok',feito:'ok',feita:'ok',agendado:'wait',agendada:'wait',sem_resposta:'wait',nao:'no'};
+const OB_TONE={sim:'ok',feito:'ok',enviado:'ok',agendado:'wait',sem_resposta:'wait',nao:'no',nao_enviado:'no'};
+// Formulário das novas alunas da pós: a Alicia copia o link daqui e manda no WhatsApp
+const OB_FORM_POS='https://forms.gle/AB1SgWQboiVYpG2A9';
 const OB_FORMAS={pix:'PIX à vista',cartao:'Cartão de crédito',pix_recorrente:'PIX recorrente',boleto_recorrente:'Boleto recorrente',cartao_recorrente:'Cartão recorrente'};
 const OB_TIPOS={nova:'Aluno novo',renovacao:'Renovação',upgrade:'Upgrade'};
 let OB_DATA=null,obFiltro='',obPeriodo=90,obLoading=false,obLastLoad=null;
@@ -1425,22 +1432,22 @@ function renderOnboarding(){
   const k={
     chamar:base.filter(v=>!v.chamado&&v.status==='ativa'),
     pend:base.filter(obPendente),
-    call:base.filter(v=>v.call_status==='agendada'),
+    form:base.filter(v=>v.form_pos==='nao_enviado'&&v.status==='ativa'),
     total:base,
   };
   const kpi=(key,n,l)=>`<button class="ob-kpi${obFiltro===key?' active':''}" onclick="setObFiltro('${key}')"><div class="ob-kpi-num">${n}</div><div class="ob-kpi-lbl">${l}</div></button>`;
   document.getElementById('ob-kpis').innerHTML=
     kpi('chamar',k.chamar.length,'Ainda não chamados')+
     kpi('pend',k.pend.length,'Onboarding pendente')+
-    kpi('call',k.call.length,'Calls agendadas')+
+    kpi('form',k.form.length,'Formulário da pós não enviado')+
     kpi('',k.total.length,'Vendas no período');
 
-  let rows=obFiltro==='chamar'?k.chamar:obFiltro==='pend'?k.pend:obFiltro==='call'?k.call:base;
+  let rows=obFiltro==='chamar'?k.chamar:obFiltro==='pend'?k.pend:obFiltro==='form'?k.form:base;
   if(q)rows=rows.filter(v=>
     [v.aluno_nome,v.aluno_email,v.vendedor,v.aluno_instagram].some(x=>(x||'').toLowerCase().includes(q))||
     (qd.length>=4&&(v.aluno_telefone||'').includes(qd)));
 
-  const head=`<div class="ob-row ob-head"><div class="ob-cell">Data</div><div class="ob-cell">Nome</div><div class="ob-cell">Contato</div><div class="ob-cell">Produto</div><div class="ob-cell">Tempo de acesso</div><div class="ob-cell">Chamado?</div><div class="ob-cell">Onboarding realizado?</div><div class="ob-cell">Call realizada?</div><div class="ob-cell">Observação</div></div>`;
+  const head=`<div class="ob-row ob-head"><div class="ob-cell">Data</div><div class="ob-cell">Nome</div><div class="ob-cell">Contato</div><div class="ob-cell">Produto</div><div class="ob-cell">Tempo de acesso</div><div class="ob-cell">Chamado?</div><div class="ob-cell">Onboarding realizado?</div><div class="ob-cell">Formulário da pós</div><div class="ob-cell">Observação</div></div>`;
   const hoje=obHoje();
   const html=rows.map(v=>{
     const lista=v.acessos.map(vaAccTexto);
@@ -1461,7 +1468,7 @@ function renderOnboarding(){
       <div class="ob-status-wrap">
         <div class="ob-cell" data-l="Chamado?">${sel('chamado')}</div>
         <div class="ob-cell" data-l="Onboarding">${sel('onboarding_status')}</div>
-        <div class="ob-cell" data-l="Call">${sel('call_status')}</div>
+        <div class="ob-cell" data-l="Formulário da pós"><div class="ob-form">${sel('form_pos')}<button class="ob-mini" title="Copiar link do formulário da pós" onclick="copyT(this,OB_FORM_POS)"><i class="ti ti-link"></i></button></div></div>
       </div>
       <div class="ob-cell" data-l="Observação"><textarea class="ob-obs" rows="1" placeholder="Anotar..." data-orig="${escH(v.observacao||'')}" oninput="obGrow(this)" onblur="saveObs('${v.id}',this)">${escH(v.observacao||'')}</textarea></div>
     </div>`;
