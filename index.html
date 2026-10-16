@@ -515,6 +515,58 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 @keyframes hmUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(max-width:900px){.hm-grid{grid-template-columns:1fr}}
 
+/* TAREFAS */
+.tf-kpis{grid-template-columns:repeat(5,1fr)}
+.ob-kpi.alerta .ob-kpi-num{color:#E08A7F}
+.tf-board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:10px;overflow-x:auto;padding-bottom:6px;align-items:start}
+.tf-col{background:var(--dark2);border:0.5px solid var(--border);border-radius:3px;display:flex;flex-direction:column;min-width:0;transition:border-color .15s,background .15s}
+.tf-col.over{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+.tf-col-h{display:flex;align-items:center;gap:8px;padding:12px 12px 10px;border-bottom:0.5px solid var(--border)}
+.tf-col-h i.tf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tf-col-h span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);flex:1}
+.tf-col-h b{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold-light);line-height:1;font-variant-numeric:lining-nums}
+.tf-col-add{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:15px;padding:2px;transition:color .2s}
+.tf-col-add:hover{color:var(--gold)}
+.tf-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;padding:10px;min-height:90px;align-content:start}
+.tf-vazio{grid-column:1/-1;font-size:12px;color:#5E5852;text-align:center;padding:22px 6px;border:0.5px dashed rgba(201,168,76,0.12);border-radius:2px}
+.tf-mais{grid-column:1/-1;background:none;border:none;color:var(--text-muted);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;padding:6px}
+.tf-mais:hover{color:var(--gold)}
+.tf-card{background:var(--dark3);border:0.5px solid var(--border);border-left:2px solid var(--c,var(--border));border-radius:2px;padding:10px 11px 11px;cursor:pointer;display:flex;flex-direction:column;gap:7px;min-width:0;transition:border-color .15s,transform .15s}
+.tf-card:hover{border-color:var(--border-hover);border-left-color:var(--c,var(--border-hover))}
+.tf-card.drag{opacity:.4}
+.tf-card.atras{background:linear-gradient(0deg,rgba(192,70,58,0.07),rgba(192,70,58,0.07)),var(--dark3)}
+.tf-card.feita .tf-card-t{color:var(--text-muted);text-decoration:line-through;text-decoration-color:rgba(154,145,136,0.5)}
+.tf-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.tf-area{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:var(--c)}
+.tf-area i{font-size:12px}
+.tf-pri{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:1px 6px;border-radius:1px;border:0.5px solid}
+.tf-pri.urgente{color:#E08A7F;border-color:rgba(192,70,58,0.5)}
+.tf-pri.alta{color:#E0B35F;border-color:rgba(224,179,95,0.45)}
+.tf-pri.baixa{color:var(--text-muted);border-color:var(--border)}
+.tf-card-t{font-size:14px;line-height:1.4;color:var(--text);overflow-wrap:anywhere}
+.tf-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-muted)}
+.tf-meta span{display:inline-flex;align-items:center;gap:4px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tf-meta i{font-size:12px;flex-shrink:0}
+.tf-meta .tf-sem{color:#5E5852}
+.tf-prazo.atras{color:#E08A7F}
+.tf-prazo.hoje{color:#E0B35F}
+.tf-prazo.ok{color:#5FC49E}
+.tf-areas{display:flex;border:0.5px solid var(--border);border-radius:2px;overflow:hidden}
+.tf-areas .ob-chip{display:inline-flex;align-items:center;gap:6px}
+.tf-areas .ob-chip i{font-size:13px}
+.tf-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tf-seg button{background:var(--dark3);border:0.5px solid var(--border);color:var(--text-muted);font-family:'Jost',sans-serif;font-size:13px;padding:9px 6px;border-radius:2px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.tf-seg button:hover{border-color:var(--border-hover)}
+.tf-seg button.on{border-color:var(--c);color:var(--c);background:rgba(201,168,76,0.06)}
+.tf-hist{margin-top:6px;border-top:0.5px solid var(--border);padding-top:4px;max-height:180px;overflow-y:auto}
+.tf-hist div{font-size:12px;color:var(--text-muted);padding:6px 0;border-bottom:0.5px solid rgba(201,168,76,0.07);line-height:1.45}
+.tf-hist div:last-child{border-bottom:none}
+.tf-hist b{font-weight:400;color:var(--text)}
+.tf-hist small{color:#6E6760;margin-right:6px;font-variant-numeric:lining-nums}
+.tf-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--gold);text-decoration:none;margin-top:6px}
+.tf-link:hover{text-decoration:underline}
+.tf-erro{font-size:12px;color:#E08A7F;min-height:16px;margin-top:10px;text-align:center}
+
 /* MOBILE */
 @media(max-width:680px){
   .ob-list.vl,.ob-list.al{min-width:0}
@@ -561,7 +613,16 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
   .week-toolbar{gap:6px}
   .prod-grid{grid-template-columns:1fr 1fr;gap:10px}
   .ob-kpis{grid-template-columns:1fr 1fr}
+  .tf-kpis .ob-kpi:first-child{grid-column:1/-1}
   .ob-kpi-num{font-size:28px}
+  .tf-board{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:minmax(0,1fr);overflow:visible}
+  .tf-cards{grid-template-columns:minmax(0,1fr);min-height:0}
+  #tab-tarefas .ob-search{flex-basis:100%;min-width:0}
+  .tf-areas,#tf-concl{flex:1 1 100%;min-width:0}
+  #tab-tarefas .va-sel{flex:1 1 100%;max-width:none}
+  .tf-areas .ob-chip,#tf-concl .ob-chip{flex:1;min-width:0;justify-content:center;padding:0 4px;letter-spacing:1px;font-size:10px}
+  .tf-areas .ob-chip i{display:none}
+  .tf-seg button{font-size:12px}
   .ob-scroll{border:none;overflow:visible}
   .ob-list{min-width:0;display:flex;flex-direction:column;gap:10px}
   .ob-row.ob-head{display:none}
@@ -665,8 +726,9 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
         <section class="hm-card"><div class="hm-card-h"><h3>Ranking de closers</h3><span id="hm-rank-sub"></span></div><div id="hm-rank"></div></section>
         <section class="hm-card"><div class="hm-card-h"><h3>Onboarding</h3><button onclick="switchTab('onboarding')">Abrir<i class="ti ti-arrow-right"></i></button></div><div id="hm-ob"></div></section>
       </div>
-      <div class="hm-grid um">
+      <div class="hm-grid">
         <section class="hm-card"><div class="hm-card-h"><h3>Próximos eventos</h3><button onclick="switchTab('calendario')">Calendário<i class="ti ti-arrow-right"></i></button></div><div id="hm-eventos"></div></section>
+        <section class="hm-card"><div class="hm-card-h"><h3>Tarefas</h3><button onclick="tfFiltro='';switchTab('tarefas')">Abrir<i class="ti ti-arrow-right"></i></button></div><div id="hm-tf"></div></section>
       </div>
       <div class="hm-foot">Dra. Vivian Amaral · Central de Gestão · <span id="hm-ano"></span></div>
     </div>
@@ -751,6 +813,24 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <div class="ob-scroll"><div class="ob-list al" id="al-list"></div></div>
       <div class="ob-foot"><span id="al-count"></span><span>Base antiga = planilha Clientes x Produtos, não confirmada. Telefones e acessos dela são estimativa.</span></div>
     </div>
+    <div id="tab-tarefas" style="display:none">
+      <div class="sec-header">
+        <div class="sec-title">Tarefas</div>
+        <button class="icon-btn" onclick="openTarefa(null)"><i class="ti ti-plus" style="font-size:12px"></i>Nova tarefa</button>
+      </div>
+      <div class="ob-kpis tf-kpis" id="tf-kpis"></div>
+      <div class="ob-toolbar">
+        <input class="ob-search" id="tf-q" type="search" placeholder="Buscar tarefa, descrição ou responsável" oninput="renderTarefas()">
+        <div class="tf-areas" id="tf-areas"></div>
+        <select class="va-sel" id="tf-resp" onchange="renderTarefas()"></select>
+        <div class="ob-chips" id="tf-concl" title="Quais concluídas aparecem">
+          <button class="ob-chip active" data-p="30" onclick="setTfConcl(this)">Concluídas 30 dias</button>
+          <button class="ob-chip" data-p="0" onclick="setTfConcl(this)">Todas</button>
+        </div>
+      </div>
+      <div class="tf-board" id="tf-board"></div>
+      <div class="ob-foot"><span id="tf-count"></span><span id="tf-updated"></span></div>
+    </div>
     <div id="tab-produtos" style="display:none"><div class="sec-header"><div class="sec-title">Produtos</div></div><div class="prod-grid" id="prod-grid"></div></div>
     <div id="tab-time" style="display:none"><div class="sec-header"><div class="sec-title">Time Interno</div></div><div class="team-grid" id="team-grid"></div></div>
     <div id="tab-acessos" style="display:none">
@@ -785,6 +865,32 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
       <button class="btn-cancel" onclick="closeVendaEdit()">Cancelar</button>
       <button class="btn-primary" id="ve-save" onclick="saveVendaEdit()">Salvar</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal tarefa -->
+<div class="add-modal" id="tf-modal" onclick="if(event.target===this)closeTarefa()">
+  <div class="add-box" style="width:min(600px,95vw)">
+    <button class="mclose-sm" onclick="closeTarefa()"><i class="ti ti-x"></i></button>
+    <h3 id="tf-m-title">Nova tarefa</h3>
+    <div class="add-date-lbl" id="tf-m-sub"></div>
+    <div class="field"><label>Título</label><input type="text" id="tf-titulo" maxlength="200" placeholder="ex: Thumbnail da aula 3 da pós"></div>
+    <div class="field"><label>Área</label><div class="tf-seg" id="tf-area"></div></div>
+    <div class="ve-grid">
+      <div class="field"><label>Responsável</label><select id="tf-responsavel"></select></div>
+      <div class="field"><label>Prazo</label><input type="date" id="tf-prazo"></div>
+      <div class="field"><label>Status</label><select id="tf-status"></select></div>
+      <div class="field"><label>Prioridade</label><select id="tf-prioridade"></select></div>
+    </div>
+    <div class="field" style="margin-top:13px"><label>Link de referência</label><input type="url" id="tf-link-in" placeholder="Drive, Canva, Figma, vídeo bruto..."><div id="tf-link-a"></div></div>
+    <div class="field"><label>Descrição</label><textarea class="ve-ta" id="tf-descricao" rows="4" placeholder="O que precisa ser feito, formato, referências, onde entregar..."></textarea></div>
+    <div id="tf-hist-wrap"></div>
+    <div class="add-actions">
+      <button class="btn-danger" id="tf-del" onclick="deleteTarefa()" style="display:none">Excluir</button>
+      <button class="btn-cancel" onclick="closeTarefa()">Cancelar</button>
+      <button class="btn-primary" id="tf-save" onclick="saveTarefa()">Salvar</button>
+    </div>
+    <div class="tf-erro" id="tf-erro"></div>
   </div>
 </div>
 
@@ -828,7 +934,7 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
     <div class="field" id="uf-senha-field"><label>Senha</label><input type="text" id="uf-senha"></div>
     <div class="field"><label>Nível</label>
       <select id="uf-nivel">
-        <option value="equipe">Equipe — Calendário, Onboarding, Vendas e Alunos</option>
+        <option value="equipe">Equipe — Calendário, Onboarding, Vendas, Alunos e Tarefas</option>
         <option value="adm">Administrativo — acesso completo</option>
       </select>
     </div>
@@ -864,12 +970,12 @@ const FICHA_SEC=[
   {title:'05 — Entrega',fields:[{key:'oQueIncluso',label:'O que está incluso'},{key:'linksGrupos',label:'Links dos grupos'},{key:'politicaCancelamento',label:'Política de cancelamento'}]},
   {title:'06 — Observações',fields:[{key:'observacoes',label:'Observações'}]},
 ];
-const ALL_TABS=['home','calendario','onboarding','vendas','alunos','produtos','time','acessos','usuarios'];
+const ALL_TABS=['home','calendario','onboarding','vendas','alunos','tarefas','produtos','time','acessos','usuarios'];
 // Time e Produtos ocultas (código mantido): só sair destas listas.
-const TABS_ADM=['home','calendario','onboarding','vendas','alunos','acessos','usuarios'];
-const TABS_EQ=['home','calendario','onboarding','vendas','alunos'];
-const TAB_LABELS={home:'Home',calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
-const TAB_ICONS={home:'ti-home',calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
+const TABS_ADM=['home','calendario','onboarding','vendas','alunos','tarefas','acessos','usuarios'];
+const TABS_EQ=['home','calendario','onboarding','vendas','alunos','tarefas'];
+const TAB_LABELS={home:'Home',calendario:'Calendário',onboarding:'Onboarding',vendas:'Vendas',alunos:'Alunos',tarefas:'Tarefas',produtos:'Produtos',time:'Time',acessos:'Acessos',usuarios:'Usuários'};
+const TAB_ICONS={home:'ti-home',calendario:'ti-calendar',onboarding:'ti-user-check',vendas:'ti-receipt',alunos:'ti-school',tarefas:'ti-layout-kanban',produtos:'ti-package',time:'ti-users',acessos:'ti-lock',usuarios:'ti-user-circle'};
 
 let EVENTS=[],PRODUCTS=[],USUARIOS=[];
 let currentUser=null,currentNivel=null;
@@ -942,7 +1048,7 @@ async function doLogin(){
 }
 
 function doLogout(){
-  OB_DATA=null;BASE_DATA=null;CLIENTES=null;
+  OB_DATA=null;BASE_DATA=null;CLIENTES=null;TF_DATA=null;
   localStorage.removeItem('va_user');
   currentUser=null;currentNivel=null;
   showLogin();
@@ -954,6 +1060,7 @@ function doLogout(){
 let hmLoading=false;
 async function loadHome(){
   renderHome();
+  loadTarefas(true);
   if(hmLoading)return;
   hmLoading=true;
   try{OB_DATA=await obRpc('onboarding_listar',{});CLIENTES=null;obLastLoad=new Date();renderHome();}
@@ -971,6 +1078,7 @@ function renderHome(){
   document.getElementById('hm-mes').textContent=`${mes} de ${agora.getFullYear()}`;
   document.getElementById('hm-rank-sub').textContent=mes;
   renderHomeEventos();
+  renderHomeTarefas();
   if(!OB_DATA){document.getElementById('hm-kpis').innerHTML='<div class="hm-vazio">Carregando...</div>';return;}
 
   const hoje=obHoje(),ini=hoje.slice(0,8)+'01';
@@ -1053,6 +1161,7 @@ function switchTab(tab){
   // ao abrir a guia mostra o que já tem e busca de novo no banco (substitui o antigo botão Atualizar)
   if(tab==='onboarding')loadOnboarding(true);
   if(tab==='vendas'||tab==='alunos')loadVendasAlunos(true);
+  if(tab==='tarefas')loadTarefas(true);
   if(tab==='produtos')renderProducts();
   if(tab==='time')renderTeam();
   if(tab==='acessos')renderAcessos();
@@ -2391,6 +2500,241 @@ async function saveVendaEdit(){
     console.error(e);
     alert('Não foi possível salvar. '+(e.message||''));
   }finally{btn.disabled=false;btn.textContent='Salvar';}
+}
+
+// ── TAREFAS ──
+// Quadro de demandas do time (Design, Infra, Edição). Arrastar o cartão entre colunas muda o status.
+// "Atrasada" não é status: é pendente ou em andamento com prazo antes de hoje.
+const TF_AREAS={
+  design:{label:'Design',color:'#C9A84C',icon:'ti-palette'},
+  infra:{label:'Infra',color:'#5B82E8',icon:'ti-server-2'},
+  edicao:{label:'Edição',color:'#9B6BE0',icon:'ti-movie'},
+};
+const TF_STATUS={
+  pendente:{label:'Pendentes',um:'Pendente',color:'#9A9188'},
+  andamento:{label:'Em andamento',um:'Em andamento',color:'#C9A84C'},
+  concluida:{label:'Concluídas',um:'Concluída',color:'#3DA882'},
+  adiada:{label:'Adiadas',um:'Adiada',color:'#5B82E8'},
+};
+const TF_PRIOR={urgente:['Urgente',0],alta:['Alta',1],normal:['Normal',2],baixa:['Baixa',3]};
+let TF_DATA=null,TF_PESSOAS=[],tfFiltro='',tfArea='',tfConcl=30,tfLoading=false,tfLastLoad=null,tfEditId=null,tfNovaArea='',tfDragId=null;
+
+function tfEl(id){return document.getElementById(id);}
+function tfAberta(t){return t.status==='pendente'||t.status==='andamento';}
+function tfAtrasada(t){return tfAberta(t)&&!!t.prazo&&t.prazo<obHoje();}
+function tfData(iso){const[y,m,d]=String(iso).slice(0,10).split('-');return y===String(new Date().getFullYear())?`${d}/${m}`:`${d}/${m}/${y.slice(2)}`;}
+function tfDiasAte(iso){const[y,m,d]=iso.split('-').map(Number),h=new Date();return Math.round((new Date(y,m-1,d)-new Date(h.getFullYear(),h.getMonth(),h.getDate()))/864e5);}
+function tfQuando(ts,soDia){return ts?new Date(ts).toLocaleString('pt-BR',soDia?{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit'}:{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';}
+function tfRecente(t){return !tfConcl||Date.parse(t.concluida_em||t.updated_at)>=Date.now()-tfConcl*864e5;}
+function tfMeu(t){return !!t.responsavel&&t.responsavel===String(currentUser.nome||'').trim();}
+function tfPessoas(){
+  const l=[...TF_PESSOAS];
+  (TF_DATA||[]).forEach(t=>{if(t.responsavel&&!l.includes(t.responsavel))l.push(t.responsavel);});
+  return l;
+}
+
+async function loadTarefas(force){
+  if(tfLoading)return;
+  if(TF_DATA){renderTarefas();if(!force)return;}
+  tfLoading=true;
+  if(!TF_DATA)tfEl('tf-board').innerHTML='<div class="ob-empty">Carregando tarefas...</div>';
+  try{
+    const r=await obRpc('tarefas_listar',{});
+    TF_DATA=r.tarefas||[];TF_PESSOAS=r.pessoas||[];tfLastLoad=new Date();
+    renderTarefas();renderHomeTarefas();
+  }catch(e){
+    console.error(e);
+    if(!TF_DATA){tfEl('tf-board').innerHTML='<div class="ob-empty">Não foi possível carregar as tarefas.<br>'+escH(e.message||'')+'</div>';renderHomeTarefas(e);}
+  }finally{tfLoading=false;}
+}
+// O que os outros mudaram aparece sozinho, menos no meio de um arraste ou com a tarefa aberta.
+setInterval(()=>{
+  const tab=tfEl('tab-tarefas');
+  if(!currentUser||!tab||tab.style.display==='none'||document.hidden||tfDragId)return;
+  if(tfEl('tf-modal').classList.contains('open'))return;
+  loadTarefas(true);
+},60000);
+
+function setTfArea(a){tfArea=a;renderTarefas();}
+function setTfFiltro(f){tfFiltro=tfFiltro===f?'':f;renderTarefas();}
+function setTfConcl(btn){
+  tfConcl=Number(btn.dataset.p);
+  document.querySelectorAll('#tf-concl .ob-chip').forEach(b=>b.classList.toggle('active',b===btn));
+  renderTarefas();
+}
+
+// Na coluna: atrasadas primeiro, depois prioridade e prazo. Concluídas: as mais recentes em cima.
+function tfOrdem(a,b){
+  if(a.status==='concluida'&&b.status==='concluida')return String(b.concluida_em||'').localeCompare(String(a.concluida_em||''));
+  return (tfAtrasada(b)-tfAtrasada(a))
+    ||((TF_PRIOR[a.prioridade]||[0,2])[1]-(TF_PRIOR[b.prioridade]||[0,2])[1])
+    ||(a.prazo||'9999').localeCompare(b.prazo||'9999')
+    ||String(b.created_at).localeCompare(String(a.created_at));
+}
+
+function renderTarefas(){
+  if(!TF_DATA)return;
+  const rs=tfEl('tf-resp'),rv=rs.value;
+  rs.innerHTML='<option value="">Todos os responsáveis</option><option value="__eu">Minhas tarefas</option><option value="__sem">Sem responsável</option>'
+    +tfPessoas().map(p=>`<option value="${escH(p)}">${escH(p)}</option>`).join('');
+  rs.value=[...rs.options].some(o=>o.value===rv)?rv:'';
+  rs.classList.toggle('on',!!rs.value);
+  tfEl('tf-areas').innerHTML=[['','Todas'],...Object.entries(TF_AREAS).map(([k,a])=>[k,a.label])]
+    .map(([k,l])=>`<button class="ob-chip${tfArea===k?' active':''}" onclick="setTfArea('${k}')">${k?`<i class="ti ${TF_AREAS[k].icon}"></i>`:''}${l}</button>`).join('');
+
+  const q=obNorm(tfEl('tf-q').value);
+  const base=TF_DATA.filter(t=>(!tfArea||t.area===tfArea)
+    &&(!rs.value||(rs.value==='__eu'?tfMeu(t):rs.value==='__sem'?!t.responsavel:t.responsavel===rs.value))
+    &&(!q||[t.titulo,t.descricao,t.responsavel,t.created_by].some(x=>obNorm(x).includes(q))));
+  const k={
+    pendente:base.filter(t=>t.status==='pendente'),
+    andamento:base.filter(t=>t.status==='andamento'),
+    concluida:base.filter(t=>t.status==='concluida'&&tfRecente(t)),
+    atrasada:base.filter(tfAtrasada),
+    adiada:base.filter(t=>t.status==='adiada'),
+  };
+  const kpi=(key,l,al)=>`<button class="ob-kpi${tfFiltro===key?' active':''}${al&&k[key].length?' alerta':''}" onclick="setTfFiltro('${key}')"><div class="ob-kpi-num">${k[key].length}</div><div class="ob-kpi-lbl">${l}</div></button>`;
+  tfEl('tf-kpis').innerHTML=kpi('pendente','Pendentes')+kpi('andamento','Em andamento')
+    +kpi('concluida',tfConcl?`Concluídas em ${tfConcl} dias`:'Concluídas')+kpi('atrasada','Atrasadas',true)+kpi('adiada','Adiadas');
+
+  // KPI clicado mostra só a coluna dele; "Atrasadas" mostra pendentes e em andamento já vencidas.
+  const cols=tfFiltro==='atrasada'?['pendente','andamento']:TF_STATUS[tfFiltro]?[tfFiltro]:Object.keys(TF_STATUS);
+  let total=0;
+  tfEl('tf-board').innerHTML=cols.map(s=>{
+    let l=k[s];
+    if(tfFiltro==='atrasada')l=l.filter(tfAtrasada);
+    l=[...l].sort(tfOrdem);total+=l.length;
+    const add=s!=='concluida'?`<button class="tf-col-add" title="Nova tarefa aqui" onclick="openTarefa(null,'${s}')"><i class="ti ti-plus"></i></button>`:'';
+    return `<section class="tf-col" data-s="${s}" ondragover="tfOver(event,this)" ondragleave="this.classList.remove('over')" ondrop="tfDrop(event,this)">
+      <div class="tf-col-h"><i class="tf-dot" style="background:${TF_STATUS[s].color}"></i><span>${TF_STATUS[s].label}</span><b>${l.length}</b>${add}</div>
+      <div class="tf-cards">${l.length?l.map(tfCard).join(''):'<div class="tf-vazio">Nenhuma tarefa aqui</div>'}</div>
+    </section>`;
+  }).join('');
+  tfEl('tf-count').textContent=`${total} ${total===1?'tarefa':'tarefas'}${tfFiltro||tfArea||rs.value||q?' com esse filtro':''}`;
+  tfEl('tf-updated').textContent=tfLastLoad?`Atualizado às ${tfLastLoad.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'';
+}
+
+function tfCard(t){
+  const a=TF_AREAS[t.area]||{label:t.area,color:'#888077',icon:'ti-point'};
+  const atras=tfAtrasada(t),aberta=tfAberta(t);
+  let prazo='<span class="tf-sem"><i class="ti ti-calendar"></i>Sem prazo</span>';
+  if(t.status==='concluida')prazo=`<span class="tf-prazo ok"><i class="ti ti-check"></i>Feita ${tfQuando(t.concluida_em,true)}</span>`;
+  else if(t.prazo){
+    const d=tfDiasAte(t.prazo);
+    const txt=atras?`Atrasada ${-d} ${d===-1?'dia':'dias'}`:aberta&&d===0?'Vence hoje':aberta&&d===1?'Amanhã':tfData(t.prazo);
+    prazo=`<span class="tf-prazo${atras?' atras':aberta&&d===0?' hoje':''}" title="Prazo ${obBr(t.prazo)}"><i class="ti ti-calendar"></i>${txt}</span>`;
+  }
+  const pri=t.prioridade&&t.prioridade!=='normal'?`<span class="tf-pri ${t.prioridade}">${TF_PRIOR[t.prioridade][0]}</span>`:'';
+  return `<div class="tf-card${atras?' atras':''}${t.status==='concluida'?' feita':''}" style="--c:${a.color}" draggable="true" data-id="${t.id}" ondragstart="tfStart(event,this)" ondragend="tfEnd(this)" onclick="openTarefa('${t.id}')">
+    <div class="tf-card-top"><span class="tf-area"><i class="ti ${a.icon}"></i>${escH(a.label)}</span>${pri}</div>
+    <div class="tf-card-t">${escH(t.titulo)}</div>
+    <div class="tf-meta"><span${t.responsavel?'':' class="tf-sem"'}><i class="ti ti-user"></i>${escH(t.responsavel||'Sem responsável')}</span>${prazo}</div>
+  </div>`;
+}
+
+// ── Arrastar entre colunas ──
+function tfStart(e,el){tfDragId=el.dataset.id;el.classList.add('drag');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',tfDragId);}
+function tfEnd(el){el.classList.remove('drag');tfDragId=null;document.querySelectorAll('.tf-col.over').forEach(c=>c.classList.remove('over'));}
+function tfOver(e,col){if(!tfDragId)return;e.preventDefault();col.classList.add('over');}
+function tfDrop(e,col){
+  e.preventDefault();col.classList.remove('over');
+  const id=tfDragId||e.dataTransfer.getData('text/plain');tfDragId=null;
+  if(id)tfMover(id,col.dataset.s);
+}
+async function tfMover(id,status){
+  const t=TF_DATA.find(x=>x.id===id);if(!t||t.status===status)return;
+  const antes={status:t.status,concluida_em:t.concluida_em};
+  t.status=status;t.concluida_em=status==='concluida'?new Date().toISOString():null;
+  renderTarefas();renderHomeTarefas();
+  try{tfTrocar(await obRpc('tarefa_salvar',{p_id:id,p_dados:{status}}));}
+  catch(e){console.error(e);Object.assign(t,antes);renderTarefas();renderHomeTarefas();alert('Não foi possível mover a tarefa. '+(e.message||''));}
+}
+function tfTrocar(n){
+  const i=TF_DATA.findIndex(x=>x.id===n.id);
+  if(i>=0)TF_DATA[i]=n;else TF_DATA.unshift(n);
+  renderTarefas();renderHomeTarefas();
+}
+
+// ── Modal da tarefa ──
+function tfDesenharArea(){
+  tfEl('tf-area').innerHTML=Object.entries(TF_AREAS).map(([k,a])=>`<button type="button" class="${tfNovaArea===k?'on':''}" style="--c:${a.color}" onclick="tfNovaArea='${k}';tfDesenharArea()"><i class="ti ${a.icon}"></i>${a.label}</button>`).join('');
+}
+function tfHistTexto(h){
+  const st=s=>TF_STATUS[s]?TF_STATUS[s].um:escH(s);
+  if(h.tipo==='criou')return 'criou a tarefa';
+  if(h.tipo==='status')return `moveu de <b>${st(h.de)}</b> para <b>${st(h.para)}</b>`;
+  if(h.tipo==='responsavel')return h.para?`passou para <b>${escH(h.para)}</b>`:'tirou o responsável';
+  if(h.tipo==='prazo')return h.para?`mudou o prazo para <b>${obBr(h.para)}</b>`:'tirou o prazo';
+  return 'editou a tarefa';
+}
+function openTarefa(id,status){
+  const t=id?TF_DATA.find(x=>x.id===id):null;
+  if(id&&!t)return;
+  tfEditId=id;
+  tfNovaArea=t?t.area:tfArea;
+  tfEl('tf-m-title').textContent=t?'Tarefa':'Nova tarefa';
+  tfEl('tf-m-sub').textContent=t?`Pedida por ${t.created_by||'—'} em ${tfQuando(t.created_at)}`:'';
+  tfEl('tf-titulo').value=t?t.titulo:'';
+  tfDesenharArea();
+  const pessoas=tfPessoas(),resp=t?t.responsavel||'':'';
+  tfEl('tf-responsavel').innerHTML='<option value="">Sem responsável</option>'+pessoas.map(p=>`<option value="${escH(p)}"${p===resp?' selected':''}>${escH(p)}</option>`).join('');
+  tfEl('tf-prazo').value=t?t.prazo||'':'';
+  tfEl('tf-status').innerHTML=veOpts(Object.entries(TF_STATUS).map(([s,x])=>[s,x.um]),t?t.status:status||'pendente');
+  tfEl('tf-prioridade').innerHTML=veOpts(Object.entries(TF_PRIOR).map(([p,x])=>[p,x[0]]),t?t.prioridade:'normal');
+  tfEl('tf-link-in').value=t?t.link||'':'';
+  tfEl('tf-link-a').innerHTML=t&&t.link&&/^https?:\/\//i.test(t.link)?`<a class="tf-link" href="${escH(t.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Abrir link</a>`:'';
+  tfEl('tf-descricao').value=t?t.descricao||'':'';
+  const hist=t?[...(t.historico||[])].reverse():[];
+  tfEl('tf-hist-wrap').innerHTML=hist.length?`<div class="ve-sub">Histórico</div><div class="tf-hist">${hist.map(h=>`<div><small>${tfQuando(h.em)}</small><b>${escH(h.por||'—')}</b> ${tfHistTexto(h)}</div>`).join('')}</div>`:'';
+  tfEl('tf-del').style.display=t&&(currentNivel==='adm'||t.created_by===currentUser.nome)?'':'none';
+  tfEl('tf-erro').textContent='';
+  tfEl('tf-modal').classList.add('open');
+  if(!t)setTimeout(()=>tfEl('tf-titulo').focus(),50);
+}
+function closeTarefa(){tfEl('tf-modal').classList.remove('open');tfEditId=null;}
+
+async function saveTarefa(){
+  const err=tfEl('tf-erro'),btn=tfEl('tf-save');
+  const dados={
+    titulo:tfEl('tf-titulo').value.trim(),
+    area:tfNovaArea,
+    responsavel:tfEl('tf-responsavel').value,
+    prazo:tfEl('tf-prazo').value,
+    status:tfEl('tf-status').value,
+    prioridade:tfEl('tf-prioridade').value,
+    link:tfEl('tf-link-in').value.trim(),
+    descricao:tfEl('tf-descricao').value.trim(),
+  };
+  if(!dados.titulo){err.textContent='Dê um título à tarefa.';return;}
+  if(!dados.area){err.textContent='Escolha a área: Design, Infra ou Edição.';return;}
+  if(dados.link&&!/^https?:\/\//i.test(dados.link))dados.link='https://'+dados.link;
+  err.textContent='';btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    tfTrocar(await obRpc('tarefa_salvar',{p_id:tfEditId,p_dados:dados}));
+    closeTarefa();
+  }catch(e){
+    console.error(e);
+    err.textContent=e.message||'Não foi possível salvar. Tente de novo.';
+  }finally{btn.disabled=false;btn.textContent='Salvar';}
+}
+async function deleteTarefa(){
+  const t=TF_DATA.find(x=>x.id===tfEditId);if(!t)return;
+  if(!confirm(`Excluir a tarefa "${t.titulo}"? Não dá para desfazer.`))return;
+  try{
+    await obRpc('tarefa_excluir',{p_id:t.id});
+    TF_DATA=TF_DATA.filter(x=>x.id!==t.id);
+    closeTarefa();renderTarefas();renderHomeTarefas();
+  }catch(e){console.error(e);tfEl('tf-erro').textContent=e.message||'Não foi possível excluir.';}
+}
+
+function renderHomeTarefas(err){
+  const el=tfEl('hm-tf');if(!el||!currentUser)return;
+  if(!TF_DATA){el.innerHTML=`<div class="hm-vazio">${err?'Não foi possível carregar as tarefas.':'Carregando...'}</div>`;return;}
+  const n=f=>TF_DATA.filter(f).length;
+  const it=(c,l,f,al)=>`<button class="hm-ob${al&&c?' alerta':''}" onclick="tfFiltro='${f}';switchTab('tarefas')"><span>${l}</span><b>${c}</b></button>`;
+  el.innerHTML=it(n(tfAtrasada),'Atrasadas','atrasada',true)
+    +it(n(t=>t.status==='andamento'),'Em andamento','andamento')
+    +it(n(t=>t.status==='pendente'),'Pendentes','pendente');
 }
 </script>
 </body>
