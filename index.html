@@ -565,6 +565,8 @@ html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost
 .tf-hist small{color:#6E6760;margin-right:6px;font-variant-numeric:lining-nums}
 .tf-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--gold);text-decoration:none;margin-top:6px}
 .tf-link:hover{text-decoration:underline}
+.tf-area .tf-pl{color:var(--text-muted);margin-left:3px;opacity:.7}
+.tf-pl-nota{display:block;color:var(--text-muted);letter-spacing:0;margin-top:4px;font-size:11px}
 .tf-erro{font-size:12px;color:#E08A7F;min-height:16px;margin-top:10px;text-align:center}
 
 /* MOBILE */
@@ -2517,7 +2519,13 @@ const TF_STATUS={
   adiada:{label:'Adiadas',um:'Adiada',color:'#5B82E8'},
 };
 const TF_PRIOR={urgente:['Urgente',0],alta:['Alta',1],normal:['Normal',2],baixa:['Baixa',3]};
-let TF_DATA=null,TF_PESSOAS=[],tfFiltro='',tfArea='',tfConcl=30,tfLoading=false,tfLastLoad=null,tfEditId=null,tfNovaArea='',tfDragId=null;
+// Planilhas de demandas da Power (CSV publicado). Só entram as linhas com Vivian em EXPERT / CLIENTE.
+const TF_PLANILHAS={
+  infra:'https://docs.google.com/spreadsheets/d/e/2PACX-1vQZxMcA23LQSVvcVFRt6pGNWNftvuzSPch01Z0wSQFvfHqmfmXw3wrZ5wnHvLUoTVt_bkGZNqHGvBQO/pub?gid=1387336565&single=true&output=csv',
+  design:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqCc8BKh7s_oVnHpGi9SAsUQgwhg0MED4BqhFhmMsSWprN8zOZWXgaMJw3QujTAGpWdcKHNSx4p3pY/pub?gid=542721339&single=true&output=csv',
+  edicao:'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoFXJmidc0Rl0Fcs2HdBOiJaZU7ED9RJsfzr1m5LQ1_-lXyPfyaIa_B1FZQWMbJYY7OEbIvB6MQmEm/pub?gid=1641389172&single=true&output=csv',
+};
+let TF_DATA=null,TF_PESSOAS=[],tfFiltro='',tfArea='',tfConcl=30,tfLoading=false,tfLastLoad=null,tfEditId=null,tfNovaArea='',tfDragId=null,tfSyncEm=0,tfSyncInfo='';
 
 function tfEl(id){return document.getElementById(id);}
 function tfAberta(t){return t.status==='pendente'||t.status==='andamento';}
@@ -2546,6 +2554,79 @@ async function loadTarefas(force){
     console.error(e);
     if(!TF_DATA){tfEl('tf-board').innerHTML='<div class="ob-empty">Não foi possível carregar as tarefas.<br>'+escH(e.message||'')+'</div>';renderHomeTarefas(e);}
   }finally{tfLoading=false;}
+  // planilhas: no máximo a cada 2 minutos, depois da lista já na tela; se algo mudou, busca de novo
+  if(currentUser&&Date.now()-tfSyncEm>120000){
+    tfSyncEm=Date.now();
+    if(await tfSincronizar())loadTarefas(true);else renderTarefas();
+  }
+}
+
+// ── Planilhas de demandas ──
+function tfCsv(txt){
+  const rows=[];let row=[],cel='',q=false;
+  for(let i=0;i<txt.length;i++){
+    const c=txt[i];
+    if(q){if(c==='"'){if(txt[i+1]==='"'){cel+='"';i++;}else q=false;}else cel+=c;}
+    else if(c==='"')q=true;
+    else if(c===','){row.push(cel);cel='';}
+    else if(c==='\n'){row.push(cel);rows.push(row);row=[];cel='';}
+    else if(c!=='\r')cel+=c;
+  }
+  if(cel||row.length){row.push(cel);rows.push(row);}
+  return rows;
+}
+// "05/10/2026" ou "22/09/26" → "2026-10-05"; data inválida vira vazio
+function tfPlData(s){
+  const m=String(s||'').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);if(!m)return '';
+  const y=Number(m[3].length===2?'20'+m[3]:m[3]),mo=Number(m[2]),d=Number(m[1]),dt=new Date(y,mo-1,d);
+  return dt.getMonth()===mo-1&&dt.getDate()===d?`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`:'';
+}
+function tfPlStatus(s){
+  const n=obNorm(s);
+  if(/finaliz|conclu|entregue|feito|pronto/.test(n))return 'concluida';
+  if(/stand|paus|adiad|cancel|parad/.test(n))return 'adiada';
+  if(/andamento|fazendo|produc|edita|revis|aprova|ajust/.test(n))return 'andamento';
+  return 'pendente';
+}
+function tfPlPrior(s){const n=obNorm(s);return /p0|urgent/.test(n)?'urgente':/p1|alta/.test(n)?'alta':/p3|baixa|quando/.test(n)?'baixa':'normal';}
+function tfPlLinhas(txt){
+  const rows=tfCsv(txt);
+  const hi=rows.findIndex(r=>obNorm(r[0]).startsWith('data do pedido'));
+  if(hi<0)throw new Error('cabeçalho DATA DO PEDIDO não encontrado');
+  const h=rows[hi].map(obNorm),col=(...ns)=>h.findIndex(x=>ns.some(n=>x.startsWith(n)));
+  const C={pedido:col('data do pedido'),solic:col('solicitante'),cliente:col('expert'),nome:col('nome da demanda'),tipo:col('tipo de'),
+    sistema:col('sistema'),material:col('link'),ref:col('orientacao','referencia'),contexto:col('contexto'),prazo:col('prazo'),
+    prior:col('prioridade'),status:col('status'),entrega:col('data de entrega'),obs:col('observacao')};
+  const g=(r,k)=>C[k]>=0?String(r[C[k]]||'').trim():'';
+  const vistos={},out=[];
+  rows.slice(hi+1).forEach(r=>{
+    if(!/vivian/.test(obNorm(g(r,'cliente'))))return;
+    const titulo=g(r,'nome').replace(/\s+/g,' ');if(!titulo)return;
+    // a mesma demanda pedida duas vezes no mesmo dia vira #2, #3 (pela ordem na planilha)
+    const pedido=tfPlData(g(r,'pedido'));
+    let chave=pedido+'|'+obNorm(titulo);
+    vistos[chave]=(vistos[chave]||0)+1;if(vistos[chave]>1)chave+='#'+vistos[chave];
+    const det=[['Tipo',g(r,'tipo')],['Sistema',g(r,'sistema')],['Material / link',g(r,'material')],['Orientação',g(r,'ref')],['Contexto',g(r,'contexto')],['Observação',g(r,'obs')]].filter(([,v])=>v&&v!=='-');
+    const url=(det.map(([,v])=>v).join(' ').match(/https?:\/\/[^\s,]+/)||[''])[0];
+    const entrega=tfPlData(g(r,'entrega'));
+    out.push({chave,titulo:titulo.slice(0,200),descricao:det.map(([k,v])=>`${k}: ${v}`).join('\n'),
+      status:tfPlStatus(g(r,'status')),prioridade:tfPlPrior(g(r,'prior')),prazo:tfPlData(g(r,'prazo'))||null,link:url||null,
+      pedido_em:pedido?pedido+'T12:00:00-03:00':null,concluida_em:entrega?entrega+'T12:00:00-03:00':null,solicitante:g(r,'solic')||null});
+  });
+  return out;
+}
+// Lê as três planilhas e manda para o banco. Devolve true se alguma tarefa entrou, mudou ou saiu.
+async function tfSincronizar(){
+  const res=await Promise.all(Object.entries(TF_PLANILHAS).map(async([area,url])=>{
+    try{
+      const r=await fetch(url,{cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return await obRpc('tarefas_sincronizar',{p_area:area,p_linhas:tfPlLinhas(await r.text())});
+    }catch(e){console.error('planilha de '+area,e);return {erro:area};}
+  }));
+  const falhas=res.filter(r=>r.erro).map(r=>TF_AREAS[r.erro].label);
+  tfSyncInfo=falhas.length?`Não foi possível ler a planilha de ${falhas.join(', ')}`:`Planilhas lidas às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
+  return res.some(r=>r.novas||r.alteradas||r.removidas);
 }
 // O que os outros mudaram aparece sozinho, menos no meio de um arraste ou com a tarefa aberta.
 setInterval(()=>{
@@ -2611,7 +2692,7 @@ function renderTarefas(){
     </section>`;
   }).join('');
   tfEl('tf-count').textContent=`${total} ${total===1?'tarefa':'tarefas'}${tfFiltro||tfArea||rs.value||q?' com esse filtro':''}`;
-  tfEl('tf-updated').textContent=tfLastLoad?`Atualizado às ${tfLastLoad.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'';
+  tfEl('tf-updated').textContent=[tfLastLoad?`Atualizado às ${tfLastLoad.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'',tfSyncInfo].filter(Boolean).join(' · ');
 }
 
 function tfCard(t){
@@ -2626,7 +2707,7 @@ function tfCard(t){
   }
   const pri=t.prioridade&&t.prioridade!=='normal'?`<span class="tf-pri ${t.prioridade}">${TF_PRIOR[t.prioridade][0]}</span>`:'';
   return `<div class="tf-card${atras?' atras':''}${t.status==='concluida'?' feita':''}" style="--c:${a.color}" draggable="true" data-id="${t.id}" ondragstart="tfStart(event,this)" ondragend="tfEnd(this)" onclick="openTarefa('${t.id}')">
-    <div class="tf-card-top"><span class="tf-area"><i class="ti ${a.icon}"></i>${escH(a.label)}</span>${pri}</div>
+    <div class="tf-card-top"><span class="tf-area"><i class="ti ${a.icon}"></i>${escH(a.label)}${t.origem==='planilha'?'<i class="ti ti-table tf-pl" title="Veio da planilha de demandas"></i>':''}</span>${pri}</div>
     <div class="tf-card-t">${escH(t.titulo)}</div>
     <div class="tf-meta"><span${t.responsavel?'':' class="tf-sem"'}><i class="ti ti-user"></i>${escH(t.responsavel||'Sem responsável')}</span>${prazo}</div>
   </div>`;
@@ -2662,6 +2743,7 @@ function tfDesenharArea(){
 function tfHistTexto(h){
   const st=s=>TF_STATUS[s]?TF_STATUS[s].um:escH(s);
   if(h.tipo==='criou')return 'criou a tarefa';
+  if(h.tipo==='planilha')return 'pediu na planilha de demandas';
   if(h.tipo==='status')return `moveu de <b>${st(h.de)}</b> para <b>${st(h.para)}</b>`;
   if(h.tipo==='responsavel')return h.para?`passou para <b>${escH(h.para)}</b>`:'tirou o responsável';
   if(h.tipo==='prazo')return h.para?`mudou o prazo para <b>${obBr(h.para)}</b>`:'tirou o prazo';
@@ -2673,7 +2755,9 @@ function openTarefa(id,status){
   tfEditId=id;
   tfNovaArea=t?t.area:tfArea;
   tfEl('tf-m-title').textContent=t?'Tarefa':'Nova tarefa';
-  tfEl('tf-m-sub').textContent=t?`Pedida por ${t.created_by||'—'} em ${tfQuando(t.created_at)}`:'';
+  tfEl('tf-m-sub').innerHTML=!t?'':t.origem==='planilha'
+    ?`Da planilha de ${escH((TF_AREAS[t.area]||{}).label||t.area)} · pedida por ${escH(t.created_by||'—')} em ${tfQuando(t.created_at,true)}<span class="tf-pl-nota">O que você mudar aqui fica, até alguém alterar o mesmo campo na planilha.</span>`
+    :`Pedida por ${escH(t.created_by||'—')} em ${tfQuando(t.created_at)}`;
   tfEl('tf-titulo').value=t?t.titulo:'';
   tfDesenharArea();
   const pessoas=tfPessoas(),resp=t?t.responsavel||'':'';
@@ -2686,7 +2770,7 @@ function openTarefa(id,status){
   tfEl('tf-descricao').value=t?t.descricao||'':'';
   const hist=t?[...(t.historico||[])].reverse():[];
   tfEl('tf-hist-wrap').innerHTML=hist.length?`<div class="ve-sub">Histórico</div><div class="tf-hist">${hist.map(h=>`<div><small>${tfQuando(h.em)}</small><b>${escH(h.por||'—')}</b> ${tfHistTexto(h)}</div>`).join('')}</div>`:'';
-  tfEl('tf-del').style.display=t&&(currentNivel==='adm'||t.created_by===currentUser.nome)?'':'none';
+  tfEl('tf-del').style.display=t&&t.origem!=='planilha'&&(currentNivel==='adm'||t.created_by===currentUser.nome)?'':'none';
   tfEl('tf-erro').textContent='';
   tfEl('tf-modal').classList.add('open');
   if(!t)setTimeout(()=>tfEl('tf-titulo').focus(),50);
