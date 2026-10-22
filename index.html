@@ -18,6 +18,9 @@
   --border:rgba(201,168,76,0.18);--border-hover:rgba(201,168,76,0.45);
 }
 html,body{height:100%;background:var(--dark);color:var(--text);font-family:'Jost',sans-serif}
+/* com pop-up ou menu do celular aberto, a página do fundo não rola */
+html:has(.modal-overlay.open,.add-modal.open,.mobile-drawer.open){overflow:hidden}
+.modal,.add-box{overscroll-behavior:contain}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
 
 /* LOGIN */
